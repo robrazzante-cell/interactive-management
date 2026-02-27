@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon-light.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+    <title>ISM Voting Access Hub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #0B2B26 0%, #164039 100%);
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            color: #0B2B26;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card .subtitle {
+            color: #6c757d;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        .badge.internal {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .badge.public {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #0B2B26 0%, #164039 100%);
+            color: #FAF3DD;
+            border: none;
+            padding: 15px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 8px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(11, 43, 38, 0.4);
+        }
+        button.primary {
+            background: linear-gradient(135deg, #0B2B26 0%, #164039 100%);
+        }
+        button.primary:hover {
+            box-shadow: 0 6px 20px rgba(11, 43, 38, 0.4);
+        }
+        button.secondary {
+            background: linear-gradient(135deg, #3E0505 0%, #5C1010 100%);
+        }
+        button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+        .project-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #0B2B26;
+        }
+        .project-info p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .project-info strong {
+            color: #495057;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        .status.success {
+            background: #FAF3DD;
+            color: #0B2B26;
+            border: 1px solid #0B2B26;
+        }
+        .status.info {
+            background: #FAF3DD;
+            color: #0B2B26;
+            border: 1px solid #0B2B26;
+        }
+        .participant-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .participant-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #0B2B26;
+        }
+        .participant-item h4 {
+            margin: 0 0 10px 0;
+            color: #0B2B26;
+        }
+        .participant-item p {
+            margin: 5px 0;
+            font-size: 13px;
+            color: #6c757d;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+    <!-- Firebase SDK (auto-injected by sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260205"></script>
+    <script src="js/firestore-api-adapter.js?v=20260205"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>🗳️ ISM Voting Access Hub</h1>
+        <p>Test both Internal (Participant-Based) and Public (Anonymous) ISM Voting</p>
+    </div>
+
+    <div class="grid">
+        <!-- INTERNAL PROJECT CARD -->
+        <div class="card">
+            <h2>
+                🏥 Falck Project
+                <span class="badge internal">Internal</span>
+            </h2>
+            <p class="subtitle">Participant-based voting with unique access tokens</p>
+
+            <div class="project-info">
+                <p><strong>Project ID:</strong> <code>id_1764823618972_c82zzrg68</code></p>
+                <p><strong>Type:</strong> Internal/Organizational</p>
+                <p><strong>Access:</strong> Token-based (participant roster)</p>
+            </div>
+
+            <button class="primary" onclick="loadFalckParticipants()">
+                📋 Load Falck Participants
+            </button>
+
+            <div id="falck-results"></div>
+        </div>
+
+        <!-- PUBLIC PROJECT CARD -->
+        <div class="card">
+            <h2>
+                🌍 Community Building
+                <span class="badge public">Public</span>
+            </h2>
+            <p class="subtitle">Anonymous public voting - anyone can participate</p>
+
+            <div class="project-info">
+                <p><strong>Project ID:</strong> <span id="public-project-id">Loading...</span></p>
+                <p><strong>Type:</strong> Public/Open Access</p>
+                <p><strong>Access:</strong> No authentication required</p>
+            </div>
+
+            <button class="secondary" onclick="findPublicProject()">
+                🔍 Find Community Building Project
+            </button>
+
+            <div id="public-results"></div>
+        </div>
+    </div>
+
+    <script>
+        const FALCK_PROJECT_ID = 'id_1764823618972_c82zzrg68';
+        let communityProjectId = null;
+
+        // Load Falck internal participants
+        async function loadFalckParticipants() {
+            const resultsDiv = document.getElementById('falck-results');
+            resultsDiv.innerHTML = '<div class="status info">⏳ Loading Falck participants...</div>';
+
+            try {
+                const response = await fetch('tables/participants?limit=1000');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const participants = data.data.filter(p => p.project_id === FALCK_PROJECT_ID);
+                
+                console.log('Falck participants:', participants);
+
+                if (participants.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="status" style="background: #f8d7da; color: #721c24;">
+                            ❌ No participants found for Falck project
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `
+                    <div class="status success">
+                        ✅ Found ${participants.length} Falck participant(s)
+                    </div>
+                    <div class="participant-list">
+                `;
+
+                participants.forEach((participant, index) => {
+                    const votingLink = `participant-voting-v6.33.html?token=${participant.access_token}`;
+                    const portalLink = `participant-portal.html?token=${participant.access_token}`;
+                    
+                    html += `
+                        <div class="participant-item">
+                            <h4>👤 ${participant.name || 'Participant ' + (index + 1)}</h4>
+                            <p><strong>Position:</strong> ${participant.position || 'N/A'}</p>
+                            <p><strong>Email:</strong> ${participant.email || 'N/A'}</p>
+                            <p><strong>Status:</strong> ${participant.completion_status || 'not_started'}</p>
+                            
+                            <div class="actions">
+                                <button onclick="window.open('${portalLink}', '_blank')">
+                                    🚪 Portal
+                                </button>
+                                <button class="primary" onclick="window.open('${votingLink}', '_blank')">
+                                    🗳️ ISM Voting
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `
+                    <div class="status" style="background: #f8d7da; color: #721c24;">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Find and load public Community Building project
+        async function findPublicProject() {
+            const resultsDiv = document.getElementById('public-results');
+            resultsDiv.innerHTML = '<div class="status info">⏳ Searching for Community Building project...</div>';
+
+            try {
+                console.log('🔍 Fetching all projects...');
+                
+                const response = await fetch('tables/projects?limit=1000');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('All projects:', data);
+                
+                // Search for Community Building project
+                const communityProject = data.data.find(p => 
+                    p.title && (
+                        p.title.toLowerCase().includes('community') || 
+                        p.title.toLowerCase().includes('building')
+                    )
+                );
+                
+                if (!communityProject) {
+                    // Show all public projects as fallback
+                    const publicProjects = data.data.filter(p => p.public_project_type && p.public_project_type !== 'none');
+                    
+                    if (publicProjects.length === 0) {
+                        resultsDiv.innerHTML = `
+                            <div class="status" style="background: #fff3cd; color: #856404;">
+                                ⚠️ No public projects found. Showing all projects:
+                            </div>
+                        `;
+                        
+                        let html = '<div class="participant-list">';
+                        data.data.forEach(project => {
+                            html += `
+                                <div class="participant-item">
+                                    <h4>📁 ${project.title}</h4>
+                                    <p><strong>ID:</strong> <code>${project.id}</code></p>
+                                    <p><strong>Organization:</strong> ${project.organization || 'N/A'}</p>
+                                    <p><strong>Public Type:</strong> ${project.public_project_type || 'Not public'}</p>
+                                    
+                                    <button class="secondary" onclick="openPublicVoting('${project.id}', '${project.title}')">
+                                        🌍 Open Public Voting
+                                    </button>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        resultsDiv.innerHTML += html;
+                        return;
+                    }
+                    
+                    // Show public projects
+                    let html = `
+                        <div class="status success">
+                            ✅ Found ${publicProjects.length} public project(s)
+                        </div>
+                        <div class="participant-list">
+                    `;
+                    
+                    publicProjects.forEach(project => {
+                        html += `
+                            <div class="participant-item">
+                                <h4>📁 ${project.title}</h4>
+                                <p><strong>ID:</strong> <code>${project.id}</code></p>
+                                <p><strong>Public Type:</strong> ${project.public_project_type}</p>
+                                
+                                <button class="secondary" onclick="openPublicVoting('${project.id}', '${project.title}')">
+                                    🌍 Open Public Voting
+                                </button>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    resultsDiv.innerHTML = html;
+                    return;
+                }
+
+                // Found Community Building project
+                communityProjectId = communityProject.id;
+                document.getElementById('public-project-id').textContent = communityProjectId;
+                
+                console.log('Found Community Building project:', communityProject);
+                
+                resultsDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ Found Community Building Project!
+                    </div>
+                    
+                    <div class="project-info">
+                        <p><strong>Title:</strong> ${communityProject.title}</p>
+                        <p><strong>Project ID:</strong> <code>${communityProject.id}</code></p>
+                        <p><strong>Organization:</strong> ${communityProject.organization || 'N/A'}</p>
+                        <p><strong>Public Type:</strong> ${communityProject.public_project_type || 'Open'}</p>
+                        <p><strong>Trigger Question:</strong> ${communityProject.trigger_question || 'N/A'}</p>
+                    </div>
+                    
+                    <button class="secondary" onclick="openPublicVoting('${communityProject.id}', '${communityProject.title}')">
+                        🌍 Start Public ISM Voting
+                    </button>
+                    
+                    <button onclick="openPublicAggregate('${communityProject.id}')">
+                        📊 View Public Aggregate Metastructure
+                    </button>
+                    
+                    <div class="status info" style="margin-top: 20px;">
+                        <strong>📝 Test Flow:</strong><br>
+                        1. Click "Start Public ISM Voting"<br>
+                        2. Complete ALL voting questions (as anonymous participant)<br>
+                        3. View your individual flowchart<br>
+                        4. Click "View Aggregate" to see combined results<br>
+                        5. Check participant count and metastructure scores!
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `
+                    <div class="status" style="background: #f8d7da; color: #721c24;">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function openPublicVoting(projectId, projectTitle) {
+            const url = `public-voting-v6.33.html?project=${projectId}`;
+            console.log(`Opening public voting for ${projectTitle}:`, url);
+            window.open(url, '_blank');
+        }
+
+        function openPublicAggregate(projectId) {
+            const url = `aggregate-metastructure-DEC19-2025.html?project=${projectId}&source=public&_t=${Date.now()}`;
+            console.log('Opening public aggregate:', url);
+            window.open(url, '_blank');
+        }
+
+        // Auto-load on page open
+        window.addEventListener('load', () => {
+            console.log('🚀 ISM Voting Access Hub loaded');
+            console.log('Falck Project ID:', FALCK_PROJECT_ID);
+        });
+    </script>
+</body>
+</html>

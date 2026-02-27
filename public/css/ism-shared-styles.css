@@ -1,0 +1,631 @@
+/**
+ * ISM SHARED STYLES - v6.28.10
+ * Unified styling for ISM voting across all session types
+ * (Async, In-Person, Public)
+ * 
+ * Date: December 18, 2025
+ * Updated: NUMBER AFTER NAME - Factor # appears after factor name with space
+ * Purpose: Better readability - "Ability Communicate (1)" format
+ * Fix: Combined name and number in single line
+ */
+
+/* ============================================
+   BRAND COLORS
+   ============================================ */
+:root {
+    --primary-dark: #0B2B26;
+    --primary-cream: #FAF3DD;
+    --primary-burgundy: #3E0505;
+    --primary-warm-cream: #FFF8DC;
+    --primary-light-tan: #F5E6D3;
+    --primary-teal: #0B2B26;
+    --primary-navy: #0B2B26;
+    --primary-orange: #3E0505;
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-dark);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: ism-spin 1s linear infinite;
+}
+
+@keyframes ism-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   VOTING CARD CONTAINER
+   ============================================ */
+.ism-voting-card,
+.voting-card {
+    background: white;
+    border-radius: 0;
+    padding: 1rem 1.5rem;
+    margin: 0 auto;
+    box-shadow: none;
+    max-width: 900px;
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+.ism-progress-container,
+.progress-container {
+    background: white;
+    border-radius: 0;
+    padding: 0.75rem 1.5rem;
+    margin: 0 auto 0.75rem auto;
+    box-shadow: none;
+    max-width: 900px;
+}
+
+.ism-progress-info,
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.ism-progress-bar-container,
+.progress-bar-container {
+    width: 100%;
+    height: 20px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ism-progress-bar,
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-dark) 0%, #164039 100%);
+    transition: width 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(11, 43, 38, 0.3);
+}
+
+/* ============================================
+   CONTEXT BOX
+   ============================================ */
+.ism-context-box,
+.context-box {
+    background: var(--primary-burgundy);
+    border: none;
+    padding: 1.25rem 1.5rem;
+    border-radius: 0;
+    margin: 0 auto 1rem auto;
+    text-align: center;
+    box-shadow: none;
+    max-width: 1000px;
+}
+
+.ism-context-box h3,
+.context-box h3 {
+    color: var(--primary-cream);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.ism-context-box p,
+.context-box p {
+    color: var(--primary-cream);
+    font-size: 1rem;
+    opacity: 1;
+    font-weight: 400;
+}
+
+/* ============================================
+   QUESTION DISPLAY
+   ============================================ */
+.ism-question-header,
+.question-header {
+    margin-bottom: 1rem;
+}
+
+.ism-question-number,
+.question-number {
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ism-question-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+/* ============================================
+   FACTOR BOXES - FIXED SIZE (v6.28.7)
+   ============================================ */
+.ism-factor-box,
+.factor-box {
+    background: var(--primary-cream);
+    border: 1.5px solid var(--primary-dark);
+    padding: 1rem 1rem;
+    border-radius: 0.4rem;
+    box-shadow: none;
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    height: 110px !important;
+    min-height: 110px !important;
+    max-height: 110px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+    flex-grow: 0;
+    overflow: visible;
+}
+
+.ism-factor-box:hover,
+.factor-box:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(11, 43, 38, 0.1);
+}
+
+.ism-factor-box-name,
+.factor-box-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: none;
+    max-width: 100%;
+}
+
+/* ============================================
+   ARROW CONTAINER (between factors)
+   ============================================ */
+.ism-arrow-container,
+.arrow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    height: 110px;
+}
+
+.ism-arrow-icon,
+.arrow-icon {
+    font-size: 1.5rem;
+    color: #0B2B26 !important; /* Forest green */
+    font-weight: bold;
+}
+
+/* ============================================
+   RELATIONAL PHRASE BADGE
+   ============================================ */
+.ism-relational-phrase-badge,
+.relational-phrase-badge {
+    background: none;
+    color: var(--primary-dark);
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    font-style: normal;
+}
+
+/* ============================================
+   RATING SCALE - RADIO BUBBLE STYLE
+   ============================================ */
+.ism-rating-scale,
+.rating-scale {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin: 3.5rem auto 1rem auto;
+    flex-wrap: nowrap;
+}
+
+.ism-rating-button,
+.rating-button {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: none !important;
+    flex: 0 0 auto; /* Don't grow or shrink */
+}
+
+.ism-rating-button:hover .ism-rating-bubble,
+.rating-button:hover .rating-bubble {
+    transform: scale(1.1);
+    border-color: var(--primary-dark);
+}
+
+/* Radio Bubble (Circle) */
+.ism-rating-bubble,
+.rating-bubble {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #ccc;
+    border-radius: 50%;
+    background: white;
+    position: relative;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.ism-rating-button.selected .ism-rating-bubble,
+.rating-button.selected .rating-bubble {
+    border-color: var(--primary-dark);
+    background: var(--primary-dark);
+}
+
+/* Inner dot when selected */
+.ism-rating-button.selected .ism-rating-bubble::after,
+.rating-button.selected .rating-bubble::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Hide number display */
+.ism-rating-number,
+.rating-number {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ism-rating-label,
+.rating-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: block;
+    color: var(--primary-dark);
+    line-height: 1.2;
+}
+
+.ism-rating-description,
+.rating-description {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ============================================
+   NAVIGATION BUTTONS
+   ============================================ */
+.ism-navigation-buttons,
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.ism-btn,
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.ism-btn-primary,
+.btn-primary {
+    background: var(--primary-dark);
+    color: white;
+}
+
+.ism-btn-primary.selected-5,
+.btn-primary.selected-5 {
+    background: var(--primary-burgundy);
+}
+
+.ism-btn-primary:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-tan, #FAF3DD) !important;
+    color: var(--forest-green, #0B2B26) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 43, 38, 0.3);
+}
+
+.ism-btn-secondary,
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-dark);
+}
+
+.ism-btn-secondary:hover:not(:disabled),
+.btn-secondary:hover:not(:disabled) {
+    background: var(--primary-dark);
+    color: white;
+}
+
+.ism-btn:disabled,
+.btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   GROUND RULES
+   ============================================ */
+.ism-ground-rules,
+.ground-rules {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 0.3rem;
+    padding: 1rem 1.25rem;
+    margin: 0 auto 1rem auto;
+    max-width: 900px;
+}
+
+.ism-ground-rules h4,
+.ground-rules h4 {
+    color: var(--primary-burgundy);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.ism-ground-rules ul,
+.ground-rules ul {
+    list-style-position: inside;
+    color: var(--primary-dark);
+    line-height: 1.5;
+    font-size: 0.85rem;
+}
+
+.ism-ground-rules li,
+.ground-rules li {
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   COMPLETION SCREEN
+   ============================================ */
+.ism-completion-screen,
+.completion-screen {
+    text-align: center;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.ism-completion-screen h2,
+.completion-screen h2 {
+    color: var(--primary-dark);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.ism-completion-screen p,
+.completion-screen p {
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.hidden {
+    display: none !important;
+}
+
+.ism-text-center {
+    text-align: center;
+}
+
+.ism-mb-1 {
+    margin-bottom: 1rem;
+}
+
+.ism-mb-2 {
+    margin-bottom: 2rem;
+}
+
+.ism-mt-1 {
+    margin-top: 1rem;
+}
+
+.ism-mt-2 {
+    margin-top: 2rem;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .ism-voting-card,
+    .voting-card {
+        padding: 1rem;
+        border-radius: 0;
+    }
+    
+    .ism-question-visual {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .ism-factor-box,
+    .factor-box {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        height: 110px !important;
+        min-height: 110px !important;
+        max-height: 110px !important;
+    }
+    
+    /* KEEP RATING SCALE HORIZONTAL - Don't stack */
+    .ism-rating-scale,
+    .rating-scale {
+        gap: 1.5rem !important;
+        margin: 2rem auto 1rem auto !important;
+        /* flex-direction stays row - removed vertical stacking */
+    }
+    
+    .ism-rating-button,
+    .rating-button {
+        min-width: 50px !important;
+    }
+    
+    .ism-rating-bubble,
+    .rating-bubble {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    
+    .ism-rating-label,
+    .rating-label {
+        font-size: 0.7rem !important;
+    }
+    
+    .ism-navigation-buttons,
+    .navigation-buttons {
+        flex-direction: column;
+    }
+    
+    .ism-btn,
+    .btn {
+        width: 100%;
+        min-height: 48px;
+        padding: 0.875rem 1.5rem;
+    }
+
+    .ism-completion-screen h2,
+    .completion-screen h2 {
+        font-size: 1.5rem;
+    }
+
+    .ism-completion-screen p,
+    .completion-screen p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ism-rating-number,
+    .rating-number {
+        font-size: 1.1rem;
+    }
+    
+    .ism-rating-label,
+    .rating-label {
+        font-size: 0.75rem;
+    }
+    
+    .ism-rating-description,
+    .rating-description {
+        font-size: 0.65rem;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes ism-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ism-fade-in {
+    animation: ism-fade-in 0.3s ease-out;
+}
+
+/* ============================================
+   FLOWCHART STYLES
+   ============================================ */
+#flowchart-canvas,
+.ism-flowchart-canvas {
+    display: block;
+    margin: 0 auto;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    cursor: grab;
+    transition: transform 0.1s ease-out;
+}
+
+#flowchart-canvas:active,
+.ism-flowchart-canvas:active {
+    cursor: grabbing;
+}
+
+/* ============================================
+   DEBUG BOX (for development)
+   ============================================ */
+.ism-debug-box,
+.debug-box {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #FAF3DD;
+    border: 2px solid #0B2B26;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--primary-dark);
+}
+
+.ism-debug-box strong,
+.debug-box strong {
+    color: #3E0505;
+}
+
+/* ============================================
+   END OF ISM SHARED STYLES
+   ============================================ */

@@ -1,0 +1,2466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="version" content="v6.28.28-PARTICIPANT-COUNT">
+    <title>Aggregate Metastructure - ISM Platform v6.28.28</title>
+    <script>
+        // FORCE VERSION CHECK - Build 20251217180000
+        console.log('%c🚀 Aggregate Metastructure v6.28.28 - WITH PARTICIPANT COUNT', 'color: #0B2B26; font-size: 18px; font-weight: bold; background: #FAF3DD; padding: 10px;');
+        console.log('%c✅ Build: 20251219-PARTICIPANT-COUNT', 'color: #2f855a; font-size: 14px; font-weight: bold;');
+        const expectedVersion = 'v6.28.28-PARTICIPANT-COUNT';
+        const expectedBuild = '20251219-PARTICIPANT-COUNT';
+        console.log('%c✅ Expected Version: ' + expectedVersion, 'color: #2f855a; font-size: 14px;');
+        console.log('%c✅ Expected Build: ' + expectedBuild, 'color: #2f855a; font-size: 14px;');
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FAF3DD;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* GREEN HEADER */
+        .header {
+            background: #0B2B26;
+            color: #FAF3DD;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #FAF3DD;
+        }
+        
+        .header p {
+            opacity: 0.95;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            opacity: 0.85;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 40px;
+        }
+        
+        /* AGGREGATE SCORES TABLE */
+        .scores-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #0B2B26;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .scores-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .scores-table thead {
+            background: #0B2B26;
+            color: #FAF3DD;
+        }
+        
+        .scores-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .scores-table th:first-child {
+            text-align: center;
+            width: 80px;
+        }
+        
+        .scores-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        
+        .scores-table td:first-child {
+            text-align: center;
+            font-weight: 600;
+            color: #0B2B26;
+            font-size: 16px;
+        }
+        
+        .scores-table tbody tr:hover {
+            background: #FFF8DC;
+        }
+        
+        .scores-table tbody tr:nth-child(even) {
+            background: #F9F9F9;
+        }
+        
+        .scores-table tbody tr:nth-child(even):hover {
+            background: #FFF8DC;
+        }
+        
+        .factor-name {
+            font-weight: 600;
+            color: #0B2B26;
+        }
+        
+        .stage-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #0B2B26;
+            color: #FAF3DD;
+        }
+        
+        /* INFOGRAPHIC SECTION */
+        .infographic-section {
+            margin-top: 60px;
+        }
+        
+        .style-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .style-card {
+            border: 3px solid #E5E5E5;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .style-card:hover {
+            border-color: #0B2B26;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .style-card.selected {
+            border-color: #0B2B26;
+            background: #FFF8DC;
+        }
+        
+        .style-card h3 {
+            font-size: 18px;
+            color: #0B2B26;
+            margin-bottom: 10px;
+        }
+        
+        .style-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .style-preview {
+            width: 100%;
+            height: 150px;
+            background: #F5F5F5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        /* DRAG AND DROP */
+        .factor-pool {
+            background: #FFF8DC;
+            border: 2px dashed #0B2B26;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            min-height: 150px;
+        }
+        
+        .factor-chip {
+            display: inline-block;
+            background: white;
+            border: 2px solid #0B2B26;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 5px;
+            cursor: move;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+        
+        .factor-chip:hover {
+            background: #0B2B26;
+            color: #FAF3DD;
+            transform: scale(1.05);
+        }
+        
+        .factor-chip.dragging {
+            opacity: 0.5;
+        }
+        
+        .infographic-canvas {
+            background: white;
+            border: 3px solid #0B2B26;
+            border-radius: 16px;
+            padding: 40px;
+            min-height: 600px;
+            margin-top: 30px;
+        }
+        
+        .drop-zone {
+            border: 2px dashed #0B2B26;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            min-height: 100px;
+            background: #FFF8DC;
+            opacity: 0.7;
+        }
+        
+        .drop-zone.drag-over {
+            background: #0B2B26;
+            border-color: #FAF3DD;
+            opacity: 1;
+        }
+        
+        .drop-zone h4 {
+            color: #0B2B26;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            background: #0B2B26;
+            color: #FAF3DD;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #1a4a42;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #0B2B26;
+            border: 2px solid #0B2B26;
+        }
+        
+        .btn-secondary:hover {
+            background: #0B2B26;
+            color: #FAF3DD;
+        }
+        
+        /* LOADING */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #E5E5E5;
+            border-top: 4px solid #0B2B26;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* PREVIEW MODAL */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .preview-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .preview-header {
+            background: #0B2B26;
+            color: #FAF3DD;
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .preview-header h2 {
+            margin: 0;
+            font-family: 'Merriweather', serif;
+        }
+        
+        .preview-close {
+            background: transparent;
+            border: 2px solid #FAF3DD;
+            color: #FAF3DD;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .preview-close:hover {
+            background: #FAF3DD;
+            color: #0B2B26;
+        }
+        
+        .preview-body {
+            padding: 40px;
+        }
+        
+        .preview-footer {
+            background: #F9F9F9;
+            padding: 20px;
+            border-radius: 0 0 16px 16px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+        
+        /* STYLED INFOGRAPHIC FOR EXPORT */
+        .export-infographic {
+            background: white;
+            padding: 60px;
+            color: #0B2B26;
+            min-width: 1400px;
+        }
+        
+        .export-header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 3px solid #FAF3DD;
+            padding-bottom: 30px;
+        }
+        
+        .export-header h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #FAF3DD;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .export-header p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+        
+        .export-section {
+            background: rgba(250, 243, 221, 0.1);
+            border: 3px solid #FAF3DD;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .export-section h3 {
+            font-family: 'Merriweather', serif;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #FAF3DD;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .export-section h3::before {
+            content: '';
+            width: 50px;
+            height: 4px;
+            background: #FAF3DD;
+            border-radius: 2px;
+        }
+        
+        .export-factors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .export-factor-chip {
+            background: #FAF3DD;
+            color: #0B2B26;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 2px solid #0B2B26;
+        }
+        
+        .export-factor-chip strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .export-factor-chip .inf-score {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .export-footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #FAF3DD;
+            opacity: 0.8;
+        }
+        
+        /* THEMED BUILDER STYLES */
+        .themed-builder-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .theme-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .theme-count-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .theme-count-controls label {
+            font-weight: 600;
+            color: #0B2B26;
+        }
+        
+        .theme-count-controls input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #0B2B26;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* THEMES CONTAINER */
+        .themes-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            min-height: 400px;
+        }
+        
+        .theme-column {
+            min-width: 280px;
+            flex: 1;
+            background: white;
+            border: 3px solid #0B2B26;
+            border-radius: 12px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .theme-header {
+            background: #0B2B26;
+            color: #FAF3DD;
+            padding: 15px;
+            border-radius: 9px 9px 0 0;
+        }
+        
+        .theme-title-input {
+            width: 100%;
+            background: transparent;
+            border: 2px solid transparent;
+            color: #FAF3DD;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 5px 8px;
+            border-radius: 4px;
+            transition: border-color 0.2s;
+        }
+        
+        .theme-title-input:hover {
+            border-color: rgba(250, 243, 221, 0.3);
+        }
+        
+        .theme-title-input:focus {
+            outline: none;
+            border-color: #FAF3DD;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .theme-options {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .theme-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .theme-options input[type="checkbox"] {
+            cursor: pointer;
+        }
+        
+        .theme-factors {
+            flex: 1;
+            padding: 15px;
+            min-height: 250px;
+            background: #fafafa;
+        }
+        
+        .theme-factors.drag-over {
+            background: #e8f5e9;
+            border: 2px dashed #0B2B26;
+            margin: -2px;
+        }
+        
+        .theme-factor-item {
+            background: white;
+            border: 2px solid #0B2B26;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: move;
+            transition: all 0.2s;
+        }
+        
+        .theme-factor-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .theme-factor-item.dragging {
+            opacity: 0.5;
+        }
+        
+        .factor-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .factor-item-name {
+            font-weight: 600;
+            color: #0B2B26;
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .factor-item-remove {
+            background: #3E0505;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            line-height: 1;
+        }
+        
+        .factor-item-remove:hover {
+            background: #5a0707;
+        }
+        
+        .factor-item-scores {
+            font-size: 11px;
+            color: #666;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        
+        .factor-item-scores span {
+            background: #f0f0f0;
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+        
+        .theme-empty {
+            color: #999;
+            text-align: center;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+        
+        /* THEMED PREVIEW SECTION */
+        .themed-preview-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .themed-preview-canvas {
+            background: white;
+            border: 2px solid #0B2B26;
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+        
+        .metastructure-flow {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            align-items: stretch;
+        }
+        
+        .flow-theme {
+            min-width: 250px;
+            flex: 1;
+            border: 3px solid #000;
+            border-radius: 8px;
+            padding: 0;
+        }
+        
+        .flow-theme-header {
+            background: #000;
+            color: white;
+            padding: 15px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .flow-theme-content {
+            padding: 20px 15px;
+        }
+        
+        .flow-factor {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .flow-factor:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .flow-factor-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        
+        .flow-factor-scores {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .flow-arrow {
+            font-size: 36px;
+            color: #000;
+            align-self: center;
+            margin: 0 10px;
+            flex-shrink: 0;
+        }
+        
+        .flow-legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .flow-legend-title {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        /* Make table rows draggable */
+        .scores-table tbody tr {
+            cursor: grab;
+        }
+        
+        .scores-table tbody tr:active {
+            cursor: grabbing;
+        }
+        
+        .scores-table tbody tr.dragging {
+            opacity: 0.5;
+        }
+    </style>
+    <!-- Firebase SDK (auto-injected by sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260205"></script>
+    <script src="js/firestore-api-adapter.js?v=20260205"></script>
+</head>
+<body>
+    <!-- Include html2canvas for PNG export -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <div class="container">
+        <!-- GREEN HEADER (KEPT AS IS) -->
+        <div class="header">
+            <h1>📊 Aggregate Metastructure</h1>
+            <p>Collective Influence Patterns from All Participants</p>
+            <p class="subtitle" id="main-subtitle">Drag & drop factors into themes, then visualize and download</p>
+            <p class="subtitle" id="participant-count-display" style="margin-top: 0.5rem; font-size: 1.1rem; font-weight: 600;">
+                <i class="fas fa-users"></i> <span id="participant-count">Loading...</span> participants have completed this project
+            </p>
+            
+            <!-- Public Viewing Mode Buttons (shown when source=public) -->
+            <div id="public-view-buttons" style="display: none; margin-top: 1rem;">
+                <button onclick="returnToPortal()" style="background: var(--burgundy); color: var(--primary-tan); border: 2px solid var(--primary-tan); padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-right: 0.5rem;">
+                    <i class="fas fa-home"></i> Return to Portal
+                </button>
+                <button onclick="window.close()" style="background: var(--forest-green); color: var(--primary-tan); border: 2px solid var(--primary-tan); padding: 0.75rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-times"></i> Close Window
+                </button>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT (COMPLETELY NEW) -->
+        <div class="main-content">
+            <!-- AGGREGATE SCORES TABLE -->
+            <div class="scores-section">
+                <div class="section-title">📈 Aggregate Metastructure Scores</div>
+                
+                <div id="loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading aggregate metastructure data...</p>
+                </div>
+                
+                <table id="scoresTable" class="scores-table hidden">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Factor</th>
+                            <th>Stage</th>
+                            <th>Avg INF</th>
+                            <th>Std Dev</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scoresTableBody">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- THEMED METASTRUCTURE BUILDER (REPLACES INFOGRAPHIC SECTION) -->
+            <div class="themed-builder-section hidden" id="themedBuilderSection">
+                <div class="section-title">
+                    <i class="fas fa-layer-group"></i>
+                    Theme Builder
+                </div>
+                
+                <div class="theme-controls">
+                    <div class="theme-count-controls">
+                        <label for="themeCount">Number of Themes:</label>
+                        <input type="number" id="themeCount" min="3" max="6" value="5" onchange="updateThemeCount()">
+                        <span style="color: #666; font-size: 13px;">(3-6 themes)</span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="clearAllThemes()">
+                            <i class="fas fa-trash"></i> Clear All
+                        </button>
+                        <button class="btn" onclick="generateThemedPreview()">
+                            <i class="fas fa-eye"></i> Generate Preview
+                        </button>
+                        <button class="btn" onclick="downloadThemedMetastructure()">
+                            <i class="fas fa-download"></i> Download PNG
+                        </button>
+                    </div>
+                </div>
+
+                <p style="color: #666; font-size: 14px; margin: 15px 0 20px 0;">
+                    <i class="fas fa-info-circle"></i> 
+                    <strong>Instructions:</strong> Drag factors from the table above into theme columns below. 
+                    Edit theme names by clicking them. Toggle score visibility using the checkbox.
+                </p>
+
+                <div class="themes-container" id="themesContainer">
+                    <!-- Theme columns will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- THEMED PREVIEW SECTION -->
+            <div class="themed-preview-section hidden" id="themedPreviewSection">
+                <div class="section-title">
+                    <i class="fas fa-image"></i>
+                    Preview
+                </div>
+                
+                <div class="themed-preview-canvas" id="themedPreviewCanvas">
+                    <!-- Generated preview goes here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/aggregate-metastructure.js"></script>
+    <script>
+        // GLOBAL VARIABLES
+        let aggregateData = null;
+        let selectedStyle = null;
+        let organizationColors = {
+            primary: '#0B2B26',
+            secondary: '#FAF3DD',
+            accent1: '#4A7C59',
+            accent2: '#8B7355'
+        };
+        
+        // INFOGRAPHIC STYLE TEMPLATES (4 STYLES)
+        const infographicStyles = [
+            {
+                id: 'cyclical',
+                name: 'Cyclical',
+                description: 'Circular flow showing continuous interconnected processes',
+                icon: '🔄',
+                sections: 5,
+                sectionNames: ['Theme 1', 'Theme 2', 'Theme 3', 'Theme 4', 'Theme 5'],
+                layout: 'circular'
+            },
+            {
+                id: 'acronym',
+                name: 'Acronym',
+                description: 'Horizontal timeline with letter-based sections',
+                icon: '🔤',
+                sections: 4,
+                sectionNames: ['Theme 1', 'Theme 2', 'Theme 3', 'Theme 4'],
+                layout: 'horizontal'
+            },
+            {
+                id: 'action-steps',
+                name: 'Action Steps',
+                description: 'Sequential progression with arrow flow',
+                icon: '➡️',
+                sections: 4,
+                sectionNames: ['Theme 1', 'Theme 2', 'Theme 3', 'Theme 4'],
+                layout: 'sequential'
+            },
+            {
+                id: 'academic',
+                name: 'Academic',
+                description: 'Structured themes with detailed factor analysis',
+                icon: '📚',
+                sections: 4,
+                sectionNames: ['Theme 1', 'Theme 2', 'Theme 3', 'Theme 4'],
+                layout: 'structured'
+            }
+        ];
+        
+        // INITIALIZE ON LOAD
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('%c═══════════════════════════════════════════════════════', 'color: #0B2B26; font-weight: bold;');
+console.log('%c🎨 Aggregate Metastructure LOADED - v6.28.25-PROJECT-ID-DEBUG', 'color: #0B2B26; font-size: 20px; font-weight: bold;');
+console.log('%c✅ Version: v6.28.25 - Project ID Debugging', 'color: #10B981; font-size: 16px; font-weight: bold;');
+console.log('%c✅ Build: 20251218460000', 'color: #10B981; font-size: 14px; font-weight: bold;');
+console.log('%c🔍 DEBUGGING: project_id matching and type checking', 'color: #DC2626; font-size: 14px; font-weight: bold;');
+console.log('%c🔍 Check console for project_id comparisons', 'color: #2f855a; font-size: 14px;');
+console.log('%c═══════════════════════════════════════════════════════', 'color: #0B2B26; font-weight: bold;');
+            
+            // Check if opened from public voting (source=public)
+            const urlParams = new URLSearchParams(window.location.search);
+            const source = urlParams.get('source');
+            const projectId = urlParams.get('project');
+            
+            if (source === 'public') {
+                console.log('🌍 PUBLIC VIEWING MODE - Showing navigation buttons');
+                document.getElementById('public-view-buttons').style.display = 'block';
+                document.getElementById('main-subtitle').textContent = 'View the collective influence patterns from all participant responses';
+                
+                // Show completion count from localStorage
+                if (projectId) {
+                    const completionCountKey = `public_project_${projectId}_completion_count`;
+                    const completionCount = parseInt(localStorage.getItem(completionCountKey) || '0');
+                    const countDisplay = document.createElement('p');
+                    countDisplay.style.cssText = 'color: #FAF3DD; font-size: 0.9rem; margin-top: 0.5rem;';
+                    countDisplay.innerHTML = `<i class="fas fa-users"></i> ${completionCount} participant${completionCount !== 1 ? 's' : ''} completed this project`;
+                    document.querySelector('.header').appendChild(countDisplay);
+                }
+            }
+            
+            loadAggregateData();
+        });
+        
+        // Return to participant portal (for public viewing mode)
+        function returnToPortal() {
+            console.log('🏠 Returning to public portal...');
+            window.location.href = 'public-participant-portal.html';
+        }
+        
+        // Clear voting data for current project
+        async function clearVotingData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('project');
+            
+            if (!projectId) {
+                alert('⚠️ No project ID found in URL');
+                return;
+            }
+            
+            const confirmed = confirm(
+                '⚠️ CLEAR OLD VOTING DATA?\n\n' +
+                'This will DELETE all voting responses for this project.\n\n' +
+                'Use this if you changed the factors and need to start fresh.\n\n' +
+                '✅ Factors will NOT be deleted\n' +
+                '✅ Projects will NOT be deleted\n' +
+                '❌ All voting data WILL be deleted\n\n' +
+                'Participants will need to vote again to see aggregate data.\n\n' +
+                'Continue?'
+            );
+            
+            if (!confirmed) {
+                console.log('❌ User cancelled clearing voting data');
+                return;
+            }
+            
+            try {
+                console.log('🗑️ Clearing voting data for project:', projectId);
+                
+                // Fetch all voting responses
+                const response = await fetch('tables/ism_votes?limit=10000');
+                
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        alert('ℹ️ No voting data exists yet. Nothing to clear.');
+                        return;
+                    }
+                    throw new Error(`Failed to fetch voting responses: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const allVotes = data.data || [];
+                
+                // Filter for this project
+                const projectVotes = allVotes.filter(v => v.project_id === projectId);
+                
+                console.log(`📊 Found ${projectVotes.length} voting responses for this project`);
+                
+                if (projectVotes.length === 0) {
+                    alert('ℹ️ No voting data found for this project. Nothing to clear.');
+                    return;
+                }
+                
+                // Delete each vote
+                let deletedCount = 0;
+                for (const vote of projectVotes) {
+                    try {
+                        const deleteResponse = await fetch(`tables/ism_votes/${vote.id}`, {
+                            method: 'DELETE'
+                        });
+                        if (deleteResponse.ok) {
+                            deletedCount++;
+                        }
+                    } catch (error) {
+                        console.error('❌ Failed to delete vote:', vote.id, error);
+                    }
+                }
+                
+                console.log(`✅ Deleted ${deletedCount} voting responses`);
+                
+                alert(
+                    `✅ SUCCESS!\n\n` +
+                    `Deleted ${deletedCount} old voting responses.\n\n` +
+                    `The page will now reload.\n\n` +
+                    `Participants can now vote again with the new factors.`
+                );
+                
+                // Reload page
+                location.reload();
+                
+            } catch (error) {
+                console.error('❌ Error clearing voting data:', error);
+                alert(`❌ ERROR!\n\n${error.message}\n\nCheck console (F12) for details.`);
+            }
+        }
+        
+        // Calculate aggregate influence scores from voting responses
+        function calculateAggregateScores(factors, votes) {
+            // Create influence score map for each factor
+            const factorScores = factors.map((factor, index) => {
+                // Get all votes where this factor is the "from" factor
+                const outgoingVotes = votes.filter(v => v.from_factor_index === index);
+                
+                // Get all votes where this factor is the "to" factor
+                const incomingVotes = votes.filter(v => v.to_factor_index === index);
+                
+                // Calculate influence score (outgoing - incoming)
+                const outgoingCount = outgoingVotes.filter(v => v.vote_value === 5).length;
+                const incomingCount = incomingVotes.filter(v => v.vote_value === 5).length;
+                const influenceScore = outgoingCount - incomingCount;
+                
+                // Calculate stats across all participants
+                const participantIds = [...new Set(votes.map(v => v.participant_id))];
+                const participantScores = participantIds.map(participantId => {
+                    const pOutgoing = votes.filter(v => v.participant_id === participantId && v.from_factor_index === index && v.vote_value === 5).length;
+                    const pIncoming = votes.filter(v => v.participant_id === participantId && v.to_factor_index === index && v.vote_value === 5).length;
+                    return pOutgoing - pIncoming;
+                });
+                
+                const avgINF = participantScores.length > 0 
+                    ? participantScores.reduce((sum, score) => sum + score, 0) / participantScores.length 
+                    : 0;
+                
+                const stdDev = participantScores.length > 0
+                    ? Math.sqrt(participantScores.reduce((sum, score) => sum + Math.pow(score - avgINF, 2), 0) / participantScores.length)
+                    : 0;
+                
+                const min = participantScores.length > 0 ? Math.min(...participantScores) : 0;
+                const max = participantScores.length > 0 ? Math.max(...participantScores) : 0;
+                
+                return {
+                    name: factor.name || factor.theme_name,
+                    avgINF: parseFloat(avgINF.toFixed(2)),
+                    stdDev: parseFloat(stdDev.toFixed(2)),
+                    min: min,
+                    max: max,
+                    stage: 'General' // Can be enhanced later
+                };
+            });
+            
+            // Sort by average influence score (descending)
+            return factorScores.sort((a, b) => b.avgINF - a.avgINF);
+        }
+        
+        // LOAD AGGREGATE DATA
+        async function loadAggregateData() {
+            try {
+                // Get project ID from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const projectId = urlParams.get('project');
+                
+                if (!projectId) {
+                    throw new Error('No project ID provided');
+                }
+                
+                console.log('📊 Loading aggregate data for project:', projectId);
+                
+                // Load project data
+                const projectResponse = await fetch(`tables/projects/${projectId}`);
+                if (!projectResponse.ok) {
+                    throw new Error('Project not found');
+                }
+                const project = await projectResponse.json();
+                console.log('✅ Project loaded:', project.title);
+                
+                // Load factors for this project
+                const factorsResponse = await fetch(`tables/coded_themes?limit=1000`);
+                const factorsData = await factorsResponse.json();
+                const projectFactors = factorsData.data.filter(f => f.project_id === projectId);
+                console.log('✅ Loaded', projectFactors.length, 'factors');
+                
+                // Load all voting responses for this project
+                console.log('🔍 Fetching voting responses from: tables/ism_votes?limit=10000');
+                const votesResponse = await fetch(`tables/ism_votes?limit=10000`);
+                console.log('📊 Response status:', votesResponse.status, votesResponse.statusText);
+                
+                // Check if voting_responses table exists
+                if (!votesResponse.ok) {
+                    if (votesResponse.status === 422) {
+                        throw new Error('⚠️ No voting data has been saved yet. The aggregate metastructure will be available once participants complete their voting.\n\nℹ️ If you changed the factors and are seeing this error, you may need to clear old voting data. Go to Admin Portal → Metastructure tab → Click "Clear Old Voting Data" button.');
+                    }
+                    throw new Error(`Failed to load voting responses: ${votesResponse.status} ${votesResponse.statusText}`);
+                }
+                
+                const votesData = await votesResponse.json();
+                
+                // Check if response has valid data structure
+                if (!votesData || !Array.isArray(votesData.data)) {
+                    console.error('Invalid voting_responses structure:', votesData);
+                    throw new Error('Invalid voting responses data structure. The voting_responses table may be empty or not properly configured.');
+                }
+                
+                console.log('📊 Total voting responses in database:', votesData.data.length);
+                console.log('🔍 Looking for project_id:', projectId, '(type:', typeof projectId, ')');
+                
+                // Show sample of project IDs in the data
+                const uniqueProjectIds = [...new Set(votesData.data.map(v => v.project_id))];
+                console.log('📋 Unique project_ids in voting_responses:', uniqueProjectIds);
+                console.log('📋 Their types:', uniqueProjectIds.map(id => typeof id));
+                
+                const projectVotes = votesData.data.filter(v => {
+                    const matches = String(v.project_id) === String(projectId);
+                    if (!matches && votesData.data.length < 20) {
+                        console.log(`   ❌ Vote with project_id="${v.project_id}" (${typeof v.project_id}) doesn't match "${projectId}" (${typeof projectId})`);
+                    }
+                    return matches;
+                });
+                console.log('✅ Loaded', projectVotes.length, 'voting responses for this project');
+                
+                // Calculate unique participant count
+                const uniqueParticipants = new Set(projectVotes.map(v => v.participant_id));
+                const participantCount = uniqueParticipants.size;
+                console.log('👥 Unique participants:', participantCount);
+                
+                // Update participant count display
+                const participantCountSpan = document.getElementById('participant-count');
+                if (participantCountSpan) {
+                    if (participantCount === 0) {
+                        participantCountSpan.textContent = 'No';
+                    } else if (participantCount === 1) {
+                        participantCountSpan.textContent = '1 participant has';
+                        document.getElementById('participant-count-display').innerHTML = 
+                            '<i class="fas fa-user"></i> <span id="participant-count">1 participant has</span> completed this project';
+                    } else {
+                        participantCountSpan.textContent = participantCount;
+                    }
+                }
+                
+                // Check if we have enough data
+                if (projectFactors.length === 0) {
+                    throw new Error('No factors found for this project. Please add factors in the admin portal first.');
+                }
+                
+                if (projectVotes.length === 0) {
+                    throw new Error('No voting data available yet. The aggregate metastructure will be available once participants complete their voting.');
+                }
+                
+                // Calculate aggregate influence scores
+                const aggregateScores = calculateAggregateScores(projectFactors, projectVotes);
+                
+                // Format data for display
+                const formattedData = {
+                    factors: aggregateScores.map((factor, index) => ({
+                        rank: index + 1,
+                        name: factor.name,
+                        stage: factor.stage || 'General',
+                        avgINF: factor.avgINF,
+                        stdDev: factor.stdDev,
+                        min: factor.min,
+                        max: factor.max
+                    }))
+                };
+                
+                aggregateData = formattedData;
+                displayScoresTable(formattedData);
+                
+                // Show themed builder
+                document.getElementById('themedBuilderSection').classList.remove('hidden');
+                initializeThemedBuilder();
+                
+            } catch (error) {
+                console.error('Error loading aggregate data:', error);
+                
+                // Show detailed error message
+                const errorMessage = error.message || 'Unknown error occurred';
+                document.getElementById('loading').innerHTML = `
+                    <div style="padding: 2rem; text-align: center;">
+                        <p style="color: #DC2626; font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem;">❌ Error Loading Aggregate Data</p>
+                        <p style="color: #4B5563; margin-bottom: 1.5rem;">${errorMessage}</p>
+                        <button onclick="location.reload()" style="background: #0B2B26; color: #FAF3DD; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 1rem;">
+                            <i class="fas fa-sync"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // DISPLAY SCORES TABLE
+        function displayScoresTable(data) {
+            const tbody = document.getElementById('scoresTableBody');
+            tbody.innerHTML = '';
+            
+            data.factors.forEach(factor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${factor.rank}</td>
+                    <td class="factor-name">${factor.name}</td>
+                    <td><span class="stage-badge">${factor.stage}</span></td>
+                    <td>${factor.avgINF.toFixed(2)}</td>
+                    <td>${factor.stdDev.toFixed(2)}</td>
+                    <td>${factor.min.toFixed(2)}</td>
+                    <td>${factor.max.toFixed(2)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Show table, hide loading
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('scoresTable').classList.remove('hidden');
+        }
+        
+        // INITIALIZE INFOGRAPHIC SECTION
+        function initializeInfographicSection() {
+            const selectorDiv = document.getElementById('styleSelector');
+            selectorDiv.innerHTML = '';
+            
+            infographicStyles.forEach(style => {
+                const card = document.createElement('div');
+                card.className = 'style-card';
+                card.dataset.styleId = style.id;
+                card.addEventListener('click', () => selectStyle(style.id));
+                card.innerHTML = `
+                    <h3>${style.icon} ${style.name}</h3>
+                    <p>${style.description}</p>
+                    <div class="style-preview">${style.icon}</div>
+                `;
+                selectorDiv.appendChild(card);
+            });
+            
+            // Attach button event listeners
+            // Old infographic code removed - themed builder is now used
+        }
+        
+        // SELECT INFOGRAPHIC STYLE
+        function selectStyle(styleId) {
+            selectedStyle = infographicStyles.find(s => s.id === styleId);
+            
+            // Update UI
+            document.querySelectorAll('.style-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.style-card').classList.add('selected');
+            
+            // Show factor pool
+            initializeFactorPool();
+            
+            // Generate infographic canvas
+            generateInfographicCanvas();
+        }
+        
+        // INITIALIZE FACTOR POOL
+        function initializeFactorPool() {
+            const poolDiv = document.getElementById('factorChips');
+            poolDiv.innerHTML = '';
+            
+            aggregateData.factors.forEach(factor => {
+                const chip = document.createElement('div');
+                chip.className = 'factor-chip';
+                chip.draggable = true;
+                chip.dataset.factorName = factor.name;
+                chip.dataset.avgInf = factor.avgINF;
+                chip.innerHTML = `<strong>${factor.name}</strong> (INF: ${factor.avgINF.toFixed(2)})`;
+                
+                // Drag events
+                chip.addEventListener('dragstart', handleDragStart);
+                chip.addEventListener('dragend', handleDragEnd);
+                
+                poolDiv.appendChild(chip);
+            });
+            
+            document.getElementById('factorPool').classList.remove('hidden');
+        }
+        
+        // GENERATE INFOGRAPHIC CANVAS
+        function generateInfographicCanvas() {
+            const canvas = document.getElementById('infographicCanvas');
+            canvas.innerHTML = '';
+            
+            // Create drop zones based on selected style
+            selectedStyle.sectionNames.forEach((sectionName, index) => {
+                const dropZone = document.createElement('div');
+                dropZone.className = 'drop-zone';
+                dropZone.dataset.section = index;
+                dropZone.innerHTML = `
+                    <h4>${sectionName}</h4>
+                    <div class="dropped-factors"></div>
+                `;
+                
+                // Drop events
+                dropZone.addEventListener('dragover', handleDragOver);
+                dropZone.addEventListener('dragleave', handleDragLeave);
+                dropZone.addEventListener('drop', handleDrop);
+                
+                canvas.appendChild(dropZone);
+            });
+            
+            canvas.classList.remove('hidden');
+            document.getElementById('actionButtons').classList.remove('hidden');
+        }
+        
+        // DRAG AND DROP HANDLERS
+        function handleDragStart(e) {
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', e.target.dataset.factorName);
+        }
+        
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+        
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            e.target.closest('.drop-zone').classList.add('drag-over');
+            return false;
+        }
+        
+        function handleDragLeave(e) {
+            e.target.closest('.drop-zone').classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            const factorName = e.dataTransfer.getData('text/plain');
+            const dropZone = e.target.closest('.drop-zone');
+            dropZone.classList.remove('drag-over');
+            
+            // Find the dragged element
+            const draggedElement = document.querySelector(`.factor-chip[data-factor-name="${factorName}"]`);
+            
+            // Add to drop zone
+            const droppedFactorsDiv = dropZone.querySelector('.dropped-factors');
+            droppedFactorsDiv.appendChild(draggedElement);
+            
+            // Remove draggable property (it's now placed)
+            draggedElement.draggable = false;
+            draggedElement.style.cursor = 'default';
+            
+            return false;
+        }
+        
+        // RESET INFOGRAPHIC
+        function resetInfographic() {
+            selectedStyle = null;
+            document.querySelectorAll('.style-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('factorPool').classList.add('hidden');
+            document.getElementById('infographicCanvas').classList.add('hidden');
+            document.getElementById('actionButtons').classList.add('hidden');
+        }
+        
+        // SHOW PREVIEW MODAL
+        function showPreview() {
+            // Generate styled infographic for preview
+            const styledInfographic = generateStyledInfographic();
+            
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'preview-modal';
+            modal.innerHTML = `
+                <div class="preview-content">
+                    <div class="preview-header">
+                        <h2>🎨 Infographic Preview</h2>
+                        <button class="preview-close">✕ Close</button>
+                    </div>
+                    <div class="preview-body"></div>
+                    <div class="preview-footer">
+                        <button class="btn btn-secondary preview-edit">✏️ Edit More</button>
+                        <button class="btn preview-export">📥 Export This</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add styled infographic to preview
+            modal.querySelector('.preview-body').appendChild(styledInfographic);
+            
+            // Event listeners
+            modal.querySelector('.preview-close').addEventListener('click', () => modal.remove());
+            modal.querySelector('.preview-edit').addEventListener('click', () => modal.remove());
+            modal.querySelector('.preview-export').addEventListener('click', () => {
+                modal.remove();
+                exportInfographic();
+            });
+            
+            // Close on background click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+            
+            document.body.appendChild(modal);
+        }
+        
+        // GENERATE THEME NAME FROM FACTORS
+        function generateThemeName(factors) {
+            if (factors.length === 0) return 'Theme';
+            
+            // Extract keywords from factor names
+            const keywords = factors.map(f => {
+                const name = f.dataset.factorName.toLowerCase();
+                // Return first significant word
+                const words = name.split(' ');
+                return words[0];
+            });
+            
+            // Simple thematic grouping logic
+            const hasLeadership = keywords.some(k => k.includes('lead') || k.includes('manage'));
+            const hasCulture = keywords.some(k => k.includes('culture') || k.includes('climate'));
+            const hasStrategy = keywords.some(k => k.includes('strateg') || k.includes('plan'));
+            const hasPeople = keywords.some(k => k.includes('people') || k.includes('workforce') || k.includes('diversity'));
+            const hasSupport = keywords.some(k => k.includes('support') || k.includes('empathy') || k.includes('inclusion'));
+            
+            if (hasLeadership) return 'Leadership & Management';
+            if (hasCulture) return 'Organizational Culture';
+            if (hasStrategy) return 'Strategic Planning';
+            if (hasPeople) return 'People & Workforce';
+            if (hasSupport) return 'Support & Inclusion';
+            
+            return 'Core Factors';
+        }
+        
+        // GENERATE STYLED INFOGRAPHIC FOR EXPORT
+        function generateStyledInfographic() {
+            // Collect all sections with factors
+            const sections = [];
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach((zone, index) => {
+                const factors = Array.from(zone.querySelectorAll('.factor-chip'));
+                if (factors.length > 0) {
+                    const themeName = generateThemeName(factors);
+                    sections.push({
+                        index,
+                        themeName,
+                        factors: factors.map(f => ({
+                            name: f.dataset.factorName,
+                            inf: parseFloat(f.dataset.avgInf)
+                        }))
+                    });
+                }
+            });
+            
+            // Route to appropriate layout generator
+            switch(selectedStyle.layout) {
+                case 'circular':
+                    return generateCyclicalLayout(sections);
+                case 'horizontal':
+                    return generateAcronymLayout(sections);
+                case 'sequential':
+                    return generateActionStepsLayout(sections);
+                case 'structured':
+                    return generateAcademicLayout(sections);
+                default:
+                    return generateCyclicalLayout(sections);
+            }
+        }
+        
+        // 1. CYCLICAL LAYOUT (Circular flow with arrows)
+        function generateCyclicalLayout(sections) {
+            const container = document.createElement('div');
+            container.style.cssText = 'width: 1000px; height: 1000px; background: white; position: relative; font-family: "Arial", sans-serif;';
+            
+            const centerX = 500;
+            const centerY = 500;
+            const radius = 320;
+            const angleStep = (2 * Math.PI) / sections.length;
+            
+            // SVG for arrows
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '1000');
+            svg.setAttribute('height', '1000');
+            svg.style.position = 'absolute';
+            svg.style.top = '0';
+            svg.style.left = '0';
+            
+            // Arrowhead marker
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+            marker.setAttribute('id', 'arrowhead');
+            marker.setAttribute('markerWidth', '8');
+            marker.setAttribute('markerHeight', '8');
+            marker.setAttribute('refX', '7');
+            marker.setAttribute('refY', '4');
+            marker.setAttribute('orient', 'auto');
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('points', '0 0, 8 4, 0 8');
+            polygon.setAttribute('fill', '#666');
+            marker.appendChild(polygon);
+            defs.appendChild(marker);
+            svg.appendChild(defs);
+            
+            // Draw arrows between nodes
+            sections.forEach((section, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                const nextAngle = ((i + 1) % sections.length) * angleStep - Math.PI / 2;
+                
+                const x1 = centerX + radius * Math.cos(angle);
+                const y1 = centerY + radius * Math.sin(angle);
+                const x2 = centerX + radius * Math.cos(nextAngle);
+                const y2 = centerY + radius * Math.sin(nextAngle);
+                
+                const controlX = centerX + (radius + 100) * Math.cos((angle + nextAngle) / 2);
+                const controlY = centerY + (radius + 100) * Math.sin((angle + nextAngle) / 2);
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${x1} ${y1} Q ${controlX} ${controlY} ${x2} ${y2}`);
+                path.setAttribute('stroke', '#666');
+                path.setAttribute('stroke-width', '5');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('marker-end', 'url(#arrowhead)');
+                svg.appendChild(path);
+            });
+            
+            container.appendChild(svg);
+            
+            // Create circular nodes
+            sections.forEach((section, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                
+                const node = document.createElement('div');
+                node.style.cssText = `
+                    position: absolute;
+                    left: ${x - 90}px;
+                    top: ${y - 90}px;
+                    width: 180px;
+                    height: 180px;
+                    border-radius: 50%;
+                    background: ${i % 2 === 0 ? '#2c3e50' : '#7f8c8d'};
+                    border: 4px solid white;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                `;
+                
+                node.innerHTML = `
+                    <div style="color: white; font-size: 14px; font-weight: bold; margin-bottom: 8px;">${section.themeName}</div>
+                    <div style="color: white; font-size: 10px; line-height: 1.3;">
+                        ${section.factors.map(f => f.name).join(', ')}
+                    </div>
+                `;
+                
+                container.appendChild(node);
+            });
+            
+            return container;
+        }
+        
+        // 2. ACRONYM LAYOUT (Horizontal timeline like SWOT)
+        function generateAcronymLayout(sections) {
+            const container = document.createElement('div');
+            container.style.cssText = 'width: 1200px; min-height: 500px; background: white; padding: 40px; font-family: "Arial", sans-serif;';
+            
+            // Title
+            const title = document.createElement('div');
+            title.style.cssText = 'text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 40px; color: #2c3e50;';
+            title.textContent = 'Metastructure Framework';
+            container.appendChild(title);
+            
+            // Horizontal timeline bar
+            const timelineContainer = document.createElement('div');
+            timelineContainer.style.cssText = 'position: relative; margin: 0 60px 60px 60px;';
+            
+            const timeline = document.createElement('div');
+            timeline.style.cssText = `
+                height: 8px;
+                background: ${sections.map((s, i) => {
+                    const color = i % 2 === 0 ? '#17a2b8' : '#ff8c42';
+                    const start = (i / sections.length) * 100;
+                    const end = ((i + 1) / sections.length) * 100;
+                    return `${color} ${start}%, ${color} ${end}%`;
+                }).join(', ')};
+                border-radius: 4px;
+            `;
+            timelineContainer.appendChild(timeline);
+            container.appendChild(timelineContainer);
+            
+            // Letter circles
+            const circlesContainer = document.createElement('div');
+            circlesContainer.style.cssText = 'display: flex; justify-content: space-between; position: relative; margin-top: -50px; padding: 0 40px;';
+            
+            sections.forEach((section, i) => {
+                const acronymLetter = section.themeName.charAt(0).toUpperCase();
+                const color = i % 2 === 0 ? '#17a2b8' : '#ff8c42';
+                
+                const circleWrapper = document.createElement('div');
+                circleWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; align-items: center; max-width: 220px;';
+                
+                // Circle
+                const circle = document.createElement('div');
+                circle.style.cssText = `
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    background: ${color};
+                    border: 5px solid white;
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 48px;
+                    font-weight: bold;
+                    color: white;
+                    margin-bottom: 20px;
+                `;
+                circle.textContent = acronymLetter;
+                
+                // Theme name
+                const themeName = document.createElement('div');
+                themeName.style.cssText = 'font-size: 15px; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 12px;';
+                themeName.textContent = section.themeName;
+                
+                // Factors list
+                const factorsList = document.createElement('div');
+                factorsList.style.cssText = 'font-size: 11px; color: #555; text-align: center; line-height: 1.5;';
+                factorsList.innerHTML = section.factors.map(f => `• ${f.name}<br><span style="color: #999;">[INF: ${f.inf.toFixed(2)}]</span>`).join('<br>');
+                
+                circleWrapper.appendChild(circle);
+                circleWrapper.appendChild(themeName);
+                circleWrapper.appendChild(factorsList);
+                circlesContainer.appendChild(circleWrapper);
+            });
+            
+            container.appendChild(circlesContainer);
+            return container;
+        }
+        
+        // 3. ACTION STEPS LAYOUT (Sequential arrows like SOAR)
+        function generateActionStepsLayout(sections) {
+            const container = document.createElement('div');
+            container.style.cssText = 'width: 1400px; min-height: 500px; background: white; padding: 40px; font-family: "Arial", sans-serif;';
+            
+            // Title
+            const title = document.createElement('div');
+            title.style.cssText = 'text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 50px; color: #2c3e50;';
+            title.textContent = 'Sequential Implementation Framework';
+            container.appendChild(title);
+            
+            const stepsContainer = document.createElement('div');
+            stepsContainer.style.cssText = 'display: flex; align-items: flex-start; justify-content: center; gap: 20px;';
+            
+            const colors = ['#2c3e50', '#17a2b8', '#ff8c42', '#f4a460'];
+            
+            sections.forEach((section, i) => {
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText = 'display: flex; align-items: center; gap: 20px;';
+                
+                // Step wrapper
+                const stepWrapper = document.createElement('div');
+                stepWrapper.style.cssText = 'flex: 1; display: flex; flex-direction: column; align-items: center; max-width: 250px;';
+                
+                // Circle with letter
+                const circle = document.createElement('div');
+                circle.style.cssText = `
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%;
+                    background: ${colors[i % colors.length]};
+                    border: 5px solid white;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 48px;
+                    font-weight: bold;
+                    color: white;
+                    margin-bottom: 20px;
+                `;
+                circle.textContent = section.themeName.charAt(0).toUpperCase();
+                
+                // Theme name
+                const themeName = document.createElement('div');
+                themeName.style.cssText = 'font-size: 16px; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 12px;';
+                themeName.textContent = section.themeName;
+                
+                // Factors
+                const factorsList = document.createElement('div');
+                factorsList.style.cssText = 'font-size: 11px; color: #555; text-align: center; line-height: 1.6;';
+                factorsList.innerHTML = section.factors.map(f => `• ${f.name}<br><span style="color: #999;">[INF: ${f.inf.toFixed(2)}]</span>`).join('<br>');
+                
+                stepWrapper.appendChild(circle);
+                stepWrapper.appendChild(themeName);
+                stepWrapper.appendChild(factorsList);
+                wrapper.appendChild(stepWrapper);
+                
+                // Arrow between steps (pointing RIGHT)
+                if (i < sections.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.style.cssText = `
+                        width: 0;
+                        height: 0;
+                        border-top: 20px solid transparent;
+                        border-bottom: 20px solid transparent;
+                        border-left: 30px solid ${colors[(i + 1) % colors.length]};
+                        margin-top: -80px;
+                    `;
+                    wrapper.appendChild(arrow);
+                }
+                
+                stepsContainer.appendChild(wrapper);
+            });
+            
+            container.appendChild(stepsContainer);
+            return container;
+        }
+        
+        // 4. ACADEMIC LAYOUT (Structured themes with detailed factors)
+        function generateAcademicLayout(sections) {
+            const container = document.createElement('div');
+            container.style.cssText = 'width: 1400px; min-height: 600px; background: white; padding: 40px; font-family: "Times New Roman", serif;';
+            
+            // Title
+            const title = document.createElement('div');
+            title.style.cssText = 'text-align: center; font-size: 20px; font-weight: normal; margin-bottom: 10px; color: #000; font-style: italic;';
+            title.textContent = 'Figure: Thematic Analysis of Influence Patterns';
+            container.appendChild(title);
+            
+            // Theme boxes container
+            const themesContainer = document.createElement('div');
+            themesContainer.style.cssText = 'display: flex; gap: 0; margin: 30px 0; border: 2px solid #000;';
+            
+            sections.forEach((section, i) => {
+                const themeBox = document.createElement('div');
+                themeBox.style.cssText = `
+                    flex: 1;
+                    border-right: ${i < sections.length - 1 ? '2px solid #000' : 'none'};
+                    padding: 15px;
+                    background: white;
+                    min-height: 300px;
+                `;
+                
+                // Header
+                const header = document.createElement('div');
+                header.style.cssText = 'font-size: 13px; font-weight: bold; text-align: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #000;';
+                header.textContent = `Theme ${i + 1}`;
+                
+                // Theme name
+                const themeName = document.createElement('div');
+                themeName.style.cssText = 'font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 8px; color: #000;';
+                themeName.textContent = section.themeName;
+                
+                // INF score summary
+                const avgINF = section.factors.reduce((sum, f) => sum + f.inf, 0) / section.factors.length;
+                const infScore = document.createElement('div');
+                infScore.style.cssText = 'font-size: 11px; text-align: center; margin-bottom: 12px; color: #666;';
+                infScore.textContent = `INF = ${avgINF.toFixed(2)}`;
+                
+                // Factors list
+                const factorsList = document.createElement('ul');
+                factorsList.style.cssText = 'margin: 0; padding-left: 18px; font-size: 10px; line-height: 1.6;';
+                section.factors.forEach(f => {
+                    const li = document.createElement('li');
+                    li.textContent = `${f.name} [INF = ${f.inf.toFixed(2)}]`;
+                    factorsList.appendChild(li);
+                });
+                
+                themeBox.appendChild(header);
+                themeBox.appendChild(themeName);
+                themeBox.appendChild(infScore);
+                themeBox.appendChild(factorsList);
+                themesContainer.appendChild(themeBox);
+            });
+            
+            container.appendChild(themesContainer);
+            
+            // Flow arrow pointing RIGHT only
+            const flowArrow = document.createElement('div');
+            flowArrow.style.cssText = 'text-align: center; font-size: 12px; color: #666; margin-top: 15px; position: relative;';
+            flowArrow.innerHTML = '<span style="position: absolute; left: 50%; transform: translateX(-50%);">Flow of Perceived Support →</span>';
+            container.appendChild(flowArrow);
+            
+            return container;
+        }
+        
+        // EXPORT INFOGRAPHIC AS PNG
+        async function exportInfographic() {
+            const styleName = selectedStyle ? selectedStyle.name.replace(/\s+/g, '-').toLowerCase() : 'infographic';
+            
+            // Generate styled infographic
+            const styledInfographic = generateStyledInfographic();
+            
+            // Temporarily add to body for rendering
+            styledInfographic.style.position = 'absolute';
+            styledInfographic.style.left = '-9999px';
+            document.body.appendChild(styledInfographic);
+            
+            try {
+                // Convert to canvas using html2canvas
+                const canvas = await html2canvas(styledInfographic, {
+                    backgroundColor: '#0B2B26',
+                    scale: 2, // Higher quality
+                    logging: false,
+                    useCORS: true
+                });
+                
+                // Convert to blob and download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = `${styleName}-metastructure-${Date.now()}.png`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    // Show success message
+                    alert('✅ Infographic exported successfully!\n\nCheck your Downloads folder.');
+                }, 'image/png');
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('❌ Export failed. Please try again or take a screenshot.');
+            } finally {
+                // Remove temporary element
+                document.body.removeChild(styledInfographic);
+            }
+        }
+        
+        // ====================================================================
+        // THEMED METASTRUCTURE BUILDER - v6.27.0
+        // ====================================================================
+        
+        let themesData = [];
+        let currentThemeCount = 5;
+        
+        // Initialize themed builder
+        function initializeThemedBuilder() {
+            console.log('🎨 Initializing Themed Metastructure Builder...');
+            loadThemedBuilderFromStorage();
+            updateThemeCount();
+            makeDraggableFromTable();
+        }
+        
+        // Load themed builder state from localStorage
+        function loadThemedBuilderFromStorage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('project');
+            
+            if (!projectId) return;
+            
+            const storageKey = `themed_builder_${projectId}`;
+            const savedData = localStorage.getItem(storageKey);
+            
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    if (parsed.themesData && Array.isArray(parsed.themesData)) {
+                        themesData = parsed.themesData;
+                        currentThemeCount = parsed.currentThemeCount || themesData.length;
+                        console.log('✅ Loaded themed builder from localStorage');
+                        return true;
+                    }
+                } catch (e) {
+                    console.error('Error loading themed builder from storage:', e);
+                }
+            }
+            return false;
+        }
+        
+        // Save themed builder state to localStorage
+        function saveThemedBuilderToStorage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('project');
+            
+            if (!projectId) return;
+            
+            const storageKey = `themed_builder_${projectId}`;
+            const dataToSave = {
+                themesData: themesData,
+                currentThemeCount: currentThemeCount,
+                savedAt: Date.now()
+            };
+            
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+                console.log('✅ Saved themed builder to localStorage');
+            } catch (e) {
+                console.error('Error saving themed builder to storage:', e);
+            }
+        }
+        
+        // Update theme count
+        function updateThemeCount() {
+            // If themesData already loaded from storage, just render it
+            if (themesData && themesData.length > 0) {
+                document.getElementById('themeCount').value = currentThemeCount;
+                renderThemeColumns();
+                return;
+            }
+            
+            // Otherwise, initialize fresh
+            const count = parseInt(document.getElementById('themeCount').value);
+            currentThemeCount = Math.max(3, Math.min(6, count));
+            document.getElementById('themeCount').value = currentThemeCount;
+            
+            // Initialize themes data
+            themesData = [];
+            const defaultNames = ['Driver Themes', 'Linkage Themes', 'Dependent Themes', 'Outcome Themes', 'Additional Themes', 'Extra Themes'];
+            
+            for (let i = 0; i < currentThemeCount; i++) {
+                themesData.push({
+                    id: i,
+                    name: defaultNames[i] || `Theme ${i + 1}`,
+                    showScores: true,
+                    factors: []
+                });
+            }
+            
+            renderThemeColumns();
+        }
+        
+        // Render theme columns
+        function renderThemeColumns() {
+            const container = document.getElementById('themesContainer');
+            container.innerHTML = '';
+            
+            themesData.forEach((theme, index) => {
+                const column = document.createElement('div');
+                column.className = 'theme-column';
+                column.dataset.themeId = theme.id;
+                
+                column.innerHTML = `
+                    <div class="theme-header">
+                        <input type="text" 
+                               class="theme-title-input" 
+                               value="${theme.name}"
+                               placeholder="Theme Name"
+                               onchange="updateThemeName(${theme.id}, this.value)">
+                        <div class="theme-options">
+                            <label>
+                                <input type="checkbox" 
+                                       ${theme.showScores ? 'checked' : ''}
+                                       onchange="toggleThemeScores(${theme.id}, this.checked)">
+                                Show Scores
+                            </label>
+                        </div>
+                    </div>
+                    <div class="theme-factors" 
+                         data-theme-id="${theme.id}"
+                         ondragover="handleThemeDragOver(event)"
+                         ondragleave="handleThemeDragLeave(event)"
+                         ondrop="handleThemeDrop(event)">
+                        ${theme.factors.length === 0 ? '<div class="theme-empty">Drag factors here</div>' : ''}
+                    </div>
+                `;
+                
+                container.appendChild(column);
+                
+                // Render factors in this theme
+                theme.factors.forEach(factor => {
+                    renderFactorInTheme(theme.id, factor);
+                });
+            });
+        }
+        
+        // Update theme name
+        function updateThemeName(themeId, newName) {
+            const theme = themesData.find(t => t.id === themeId);
+            if (theme) {
+                theme.name = newName;
+                saveThemedBuilderToStorage();
+            }
+        }
+        
+        // Toggle theme scores visibility
+        function toggleThemeScores(themeId, show) {
+            const theme = themesData.find(t => t.id === themeId);
+            if (theme) {
+                theme.showScores = show;
+                renderThemeColumns();
+                saveThemedBuilderToStorage();
+            }
+        }
+        
+        // Make table rows draggable
+        function makeDraggableFromTable() {
+            const tableRows = document.querySelectorAll('#scoresTable tbody tr');
+            tableRows.forEach(row => {
+                row.draggable = true;
+                row.style.cursor = 'move';
+                
+                row.addEventListener('dragstart', (e) => {
+                    const factorName = row.cells[0].textContent.trim();
+                    const factor = aggregateData.factors.find(f => f.name === factorName);
+                    
+                    if (!factor) {
+                        console.error('Factor not found:', factorName);
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    console.log('Dragging factor:', factor);
+                    e.dataTransfer.effectAllowed = 'copy';
+                    e.dataTransfer.setData('application/json', JSON.stringify(factor));
+                    e.dataTransfer.setData('text/plain', factorName); // Fallback
+                    row.style.opacity = '0.5';
+                });
+                
+                row.addEventListener('dragend', (e) => {
+                    row.style.opacity = '1';
+                });
+            });
+        }
+        
+        // Theme drag handlers
+        function handleThemeDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'copy';
+            e.currentTarget.classList.add('drag-over');
+        }
+        
+        function handleThemeDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        
+        function handleThemeDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const themeId = parseInt(e.currentTarget.dataset.themeId);
+            const theme = themesData.find(t => t.id === themeId);
+            
+            if (!theme) return;
+            
+            try {
+                let factor = null;
+                const jsonData = e.dataTransfer.getData('application/json');
+                
+                // Try to parse JSON data
+                if (jsonData && jsonData !== 'undefined') {
+                    try {
+                        factor = JSON.parse(jsonData);
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                    }
+                }
+                
+                // Fallback: try to get factor from text/plain
+                if (!factor) {
+                    const factorName = e.dataTransfer.getData('text/plain');
+                    if (factorName) {
+                        factor = aggregateData.factors.find(f => f.name === factorName.trim());
+                        console.log('Using fallback text/plain method, found factor:', factor);
+                    }
+                }
+                
+                // Validate factor object
+                if (!factor || !factor.name) {
+                    console.error('Invalid factor data:', factor);
+                    alert('Unable to add factor. Please try again.');
+                    return;
+                }
+                
+                // Check if factor already exists in this theme
+                if (theme.factors.some(f => f.name === factor.name)) {
+                    alert('This factor is already in this theme!');
+                    return;
+                }
+                
+                // Add factor to theme
+                theme.factors.push(factor);
+                console.log('✅ Factor added to theme:', factor.name);
+                renderThemeColumns();
+                saveThemedBuilderToStorage();
+                
+            } catch (error) {
+                console.error('Drop error:', error);
+                alert('Error adding factor. Please try again.');
+            }
+        }
+        
+        // Render factor in theme
+        function renderFactorInTheme(themeId, factor) {
+            const themeFactorsDiv = document.querySelector(`.theme-factors[data-theme-id="${themeId}"]`);
+            if (!themeFactorsDiv) return;
+            
+            // Remove empty message
+            const emptyMsg = themeFactorsDiv.querySelector('.theme-empty');
+            if (emptyMsg) emptyMsg.remove();
+            
+            const theme = themesData.find(t => t.id === themeId);
+            
+            const factorDiv = document.createElement('div');
+            factorDiv.className = 'theme-factor-item';
+            factorDiv.draggable = true;
+            factorDiv.dataset.factorName = factor.name;
+            
+            const scoresHTML = theme && theme.showScores ? `
+                <div class="factor-item-scores">
+                    <span>POS: ${factor.avgPOS.toFixed(1)}</span>
+                    <span>ACT: ${factor.avgACT.toFixed(1)}</span>
+                    <span>INF: ${factor.avgINF.toFixed(1)}</span>
+                </div>
+            ` : '';
+            
+            factorDiv.innerHTML = `
+                <div class="factor-item-header">
+                    <div class="factor-item-name">${factor.name}</div>
+                    <button class="factor-item-remove" onclick="removeFactorFromTheme(${themeId}, '${factor.name.replace(/'/g, "\\'")}')">×</button>
+                </div>
+                ${scoresHTML}
+            `;
+            
+            // Drag to reorder within themes
+            factorDiv.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('application/json', JSON.stringify({ factor, fromThemeId: themeId }));
+                factorDiv.classList.add('dragging');
+            });
+            
+            factorDiv.addEventListener('dragend', (e) => {
+                factorDiv.classList.remove('dragging');
+            });
+            
+            themeFactorsDiv.appendChild(factorDiv);
+        }
+        
+        // Remove factor from theme
+        function removeFactorFromTheme(themeId, factorName) {
+            const theme = themesData.find(t => t.id === themeId);
+            if (theme) {
+                theme.factors = theme.factors.filter(f => f.name !== factorName);
+                renderThemeColumns();
+                saveThemedBuilderToStorage();
+            }
+        }
+        
+        // Clear all themes
+        function clearAllThemes() {
+            if (confirm('Clear all factors from all themes?')) {
+                themesData.forEach(theme => {
+                    theme.factors = [];
+                });
+                renderThemeColumns();
+                saveThemedBuilderToStorage();
+            }
+        }
+        
+        // Generate themed preview
+        function generateThemedPreview() {
+            console.log('🎨 Generating themed preview...');
+            
+            // Validate: at least one theme must have factors
+            const hasFactors = themesData.some(theme => theme.factors.length > 0);
+            if (!hasFactors) {
+                alert('Please add at least one factor to a theme before generating preview!');
+                return;
+            }
+            
+            const previewSection = document.getElementById('themedPreviewSection');
+            const canvas = document.getElementById('themedPreviewCanvas');
+            
+            // Build preview HTML
+            const previewHTML = `
+                <div class="themed-metastructure-display" id="themedMetastructureDisplay">
+                    <div class="themed-header">
+                        <h2>Aggregate Metastructure - Thematic View</h2>
+                        <p>${projectData.title || 'ISM Project'}</p>
+                    </div>
+                    
+                    <div class="themed-columns">
+                        ${themesData.map(theme => {
+                            if (theme.factors.length === 0) return '';
+                            
+                            return `
+                                <div class="themed-column">
+                                    <div class="themed-column-header">
+                                        <h3>${theme.name}</h3>
+                                    </div>
+                                    <div class="themed-column-factors">
+                                        ${theme.factors.map(factor => `
+                                            <div class="themed-factor-box">
+                                                <div class="themed-factor-name">${factor.name}</div>
+                                                ${theme.showScores ? `
+                                                    <div class="themed-factor-scores">
+                                                        <span><strong>POS:</strong> ${factor.avgPOS.toFixed(1)}</span>
+                                                        <span><strong>ACT:</strong> ${factor.avgACT.toFixed(1)}</span>
+                                                        <span><strong>INF:</strong> ${factor.avgINF.toFixed(1)}</span>
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
+                    <div class="themed-footer">
+                        <p>Generated by ISM Platform v6.27.0 | ${new Date().toLocaleDateString()}</p>
+                    </div>
+                </div>
+            `;
+            
+            canvas.innerHTML = previewHTML + `
+                <style>
+                    .themed-metastructure-display {
+                        background: white;
+                        padding: 40px;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                    }
+                    
+                    .themed-header {
+                        text-align: center;
+                        margin-bottom: 40px;
+                        border-bottom: 3px solid #0B2B26;
+                        padding-bottom: 20px;
+                    }
+                    
+                    .themed-header h2 {
+                        color: #0B2B26;
+                        font-size: 28px;
+                        margin: 0 0 10px 0;
+                    }
+                    
+                    .themed-header p {
+                        color: #666;
+                        font-size: 16px;
+                        margin: 0;
+                    }
+                    
+                    .themed-columns {
+                        display: flex;
+                        gap: 30px;
+                        justify-content: center;
+                        margin-bottom: 30px;
+                    }
+                    
+                    .themed-column {
+                        flex: 1;
+                        min-width: 200px;
+                        max-width: 280px;
+                    }
+                    
+                    .themed-column-header {
+                        background: #0B2B26;
+                        color: #FAF3DD;
+                        padding: 15px;
+                        border-radius: 8px 8px 0 0;
+                        text-align: center;
+                    }
+                    
+                    .themed-column-header h3 {
+                        margin: 0;
+                        font-size: 18px;
+                        font-weight: 700;
+                    }
+                    
+                    .themed-column-factors {
+                        border: 3px solid #0B2B26;
+                        border-top: none;
+                        border-radius: 0 0 8px 8px;
+                        padding: 15px;
+                        background: #fafafa;
+                        min-height: 150px;
+                    }
+                    
+                    .themed-factor-box {
+                        background: white;
+                        border: 2px solid #0B2B26;
+                        border-radius: 6px;
+                        padding: 12px;
+                        margin-bottom: 12px;
+                    }
+                    
+                    .themed-factor-box:last-child {
+                        margin-bottom: 0;
+                    }
+                    
+                    .themed-factor-name {
+                        font-weight: 600;
+                        color: #0B2B26;
+                        margin-bottom: 8px;
+                        font-size: 14px;
+                    }
+                    
+                    .themed-factor-scores {
+                        display: flex;
+                        gap: 8px;
+                        font-size: 11px;
+                        color: #666;
+                        flex-wrap: wrap;
+                    }
+                    
+                    .themed-factor-scores span {
+                        background: #f0f0f0;
+                        padding: 3px 8px;
+                        border-radius: 3px;
+                    }
+                    
+                    .themed-footer {
+                        text-align: center;
+                        color: #999;
+                        font-size: 12px;
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 2px solid #e0e0e0;
+                    }
+                    
+                    .themed-footer p {
+                        margin: 0;
+                    }
+                </style>
+            `;
+            
+            previewSection.classList.remove('hidden');
+            previewSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Download themed metastructure as PNG
+        async function downloadThemedMetastructure() {
+            const displayElement = document.getElementById('themedMetastructureDisplay');
+            
+            if (!displayElement) {
+                alert('Please generate a preview first!');
+                return;
+            }
+            
+            try {
+                console.log('📸 Capturing themed metastructure...');
+                
+                const canvas = await html2canvas(displayElement, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    useCORS: true
+                });
+                
+                // Convert to blob and download
+                canvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `Themed_Metastructure_${Date.now()}.png`;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    
+                    console.log('✅ Themed metastructure downloaded!');
+                });
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Error generating download. Please try again.');
+            }
+        }
+        
+        // ====================================================================
+        // END THEMED METASTRUCTURE BUILDER
+        // ====================================================================
+        
+        // CACHE BUSTING - Force reload on version change
+        const CURRENT_VERSION = 'v6.27.0-DRAG-FIX';
+        const CACHED_VERSION = localStorage.getItem('metastructure_version');
+        
+        if (CACHED_VERSION !== CURRENT_VERSION) {
+            console.log(`🔄 Version changed from ${CACHED_VERSION} to ${CURRENT_VERSION} - Clearing cache`);
+            localStorage.setItem('metastructure_version', CURRENT_VERSION);
+            // Force hard reload
+            if (CACHED_VERSION) {
+                console.log('🔄 Hard reloading page to clear cache...');
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

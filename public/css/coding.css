@@ -1,0 +1,315 @@
+/* Coding & Theme Generation Styles */
+
+/* Theme Number Selector */
+.theme-number-selector {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.theme-num-btn {
+    padding: 0.75rem 1.25rem;
+    background: var(--light-tan);
+    border: 2px solid var(--border-color);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--forest-green);
+    transition: all 0.2s ease;
+}
+
+.theme-num-btn:hover {
+    background: var(--primary-tan);
+    border-color: var(--forest-green);
+    transform: translateY(-2px);
+}
+
+.theme-num-btn.active {
+    background: var(--deep-red);
+    color: var(--white);
+    border-color: var(--deep-red);
+}
+
+/* Theme List Container */
+.themes-sortable {
+    min-height: 200px;
+}
+
+/* Individual Theme Item */
+.theme-item {
+    background: var(--light-tan);
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+    cursor: move;
+}
+
+.theme-item:hover {
+    border-color: var(--forest-green);
+    box-shadow: 0 4px 12px rgba(11, 43, 38, 0.1);
+}
+
+.theme-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.theme-item.drag-over {
+    border-color: var(--deep-red);
+    border-style: dashed;
+    background: var(--primary-tan);
+}
+
+/* Theme Header */
+.theme-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.theme-drag-handle {
+    font-size: 1.5rem;
+    color: var(--text-gray);
+    cursor: grab;
+    padding: 0.5rem;
+}
+
+.theme-drag-handle:active {
+    cursor: grabbing;
+}
+
+.theme-rank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: var(--deep-red);
+    color: var(--white);
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.theme-title-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.theme-title {
+    flex: 1;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--forest-green);
+}
+
+.theme-title input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.theme-frequency {
+    background: var(--forest-green);
+    color: var(--white);
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.theme-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.theme-action-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-gray);
+    font-size: 1.125rem;
+    transition: color 0.2s ease;
+}
+
+.theme-action-btn:hover {
+    color: var(--deep-red);
+}
+
+.theme-action-btn.delete:hover {
+    color: #3E0505;
+}
+
+/* Theme Details */
+.theme-details {
+    display: none;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.theme-details.expanded {
+    display: block;
+}
+
+.theme-codes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.code-label {
+    background: var(--white);
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border-left: 3px solid var(--deep-red);
+}
+
+.code-label strong {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-gray);
+    margin-bottom: 0.25rem;
+}
+
+.code-label span {
+    font-size: 0.95rem;
+    color: var(--forest-green);
+}
+
+.theme-keywords {
+    margin-bottom: 1rem;
+}
+
+.keyword-tag {
+    display: inline-block;
+    background: var(--forest-green);
+    color: var(--white);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8125rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.theme-related-ideas {
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 0.375rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.related-idea-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--forest-green);
+}
+
+.related-idea-item:last-child {
+    border-bottom: none;
+}
+
+.related-idea-participant {
+    color: var(--text-gray);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Empty State */
+.themes-empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-gray);
+}
+
+.themes-empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+/* Buttons */
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Drag Animations */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.theme-item.just-dropped {
+    animation: shake 0.3s ease;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .theme-number-selector {
+        flex-wrap: wrap;
+    }
+    
+    .theme-num-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .theme-header {
+        flex-wrap: wrap;
+    }
+    
+    .theme-codes {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading State */
+.themes-loading {
+    text-align: center;
+    padding: 3rem;
+}
+
+.themes-loading i {
+    font-size: 3rem;
+    color: var(--deep-red);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Success State */
+.theme-save-success {
+    background: #FAF3DD;
+    border: 1px solid #0B2B26;
+    color: #0B2B26;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.theme-save-success i {
+    font-size: 1.5rem;
+}

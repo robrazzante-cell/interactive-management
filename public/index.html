@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Management Platform</title>
+    <link rel="stylesheet" href="css/style.css?v=1.0.0">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script>window._skipAnonymousAuth = true;</script>
+    <script src="js/firebase-init.js?v=1.0.0"></script>
+    <script src="js/firestore-api-adapter.js?v=1.0.0"></script>
+</head>
+<body>
+    <div class="landing-container">
+        <header class="landing-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <span style="font-family: 'Merriweather', serif; font-size: 1.8rem; font-weight: 700; color: #FAF3DD;">Interactive Management Platform</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Interpretive Structural Modeling</h1>
+                <p class="hero-subtitle">An open-source platform for collaborative decision-making and organizational planning</p>
+                <div class="hero-actions">
+                    <button class="btn btn-secondary btn-large" onclick="showParticipantAccess()">
+                        <i class="fas fa-users"></i> Participant Access
+                    </button>
+                    <button class="btn btn-secondary btn-large" onclick="showAdminLogin()">
+                        <i class="fas fa-user-shield"></i> Administrator Login
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="features-container">
+                <h3>How It Works</h3>
+                <p class="section-subtitle">A proven methodology for turning group input into structured action plans</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-number">1</div>
+                        <i class="fas fa-lightbulb"></i>
+                        <h4>Generate Ideas</h4>
+                        <p>Gather perspectives from participants using structured idea generation around a triggering question.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">2</div>
+                        <i class="fas fa-project-diagram"></i>
+                        <h4>Structure Relationships</h4>
+                        <p>Use pairwise voting to determine how ideas relate to each other through Interpretive Structural Modeling.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">3</div>
+                        <i class="fas fa-sitemap"></i>
+                        <h4>Visualize Results</h4>
+                        <p>Generate hierarchical flowcharts showing priority levels and relationships between factors.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="landing-footer" style="background: var(--forest-green); color: white; padding: 1.5rem 0; margin-top: 2rem;">
+            <div style="max-width: 1200px; margin: 0 auto; text-align: center; padding: 0 2rem;">
+                <p style="font-size: 0.85rem; opacity: 0.8;">Interactive Management Platform &mdash; Open Source (MIT License)</p>
+                <p style="font-size: 0.75rem; opacity: 0.6; margin-top: 0.5rem;">Based on Interpretive Structural Modeling (Warfield, 1974)</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3>Administrator Login</h3>
+                <button class="close-btn" onclick="closeModal('admin-login-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="adminLogin(event)">
+                    <div class="form-section">
+                        <label for="admin-email">Email Address</label>
+                        <input type="email" id="admin-email" required placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-section">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participant Access Modal -->
+    <div id="participant-access-modal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3>Participant Access</h3>
+                <button class="close-btn" onclick="closeModal('participant-access-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="participantAccess(event)">
+                    <div class="form-section">
+                        <label for="access-code">Access Token</label>
+                        <input type="text" id="access-code" required placeholder="Enter your unique access token" style="text-transform: uppercase;">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-arrow-right"></i> Access Portal
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js?v=1.0.0"></script>
+    <script src="js/landing.js?v=1.0.0"></script>
+</body>
+</html>

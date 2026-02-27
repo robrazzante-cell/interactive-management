@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon-light.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+    <title>Public Participant Portal - Interactive Management Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --forest-green: #0B2B26;
+            --primary-tan: #FAF3DD;
+            --burgundy: #3E0505;
+            --warm-cream: #FFF8DC;
+            --light-tan: #F5E6D3;
+        }
+        
+        body {
+            background: var(--primary-tan);
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Admin-Style Header - Consistent Branding */
+        .app-header {
+            background: var(--forest-green);
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        /* Organization Logo - Centered */
+        .org-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            max-height: 60px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+        
+        .logo-divider {
+            width: 2px;
+            height: 40px;
+            background: var(--primary-tan);
+            opacity: 0.3;
+        }
+        
+        .logo-img {
+            height: 50px;
+            object-fit: contain;
+        }
+        
+        .header-subtitle {
+            color: var(--primary-tan);
+            font-size: 0.9rem;
+            margin: 0.25rem 0 0 0;
+            font-weight: 600;
+        }
+        
+        .participant-name {
+            color: var(--primary-tan);
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Tab Navigation - Exact Admin Style */
+        .tab-navigation {
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 0;
+        }
+        
+        .tab-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #718096;
+            font-weight: 600;
+            font-family: 'Open Sans', sans-serif;
+            border-bottom: 3px solid transparent;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            color: var(--forest-green);
+            background: var(--light-tan);
+        }
+        
+        .tab-button:active {
+            transform: scale(0.98);
+            background: rgba(250, 243, 221, 0.6);
+        }
+        
+        .tab-button.active {
+            color: var(--burgundy);
+            border-bottom-color: var(--burgundy);
+            background: var(--light-tan);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--forest-green) 0%, #174038 100%);
+            padding: 1.25rem 1.25rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-content h2 {
+            font-family: 'Merriweather', serif;
+            font-size: 2.5rem;
+            margin: 0 0 0.75rem 0;
+            color: var(--primary-tan);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: rgba(250, 243, 221, 0.9);
+            margin: 0;
+        }
+        
+        /* Main Container */
+        .landing-container {
+            min-height: 100vh;
+        }
+        
+        .features-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.25rem 1.25rem;
+        }
+        
+        .features-container {
+            width: 100%;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Task Cards - Clean Design */
+        .task-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .task-card.completed {
+            border-color: #27ae60;
+            background: #f0f9f4;
+        }
+        
+        .task-card.locked {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        /* Locked Overlay */
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            z-index: 10;
+        }
+        
+        .locked-overlay i {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        
+        .locked-overlay h4 {
+            color: var(--forest-green);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+        }
+        
+        .locked-overlay p {
+            color: #666;
+            margin: 0;
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .task-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .task-title h3 {
+            color: var(--forest-green);
+            margin: 0;
+            font-family: 'Merriweather', serif;
+            font-size: 1.5rem;
+        }
+        
+        .task-title i {
+            font-size: 2rem;
+            color: var(--forest-green);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .status-badge.completed {
+            background: #e8f5e9;
+            color: var(--forest-green);
+        }
+        
+        .status-badge.completed .fa-circle {
+            color: var(--forest-green);
+        }
+        
+        .status-badge.pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .status-badge.in-progress {
+            background: #F5E6D3;
+            color: var(--forest-green);
+        }
+        
+        .status-badge.locked {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        /* Action Buttons */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--forest-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .action-button:hover {
+            background: #174038;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .action-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .action-button.secondary {
+            background: white;
+            color: var(--forest-green);
+            border: 2px solid var(--forest-green);
+        }
+        
+        .action-button.secondary:hover {
+            background: var(--primary-tan);
+        }
+        
+        .action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Info Boxes */
+        .info-box {
+            background: #F5E6D3;
+            border-left: 4px solid var(--forest-green);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .info-box h3 {
+            color: var(--forest-green);
+            margin: 0 0 0.75rem 0;
+            font-size: 1.3rem;
+        }
+        
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+            margin: 0.5rem 0;
+        }
+        
+        .info-box ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .info-box li {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Public Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: var(--forest-green);
+        }
+        
+        .project-card:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        
+        .project-card h4 {
+            color: var(--forest-green);
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+        
+        .project-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        /* Completion Stats */
+        .completion-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--primary-tan);
+            border-radius: 8px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forest-green);
+        }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 43, 38, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--forest-green);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast.success {
+            background: #27ae60;
+        }
+        
+        .toast.error {
+            background: #c0392b;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Trigger Box */
+        .trigger-box {
+            background: var(--light-tan);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--forest-green);
+        }
+        
+        .trigger-box h4 {
+            color: var(--forest-green);
+            margin: 0 0 0.75rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .trigger-box p {
+            color: #333;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        /* Preview Mode Banner */
+        .preview-banner {
+            background: #f97316;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .tab-navigation {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                flex: 1;
+                min-width: 150px;
+                justify-content: center;
+            }
+
+            .hero-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .header-content {
+                padding: 0 0.75rem;
+            }
+
+            .logo-section {
+                gap: 0.75rem;
+            }
+
+            .logo-img {
+                height: 36px;
+            }
+
+            .org-logo {
+                max-height: 40px;
+                max-width: 120px;
+            }
+
+            .features-section {
+                padding: 1rem;
+            }
+
+            .action-button {
+                min-height: 48px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .task-title h3 {
+                font-size: 1.2rem;
+            }
+
+            .info-box {
+                padding: 1rem;
+            }
+
+            .info-box h3 {
+                font-size: 1.1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .completion-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h2 {
+                font-size: 1.25rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .task-card {
+                padding: 1rem;
+            }
+
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .status-badge {
+                font-size: 0.8rem;
+            }
+
+            .locked-overlay h4 {
+                font-size: 1.2rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <!-- Firebase SDK (auto-injected by sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260205"></script>
+    <script src="js/firestore-api-adapter.js?v=20260205"></script>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div>
+            <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <p>Loading your portal...</p>
+        </div>
+    </div>
+
+    <div class="landing-container">
+        <!-- Header - Admin Style -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <span style="font-family: 'Merriweather', serif; font-size: 1.1rem; font-weight: 700; color: #FAF3DD;">Interactive Management</span>
+                    <div class="logo-divider"></div>
+                    <p class="header-subtitle" id="portal-subtitle" style="margin: 0; font-size: 1.1rem;">Participant Portal</p>
+                </div>
+                
+                <!-- Organization Logo - Centered -->
+                <img id="org-logo" class="org-logo" alt="Organization" style="display: none;">
+                <div class="participant-name" id="participant-name-display">
+                    <i class="fas fa-user"></i>
+                    <span id="participant-name">Participant</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Tab Navigation -->
+        <nav class="tab-navigation">
+            <div style="max-width: 1400px; margin: 0 auto; display: flex; padding: 0 1.5rem; overflow-x: auto;">
+                <button class="tab-button active" onclick="switchTab('public-projects')">
+                    <i class="fas fa-globe"></i> Public Projects
+                </button>
+                <button class="tab-button" onclick="switchTab('about-ism')">
+                    <i class="fas fa-info-circle"></i> About Collective Intelligence
+                </button>
+            </div>
+        </nav>
+
+        <!-- Project Info Banner -->
+        <div style="background: linear-gradient(135deg, var(--forest-green) 0%, #174038 100%); padding: 1rem 1.5rem; text-align: center; color: white;">
+            <h2 id="portal-title" style="margin: 0; font-family: 'Merriweather', serif; font-size: 1.8rem; color: var(--primary-tan);">Public ISM Projects</h2>
+        </div>
+
+        <!-- Main Content -->
+        <section class="features-section">
+            <div class="features-container">
+                
+                <!-- OVERVIEW TAB - HIDDEN FOR PUBLIC PORTAL -->
+                <div id="overview-tab" class="tab-content" style="display: none;">
+                    
+                    <!-- Organization Objectives Box -->
+                    <div class="info-box" style="margin-bottom: 2rem;">
+                        <h3><i class="fas fa-lightbulb"></i> <span id="organization-objectives-title">Organization Objectives</span></h3>
+                        <p id="organization-objectives-overview">Loading organization objectives...</p>
+                    </div>
+                    
+                    <!-- Task 1: Idea Generation -->
+                    <div class="task-card" id="idea-task-card">
+                        <div class="task-header">
+                            <div class="task-title">
+                                <i class="fas fa-lightbulb"></i>
+                                <h3>Task 1: Idea Generation</h3>
+                            </div>
+                            <span class="status-badge pending" id="idea-status-badge">
+                                <i class="fas fa-circle"></i> Not Started
+                            </span>
+                        </div>
+                        
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Share your thoughts and ideas in response to the research question.
+                        </p>
+                        
+                        <!-- Research Question Display -->
+                        <div class="trigger-box" id="trigger-box" style="background: #FFF8DC; border-left: 4px solid var(--forest-green); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--forest-green); margin: 0 0 0.75rem 0; font-size: 1.1rem;">Research Question:</h4>
+                            <p id="trigger-question" style="color: #2d3748; font-size: 1.05rem; margin: 0; font-weight: 500;"></p>
+                        </div>
+                        
+                        <!-- Submitted Ideas Summary -->
+                        <div id="submitted-ideas-summary" style="display: none;">
+                            <div class="completion-stats">
+                                <div class="stat-item">
+                                    <div class="stat-label">Ideas Submitted</div>
+                                    <div class="stat-value" id="ideas-count">0</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Completed On</div>
+                                    <div class="stat-value" id="ideas-date">-</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="action-button" onclick="openIdeaGeneration()" id="start-ideas-btn">
+                            <i class="fas fa-pen"></i> Start Task
+                        </button>
+                    </div>
+
+                    <!-- Task 2: ISM Voting -->
+                    <div class="task-card" id="voting-task-card" style="position: relative;">
+                        <!-- Locked Overlay (shown when voting is locked) -->
+                        <div class="locked-overlay" id="voting-locked-overlay">
+                            <i class="fas fa-lock"></i>
+                            <h4>Voting Locked</h4>
+                            <p>This voting task is currently locked by the administrator. You will be notified when it becomes available.</p>
+                        </div>
+                        
+                        <div class="task-header">
+                            <div class="task-title">
+                                <i class="fas fa-vote-yea"></i>
+                                <h3>Task 2: ISM Voting</h3>
+                            </div>
+                            <span class="status-badge locked" id="voting-status-badge">
+                                <i class="fas fa-lock"></i> Locked
+                            </span>
+                        </div>
+                        
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Participate in structured voting to map influence relationships between factors.
+                        </p>
+                        
+                        <div id="voting-completion-summary" style="display: none;">
+                            <div class="completion-stats">
+                                <div class="stat-item">
+                                    <div class="stat-label">Factors Evaluated</div>
+                                    <div class="stat-value" id="factors-count">0</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Levels Identified</div>
+                                    <div class="stat-value" id="levels-count">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="action-button" onclick="openVoting()" id="start-voting-btn" style="display: none;">
+                            <i class="fas fa-vote-yea"></i> Start Voting
+                        </button>
+                    </div>
+                    
+                </div>
+                
+                <!-- PUBLIC PROJECTS TAB -->
+                <div id="public-projects-tab" class="tab-content active">
+                    <div class="info-box">
+                        <h3><i class="fas fa-globe"></i> Public ISM Projects</h3>
+                        <p>Explore and participate in public ISM research projects. These projects are open to all participants and provide great practice for the ISM methodology.</p>
+                    </div>
+                    
+                    <div class="projects-grid" id="public-projects-grid">
+                        <!-- Projects loaded dynamically -->
+                        <p style="color: #666; text-align: center; padding: 1.25rem;">Loading public projects...</p>
+                    </div>
+                </div>
+                
+                <!-- ABOUT ISM TAB -->
+                <div id="about-ism-tab" class="tab-content">
+                    <div class="info-box" style="background: #FFF8DC; border-left-color: #0B2B26;">
+                        <h3><i class="fas fa-brain"></i> About Collective Intelligence</h3>
+                        <p>Collective Intelligence is a methodology that harnesses the wisdom and insights of groups to solve complex problems and make better decisions together.</p>
+                        <p style="margin-top: 1rem; padding: 0.75rem; background: rgba(11, 43, 38, 0.05); border-radius: 6px; font-style: italic;"><strong>Methodology Development:</strong> The Collective Intelligence research methodology (formally called Interactive Management Research) was developed by John Warfield and adapted by <a href="https://www.linkedin.com/in/rob-razzante-phd-a105a459/" target="_blank" style="color: var(--forest-green); text-decoration: underline; font-weight: 600;">Rob Razzante</a> and colleagues.</p>
+                        <p><strong>How it helps achieve organizational goals:</strong></p>
+                        <ul>
+                            <li><strong>Diverse Perspectives:</strong> Brings together multiple viewpoints to identify comprehensive solutions</li>
+                            <li><strong>Structured Analysis:</strong> Uses systematic methods like ISM to organize and prioritize ideas</li>
+                            <li><strong>Democratic Participation:</strong> Ensures all voices are heard and valued in the decision-making process</li>
+                            <li><strong>Evidence-Based Results:</strong> Generates data-driven insights that guide strategic actions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-box" style="background: #FAF3DD; border-left-color: #3E0505;">
+                        <h3><i class="fas fa-sitemap"></i> Collective Intelligence Methodology</h3>
+                        <p><strong>Interactive Management Research uses an open-source computer-based algorithm, Interpretive Structural Modeling (ISM; Warfield, 1976), for mapping complex relationships between ideas and factors.</strong></p>
+                        
+                        <p style="margin-top: 1rem;"><strong>The Modified Collective Intelligence Methodology:</strong></p>
+                        <ul>
+                            <li><strong>Step 1: Idea Generation</strong> - Participants share ideas and clarifications in response to a guiding question (e.g., which human and organizational characteristics build a culture of innovation?)</li>
+                            <li><strong>Step 2: Coding & Factors</strong> - Ideas are analyzed and grouped into key factors (themes)</li>
+                            <li><strong>Step 3: Rank-Order Factors</strong> - Factors are then rank-ordered to identify the top 8-15 factors</li>
+                            <li><strong>Step 4: Structuring Factors</strong> - Participants use ISM to vote on the relationships between the factors, creating a visual map that shows which factors drive others according to the perceptions of the individual participant or group of stakeholders</li>
+                            <li><strong>Step 5: Analysis</strong> - Results guide decision-making and strategic planning</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><strong>What to expect in ISM Voting:</strong></p>
+                        <ul>
+                            <li>You'll review a pair of factors and decide if one influences the other ("Does Factor A significantly support Factor B?")</li>
+                            <li>Voting is simple: Vote using a simple Likert scale from 1-5</li>
+                            <li>Your input creates a visual "map" of factor relationships</li>
+                            <li>The process typically takes 20-30 minutes if done individually and up to several days if done in a group</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 8px; border: 2px solid #3E0505;">
+                            <strong><i class="fas fa-graduation-cap"></i> Want to practice?</strong><br>
+                            We encourage you to participate in one of our <strong>Public ISM Projects</strong> (go to the Public Projects tab) to get comfortable with the voting process before your main project begins!
+                        </p>
+                        
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: #f9f9f9; border-radius: 8px; font-size: 0.9rem; color: #666;">
+                            <h4 style="color: var(--forest-green); margin-bottom: 0.5rem; font-size: 1rem;">References:</h4>
+                            <p style="margin: 0.5rem 0;">Razzante, R., Hogan, M., Broome, B., Tracy, S. J., Chawla, D., & Skurzak, D. (2023). Interactive management research in organizational communication. <em>Management Communication Quarterly, 37</em>(4), 971-984. DOI: 10.1177/08933189231159386</p>
+                            <p style="margin: 0.5rem 0;">Warfield, J. N. (1976). <em>Societal systems: Planning, policy and complexity.</em> New York, NY: Wiley.</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ==================== GLOBAL STATE ====================
+        let participantData = null;
+        let projectData = null;
+        let submittedIdeas = [];
+        let currentTab = 'overview';
+        let isPreviewMode = false;
+        
+        // ==================== INITIALIZATION ====================
+        async function initializePortal() {
+            try {
+                console.log('🌍 PUBLIC PORTAL MODE - No token required');
+                
+                // PUBLIC MODE: No participant or project data needed
+                // Just load public projects
+                
+                // Hide participant name
+                document.getElementById('participant-name').style.display = 'none';
+                
+                // Load public projects
+                loadPublicProjects();
+                
+                // Hide loading overlay
+                document.getElementById('loading-overlay').style.display = 'none';
+                
+                console.log('🎉 Public portal initialization complete');
+                
+            } catch (error) {
+                console.error('❌ Error loading portal:', error);
+                
+                let errorTitle = 'Error Loading Portal';
+                let errorMessage = error.message;
+                let helpText = 'Please contact your administrator for assistance.';
+                
+                // Customize message for missing token
+                if (error.message.includes('No access token')) {
+                    errorTitle = 'No Access Token Provided';
+                    errorMessage = 'This portal requires a valid access token to view.';
+                    helpText = `
+                        <strong>How to access this portal:</strong><br>
+                        • If you're a participant, use the link sent to you by email<br>
+                        • If you're an administrator, use the Preview button in the admin portal<br>
+                        • Access tokens are unique per participant and cannot be shared
+                    `;
+                }
+                
+                // Customize message for invalid token
+                if (error.message.includes('Invalid access token')) {
+                    errorTitle = 'Invalid Access Token';
+                    errorMessage = 'The access token provided is not valid or has expired.';
+                    helpText = `
+                        <strong>Possible reasons:</strong><br>
+                        • The participant may have been removed from the project<br>
+                        • The access token may have been regenerated<br>
+                        • Please contact your administrator to get a new access link
+                    `;
+                }
+                
+                document.getElementById('loading-overlay').innerHTML = `
+                    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                        <h2 style="color: white; margin-bottom: 1rem;">${errorTitle}</h2>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem; margin-bottom: 1.5rem;">${errorMessage}</p>
+                        <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; text-align: left;">
+                            <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; margin: 0;">${helpText}</p>
+                        </div>
+                        <a href="index.html" style="display: inline-block; margin-top: 1.25rem; padding: 0.75rem 1.5rem; background: var(--primary-tan); color: var(--forest-green); text-decoration: none; border-radius: 6px; font-weight: 600;">
+                            <i class="fas fa-home"></i> Return to Landing Page
+                        </a>
+                    </div>
+                `;
+            }
+        }
+        
+        // Update Portal UI with participant/project info
+        function updatePortalUI() {
+            if (!participantData || !projectData) return;
+            
+            // Update participant name in header
+            document.getElementById('participant-name').textContent = participantData.name || 'Participant';
+            
+            // Update portal title with project name
+            document.getElementById('portal-title').textContent = projectData.project_name || 'Collective Intelligence Initiative';
+            
+            // Load organization logo if available - centered in header
+            const logoUrl = projectData.company_logo || projectData.logo_url || projectData.logo || projectData.organization_logo;
+            console.log('🔍 Project data for logo:', {
+                company_logo: projectData.company_logo,
+                logo_url: projectData.logo_url,
+                logo: projectData.logo,
+                organization_logo: projectData.organization_logo,
+                finalLogoUrl: logoUrl
+            });
+            
+            if (logoUrl && logoUrl.trim() !== '') {
+                const orgLogo = document.getElementById('org-logo');
+                
+                orgLogo.src = logoUrl;
+                orgLogo.alt = projectData.organization || 'Organization';
+                orgLogo.style.display = 'block';
+                orgLogo.onerror = function() {
+                    console.error('❌ Failed to load organization logo:', logoUrl);
+                    this.style.display = 'none';
+                };
+                orgLogo.onload = function() {
+                    console.log('✅ Organization logo loaded successfully:', logoUrl);
+                };
+            } else {
+                console.warn('⚠️ No organization logo URL found in project data');
+            }
+            
+            // Update organization objectives in Overview tab
+            const objectivesText = projectData.objectives || 
+                                   projectData.organization_objectives || 
+                                   projectData.research_objectives || 
+                                   'No objectives specified for this project.';
+            document.getElementById('organization-objectives-overview').textContent = objectivesText;
+            
+            // Update Overview tab name dynamically
+            const orgName = projectData.organization || 'Organization';
+            
+            // Update objectives title with organization name
+            document.getElementById('organization-objectives-title').textContent = `${orgName} Objectives`;
+            const projectTopic = projectData.title || '';
+            
+            // Create tab name: "Organization_Topic" or just "Organization" if no topic
+            let tabName = orgName;
+            if (projectTopic && projectTopic !== orgName) {
+                // Extract key topic words (first 2-3 meaningful words)
+                const topicWords = projectTopic.replace(orgName, '').trim();
+                if (topicWords) {
+                    tabName = `${orgName}_${topicWords}`;
+                }
+            }
+            
+            // Update tab button text
+            document.getElementById('overview-tab-name').textContent = tabName;
+            
+            // Update trigger question - always visible
+            if (projectData.trigger_question) {
+                document.getElementById('trigger-question').textContent = projectData.trigger_question;
+            }
+        }
+        
+        // Load existing ideas
+        async function loadExistingIdeas() {
+            try {
+                const response = await fetch(`tables/idea_responses?limit=1000`);
+                const data = await response.json();
+                
+                // Filter ideas for this participant
+                submittedIdeas = data.data.filter(idea => 
+                    idea.participant_id === participantData.id && 
+                    idea.project_id === participantData.project_id
+                );
+                
+                console.log('💡 Loaded', submittedIdeas.length, 'submitted ideas');
+            } catch (error) {
+                console.error('Error loading ideas:', error);
+                submittedIdeas = [];
+            }
+        }
+        
+        // Update task status based on data
+        function updateTaskStatus() {
+            // Task 1: Idea Generation
+            const ideaCard = document.getElementById('idea-task-card');
+            const ideaBadge = document.getElementById('idea-status-badge');
+            const startBtn = document.getElementById('start-ideas-btn');
+            const summaryDiv = document.getElementById('submitted-ideas-summary');
+            
+            if (submittedIdeas.length > 0) {
+                // Completed
+                ideaCard.classList.add('completed');
+                ideaBadge.innerHTML = '<i class="fas fa-circle"></i> Completed';
+                ideaBadge.className = 'status-badge completed';
+                startBtn.innerHTML = '<i class="fas fa-pen"></i> Add More Ideas';
+                
+                // Show summary
+                summaryDiv.style.display = 'block';
+                document.getElementById('ideas-count').textContent = submittedIdeas.length;
+                
+                const latestIdea = submittedIdeas.reduce((latest, idea) => 
+                    idea.created_at > latest.created_at ? idea : latest
+                );
+                document.getElementById('ideas-date').textContent = 
+                    new Date(latestIdea.created_at).toLocaleDateString();
+            } else {
+                // Not started
+                ideaBadge.innerHTML = '<i class="fas fa-circle"></i> Not Started';
+                ideaBadge.className = 'status-badge pending';
+                startBtn.innerHTML = '<i class="fas fa-pen"></i> Start Task';
+                summaryDiv.style.display = 'none';
+            }
+            
+            // Task 2: ISM Voting - Check if unlocked
+            const votingCard = document.getElementById('voting-task-card');
+            const votingBadge = document.getElementById('voting-status-badge');
+            const votingBtn = document.getElementById('start-voting-btn');
+            const votingOverlay = document.getElementById('voting-locked-overlay');
+            const votingSummary = document.getElementById('voting-completion-summary');
+            
+            // Check if voting is explicitly unlocked
+            const isVotingUnlocked = participantData.voting_unlocked === true || 
+                                     projectData.voting_unlocked === true;
+            
+            console.log('🔐 Voting unlock status:', {
+                participant: participantData.voting_unlocked,
+                project: projectData.voting_unlocked,
+                isUnlocked: isVotingUnlocked
+            });
+            
+            // Check if voting is completed
+            const isVotingComplete = participantData.flowchart_completed && participantData.ism_completed;
+            
+            if (isVotingComplete) {
+                // Voting completed
+                votingCard.classList.add('completed');
+                votingBadge.innerHTML = '<i class="fas fa-circle"></i> Completed';
+                votingBadge.className = 'status-badge completed';
+                votingBtn.innerHTML = '<i class="fas fa-chart-network"></i> View Results';
+                votingBtn.style.display = 'block';
+                votingOverlay.style.display = 'none';
+                
+                // Show completion summary
+                votingSummary.style.display = 'block';
+                document.getElementById('factors-count').textContent = participantData.factors_evaluated || '0';
+                document.getElementById('levels-count').textContent = participantData.levels_identified || '0';
+
+                // Add certificate link (bottom-right of card, matching action-button style)
+                if (participantData.access_token) {
+                    const certBtn = document.createElement('a');
+                    certBtn.href = `certificate.html?token=${encodeURIComponent(participantData.access_token)}`;
+                    certBtn.className = 'action-button';
+                    certBtn.style.cssText = 'position: absolute; bottom: 1rem; right: 1rem; text-decoration: none; color: white;';
+                    certBtn.innerHTML = '<i class="fas fa-certificate"></i> View Certificate';
+                    votingCard.appendChild(certBtn);
+                }
+
+            } else if (isVotingUnlocked) {
+                // Voting unlocked and available
+                votingBadge.innerHTML = '<i class="fas fa-unlock"></i> Ready';
+                votingBadge.className = 'status-badge in-progress';
+                votingBtn.innerHTML = '<i class="fas fa-vote-yea"></i> Start Voting';
+                votingBtn.style.display = 'block';
+                votingOverlay.style.display = 'none';
+                votingSummary.style.display = 'none';
+                
+            } else {
+                // Voting locked (default state)
+                votingBadge.innerHTML = '<i class="fas fa-lock"></i> Locked';
+                votingBadge.className = 'status-badge locked';
+                votingBtn.style.display = 'none';
+                votingOverlay.style.display = 'flex';
+                votingSummary.style.display = 'none';
+            }
+        }
+        
+        // Load public projects
+        async function loadPublicProjects() {
+            try {
+                const response = await fetch('tables/projects?limit=1000');
+                const data = await response.json();
+                
+                // Filter for public projects (must have session_mode='public_project' AND not be untitled)
+                const publicProjects = data.data.filter(project => {
+                    const isPublicMode = project.session_mode === 'public_project';
+                    const title = project.title || project.project_name || '';
+                    const hasTitle = title.trim() !== '' && 
+                                    title.toLowerCase() !== 'untitled project' &&
+                                    title.toLowerCase() !== 'untitled';
+                    const isActive = project.status === 'active' || !project.status;
+                    
+                    return isPublicMode && hasTitle && isActive;
+                });
+                
+                console.log('🌍 Found', publicProjects.length, 'public projects');
+                
+                const grid = document.getElementById('public-projects-grid');
+                
+                if (publicProjects.length === 0) {
+                    grid.innerHTML = '<p style="color: #666; text-align: center; padding: 1.25rem;">No public projects available at this time.</p>';
+                    return;
+                }
+                
+                // Render project cards
+                grid.innerHTML = publicProjects.map(project => `
+                    <div class="project-card" onclick="openPublicProject('${project.id}')">
+                        <h4>${project.title || 'Untitled Project'}</h4>
+                        <p>${project.description || 'No description available'}</p>
+                        <div class="project-meta">
+                            <span><i class="fas fa-users"></i> ${project.participant_count || 0} participants</span>
+                            <span class="status-badge ${project.status === 'active' ? 'in-progress' : 'pending'}" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">
+                                ${project.status || 'Active'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading public projects:', error);
+                document.getElementById('public-projects-grid').innerHTML = 
+                    '<p style="color: #e74c3c; text-align: center; padding: 1.25rem;">Error loading public projects</p>';
+            }
+        }
+        
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tabName) {
+            console.log('📑 Switching to tab:', tabName);
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            currentTab = tabName;
+        }
+        
+        // ==================== TASK ACTIONS ====================
+        function openIdeaGeneration() {
+            if (!participantData || !projectData) {
+                showToast('Error: Portal data not loaded', 'error');
+                return;
+            }
+            
+            // Navigate to idea generation page in same tab
+            const ideaUrl = `participant.html?token=${participantData.access_token}`;
+            window.location.href = ideaUrl;
+        }
+        
+        function openVoting() {
+            if (!participantData || !projectData) {
+                showToast('Error: Portal data not loaded', 'error');
+                return;
+            }
+            
+            // Check if voting is unlocked
+            const isVotingUnlocked = participantData.voting_unlocked === true || 
+                                     projectData.voting_unlocked === true;
+            
+            if (!isVotingUnlocked) {
+                showToast('Voting is currently locked by the administrator', 'error');
+                return;
+            }
+            
+            // Navigate to voting page in same tab
+            const votingUrl = `participant-voting.html?token=${participantData.access_token}`;
+            window.location.href = votingUrl;
+        }
+        
+        function openPublicProject(projectId) {
+            console.log('🌍 Opening public project:', projectId);
+            showToast('Opening public project...', 'success');
+            
+            // Redirect to public voting page with project ID
+            window.location.href = `public-voting.html?project=${projectId}`;
+        }
+        
+        // ==================== UTILITY FUNCTIONS ====================
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // ==================== INIT ON LOAD ====================
+        window.addEventListener('DOMContentLoaded', initializePortal);
+    </script>
+
+    <footer style="background: #0B2B26; color: #FAF3DD; text-align: center; padding: 1rem; margin-top: 2rem; font-size: 0.8rem;">
+        Interactive Management Platform &mdash; Open Source (MIT License)
+    </footer>
+
+</body>
+</html>

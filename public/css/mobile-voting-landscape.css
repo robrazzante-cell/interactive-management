@@ -1,0 +1,378 @@
+/* ============================================
+   MOBILE ISM VOTING - LANDSCAPE OPTIMIZED
+   Forces horizontal orientation for better UX
+   ============================================ */
+
+/* Portrait mode is fully supported — no rotation warning needed */
+
+/* ============================================
+   MOBILE LANDSCAPE MODE - PRESERVE LAYOUT
+   ============================================ */
+@media screen and (max-width: 896px) and (orientation: landscape) {
+    /* Keep horizontal layout - DON'T stack vertically */
+    .ism-question-visual {
+        flex-direction: row !important;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem !important;
+    }
+    
+    /* Factor boxes - smaller but readable in landscape */
+    .ism-factor-box,
+    .factor-box {
+        width: 160px !important;
+        min-width: 160px !important;
+        max-width: 160px !important;
+        height: 90px !important;
+        min-height: 90px !important;
+        max-height: 90px !important;
+        padding: 0.75rem !important;
+    }
+    
+    .ism-factor-box-name,
+    .factor-box-name {
+        font-size: 0.85rem !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Arrow stays between factors */
+    .ism-arrow-container,
+    .arrow-container {
+        height: 90px;
+        flex-direction: column;
+    }
+    
+    .ism-arrow-icon,
+    .arrow-icon {
+        font-size: 1.2rem !important;
+        color: var(--primary-dark) !important;
+        font-weight: bold !important;
+    }
+    
+    .ism-relational-phrase-badge,
+    .relational-phrase-badge {
+        font-size: 0.7rem !important;
+        padding: 0 !important;
+    }
+    
+    /* Rating scale - HORIZONTAL ROW, larger touch targets */
+    .ism-rating-scale,
+    .rating-scale {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 1rem !important;
+        margin: 2rem 0 1rem 0 !important;
+        padding: 0 0.5rem;
+        flex-wrap: nowrap !important;
+    }
+    
+    .ism-rating-button,
+    .rating-button {
+        flex-direction: column !important;
+        align-items: center !important;
+        min-width: 60px !important;
+        max-width: 70px !important;
+        padding: 0.5rem 0.25rem !important;
+        flex: 0 0 auto !important;
+    }
+    
+    /* Larger bubbles for easier tapping */
+    .ism-rating-bubble,
+    .rating-bubble {
+        width: 36px !important;
+        height: 36px !important;
+        border-width: 3px !important;
+    }
+    
+    .ism-rating-button.selected .ism-rating-bubble::after,
+    .rating-button.selected .rating-bubble::after {
+        width: 16px !important;
+        height: 16px !important;
+    }
+    
+    .ism-rating-label,
+    .rating-label {
+        font-size: 0.75rem !important;
+        text-align: center;
+        max-width: 60px;
+        line-height: 1.2;
+    }
+    
+    /* Navigation buttons side-by-side */
+    .ism-navigation-buttons,
+    .navigation-buttons {
+        flex-direction: row !important;
+        gap: 0.75rem !important;
+    }
+    
+    .ism-btn,
+    .btn {
+        padding: 0.75rem 1rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    /* Compact header for landscape */
+    .header-content {
+        padding: 0 1rem !important;
+    }
+    
+    .org-logo {
+        max-height: 40px !important;
+    }
+    
+    .logo-text h1 {
+        font-size: 1rem !important;
+    }
+    
+    .logo-text p {
+        font-size: 0.75rem !important;
+    }
+    
+    /* Compact progress bar */
+    .ism-progress-container,
+    .progress-container {
+        padding: 0.5rem 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .ism-progress-info,
+    .progress-info {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .ism-progress-bar-container,
+    .progress-bar-container {
+        height: 16px !important;
+    }
+    
+    /* Compact voting card */
+    .ism-voting-card,
+    .voting-card {
+        padding: 1rem !important;
+    }
+    
+    .ism-question-number,
+    .question-number {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    /* Ground rules button */
+    #ground-rules-button-container {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .btn-info {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 1rem !important;
+    }
+}
+
+/* ============================================
+   MOBILE PORTRAIT MODE - OPTIMIZE STACKING
+   Keep rating scale HORIZONTAL even in portrait
+   ============================================ */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    /* Stack vertically in portrait */
+    .ism-question-visual {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+    
+    /* Full width factor boxes */
+    .ism-factor-box,
+    .factor-box {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+    }
+    
+    /* Arrow container - vertical with proper downward arrow */
+    .ism-arrow-container,
+    .arrow-container {
+        flex-direction: column !important;
+        height: auto !important;
+        width: 100% !important;
+        gap: 0.5rem !important;
+        align-items: center !important;
+    }
+    
+    /* Make arrow point downward - use triangular arrowhead like flowchart */
+    .ism-arrow-icon,
+    .arrow-icon {
+        font-size: 0 !important; /* Hide original arrow text */
+        position: relative;
+        width: 100%;
+        text-align: center;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .ism-arrow-icon::before,
+    .arrow-icon::before {
+        content: '▼' !important;
+        font-size: 2.5rem !important;
+        color: var(--primary-burgundy) !important;
+        display: block !important;
+        line-height: 1 !important;
+        transform: scaleY(0.6) !important; /* Make it a sharper triangle like flowchart */
+        font-weight: bold !important;
+    }
+    
+    /* Keep relational phrase horizontal */
+    .ism-relational-phrase-badge,
+    .relational-phrase-badge {
+        writing-mode: horizontal-tb !important;
+        text-align: center !important;
+        white-space: normal !important;
+        max-width: 200px !important;
+    }
+    
+    /* KEEP RATING SCALE HORIZONTAL in portrait too */
+    .ism-rating-scale,
+    .rating-scale {
+        flex-direction: row !important;
+        gap: 0.5rem !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 0.5rem !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+    }
+    
+    .ism-rating-button,
+    .rating-button {
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        padding: 0.75rem 0.25rem !important;
+        background: transparent !important;
+        border: none !important;
+        min-width: 60px !important;
+        max-width: 70px !important;
+        flex: 0 0 auto !important;
+    }
+    
+    .ism-rating-button:active,
+    .rating-button:active {
+        background: #f0f0f0 !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    .ism-rating-button.selected,
+    .rating-button.selected {
+        background: transparent !important;
+    }
+    
+    /* Larger bubbles for portrait */
+    .ism-rating-bubble,
+    .rating-bubble {
+        width: 36px !important;
+        height: 36px !important;
+        border-width: 3px !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .ism-rating-button.selected .ism-rating-bubble::after,
+    .rating-button.selected .rating-bubble::after {
+        width: 16px !important;
+        height: 16px !important;
+    }
+    
+    .ism-rating-label,
+    .rating-label {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        line-height: 1.2 !important;
+        max-width: 60px !important;
+        word-wrap: break-word !important;
+    }
+    
+    /* Stack navigation buttons */
+    .ism-navigation-buttons,
+    .navigation-buttons {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+    
+    .ism-btn,
+    .btn {
+        width: 100% !important;
+        padding: 1rem !important;
+        font-size: 1rem !important;
+        min-height: 50px !important; /* Large touch target */
+    }
+}
+
+/* ============================================
+   TABLET LANDSCAPE (iPad, etc)
+   ============================================ */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    /* Keep desktop-like layout but slightly smaller */
+    .ism-factor-box,
+    .factor-box {
+        width: 200px !important;
+        min-width: 200px !important;
+        max-width: 200px !important;
+        height: 100px !important;
+        min-height: 100px !important;
+        max-height: 100px !important;
+    }
+    
+    .ism-rating-scale,
+    .rating-scale {
+        gap: 1.5rem !important;
+    }
+    
+    .ism-rating-bubble,
+    .rating-bubble {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    
+    .ism-rating-button.selected .ism-rating-bubble::after,
+    .rating-button.selected .rating-bubble::after {
+        width: 14px !important;
+        height: 14px !important;
+    }
+}
+
+/* ============================================
+   IMPROVE TOUCH TARGETS FOR ALL MOBILE
+   ============================================ */
+@media (hover: none) and (pointer: coarse) {
+    /* This targets touch devices */
+    .ism-rating-button,
+    .rating-button {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(11, 43, 38, 0.1);
+    }
+    
+    .ism-btn,
+    .btn {
+        -webkit-tap-highlight-color: rgba(11, 43, 38, 0.2);
+        min-height: 48px; /* iOS accessibility guideline */
+    }
+    
+    /* Prevent zoom on input focus (iOS) */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* ============================================
+   SCREEN ROTATION TRANSITION
+   ============================================ */
+@media screen and (max-width: 896px) {
+    * {
+        transition: all 0.3s ease;
+    }
+}

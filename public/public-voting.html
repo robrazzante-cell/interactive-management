@@ -1,0 +1,3161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon-light.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+    <meta name="version" content="6.39.1-NO-POSITION-NUMBERS">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        // AGGRESSIVE CACHE BUSTING - v6.29.0
+        const EXPECTED_VERSION = 'v6.39.0-EXPORT-IMPORT-FINAL';
+        const EXPECTED_BUILD = '20251222-FINAL-SOLUTION';
+        
+        console.log('%c═══════════════════════════════════════════', 'color: #0B2B26; font-weight: bold;');
+        console.log(`%c📌 PUBLIC ISM VOTING v6.39.0 - EXPORT/IMPORT 💾`, 'color: white; font-size: 16px; font-weight: bold; background: #2563EB; padding: 5px 10px;');
+        console.log(`%c💾 Platform requires auth for DB writes - Export/Import is the solution!`, 'color: #2563EB; font-size: 14px; font-weight: bold;');
+        console.log(`%c✅ Build: ${EXPECTED_BUILD}`, 'color: #10B981; font-size: 14px; font-weight: bold;');
+        console.log('%c⚠️ If you see OLD STYLE (boxes/numbers), HARD REFRESH!', 'color: #DC2626; font-size: 14px; font-weight: bold;');
+        console.log('%c   Windows/Linux: Ctrl + Shift + R', 'color: #666; font-size: 12px;');
+        console.log('%c   Mac: Cmd + Shift + R', 'color: #666; font-size: 12px;');
+        console.log('%c═══════════════════════════════════════════', 'color: #0B2B26; font-weight: bold;');
+        
+        // Force clear old version cache
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+            });
+        }
+        
+        // Check localStorage for old version
+        const storedVersion = localStorage.getItem('public_ism_voting_version');
+        if (storedVersion && storedVersion !== EXPECTED_VERSION) {
+            console.log('%c🔄 OLD VERSION DETECTED IN CACHE - FORCING RELOAD!', 'color: #DC2626; font-size: 14px; font-weight: bold; background: #FEE2E2; padding: 5px;');
+            localStorage.setItem('public_ism_voting_version', EXPECTED_VERSION);
+            window.location.reload(true);
+        } else {
+            localStorage.setItem('public_ism_voting_version', EXPECTED_VERSION);
+        }
+    </script>
+    <title>ISM Voting - Interactive Management Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/ism-shared-styles.css?v=20260225">
+    <link rel="stylesheet" href="css/mobile-voting-landscape.css?v=6.29.0&t=20251221">
+    <link rel="stylesheet" href="css/ada-footer.css">
+    <!-- Bot Protection Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Brand Colors */
+        :root {
+            --primary-dark: #0B2B26;
+            --primary-cream: #FAF3DD;
+            --primary-burgundy: #3E0505;
+            --primary-warm-cream: #FFF8DC;
+            --primary-light-tan: #F5E6D3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #FAF3DD;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            flex: 1;
+        }
+        
+        /* Admin-Style Header */
+        .app-header {
+            background: #0B2B26;
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .org-logo {
+            max-height: 50px;
+            max-width: 150px;
+            object-fit: contain;
+        }
+        
+        .logo-divider {
+            width: 2px;
+            height: 40px;
+            background: #FAF3DD;
+            opacity: 0.3;
+        }
+        
+        .logo-img {
+            height: 50px;
+            object-fit: contain;
+        }
+        
+        .header-subtitle {
+            color: #FAF3DD;
+            font-size: 0.9rem;
+            margin: 0.25rem 0 0 0;
+            font-weight: 600;
+        }
+        
+        .participant-info {
+            color: #FAF3DD;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Loading State */
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0B2B26;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .voting-card {
+            background: white;
+            border-radius: 0;
+            padding: 1rem 1.5rem;
+            margin: 0;
+            box-shadow: none;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        /* Wider container for flowchart display */
+        #completion-container .voting-card {
+            max-width: 95%;
+            width: 100%;
+            padding: 2rem;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 0;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 0;
+            box-shadow: none;
+            max-width: 900px;
+            margin: 0 auto 0.75rem auto;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #0B2B26 0%, #164d45 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(11, 43, 38, 0.3);
+        }
+        
+        /* Context Box - REMOVED per user request (context now only in question card) */
+        
+        /* Question Display */
+        .question-header {
+            margin-bottom: 1rem;
+        }
+        
+        .question-number {
+            color: #0B2B26;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .ism-question-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        
+        .factor-box {
+            background: #FAF3DD;
+            border: 1.5px solid #0B2B26;
+            padding: 0.75rem 1rem;
+            border-radius: 0.4rem;
+            box-shadow: none;
+            min-width: 140px;
+            max-width: 220px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .factor-box:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(11, 43, 38, 0.1);
+        }
+        
+        .factor-box-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0B2B26;
+            line-height: 1.3;
+        }
+        
+        .arrow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+        }
+        
+        .arrow-icon {
+            font-size: 1.5rem;
+            color: #0B2B26;
+            font-weight: bold;
+        }
+        
+        .relational-phrase-badge {
+            background: none;
+            color: #0B2B26;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+            font-style: normal;
+        }
+        
+        /* Rating Buttons - Using external ism-shared-styles.css for radio bubble style */
+        /* All rating styles removed - handled by css/ism-shared-styles.css */
+        
+        /* Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.3rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: #0B2B26;
+            color: white;
+        }
+        
+        .btn-primary.selected-5 {
+            background: #3E0505;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #164d45;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(11, 43, 38, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #0B2B26;
+            border: 1px solid #0B2B26;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #0B2B26;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Voting Tips */
+        .voting-tips {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 0 auto;
+            padding: 1rem 0;
+            max-width: 900px;
+            flex-wrap: wrap;
+        }
+
+        .voting-tip {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: #0B2B26;
+            font-weight: 500;
+        }
+
+        .voting-tip i {
+            color: #0B2B26;
+            font-size: 0.8rem;
+        }
+
+        /* Save & Return Button */
+        .save-return-btn {
+            display: block;
+            margin: 1.25rem auto 0 auto;
+            padding: 0.5rem 1.5rem;
+            background: #0B2B26;
+            color: #FAF3DD;
+            border: none;
+            border-radius: 0.3rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .save-return-btn:hover {
+            background: #164039;
+            transform: translateY(-1px);
+        }
+        
+        /* Debug Box */
+        .debug-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fffbe6;
+            border: 2px solid #ffd700;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #0B2B26;
+        }
+        
+        .debug-box strong {
+            color: #8B2500;
+        }
+        
+        /* Completion Screen */
+        .completion-screen {
+            text-align: center;
+            padding: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .completion-screen h2 {
+            color: #0B2B26;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .completion-screen p {
+            color: #0B2B26;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Flowchart Styles */
+        #flowchart-canvas {
+            display: block;
+            margin: 0 auto;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            cursor: grab;
+            transition: transform 0.1s ease-out;
+        }
+        
+        #flowchart-canvas:active {
+            cursor: grabbing;
+        }
+        
+        #flowchart-wrapper {
+            overflow-x: auto;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+            padding: 20px;
+            display: block;
+            width: 100%;
+            max-height: 800px;
+            position: relative;
+        }
+        
+
+    </style>
+    <!-- Firebase SDK (auto-injected by sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260205"></script>
+    <script src="js/firestore-api-adapter.js?v=20260205"></script>
+</head>
+<body>
+    <!-- 🤖 BOT PROTECTION: Honeypot Fields (Hidden from humans, visible to bots) -->
+    <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+        <input type="text" name="website" id="honeypot-website" tabindex="-1" autocomplete="off" placeholder="Your website">
+        <input type="email" name="user_email" id="honeypot-email" tabindex="-1" autocomplete="off" placeholder="Your email">
+        <input type="tel" name="phone_number" id="honeypot-phone" tabindex="-1" autocomplete="off" placeholder="Your phone">
+        <textarea name="comments" id="honeypot-comments" tabindex="-1" autocomplete="off" placeholder="Additional comments"></textarea>
+    </div>
+    
+    <!-- Header - Admin Style -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <!-- Organization Logo -->
+                <img id="org-logo" class="org-logo" alt="Organization" style="display: none;">
+                <div id="logo-divider" class="logo-divider" style="display: none;"></div>
+                
+                <div>
+                    <span style="font-family: 'Merriweather', serif; font-size: 1.1rem; font-weight: 700; color: #FAF3DD;">Interactive Management</span>
+                    <p class="header-subtitle">ISM Voting</p>
+                </div>
+            </div>
+            <div class="participant-info">
+                <i class="fas fa-user"></i>
+                <span id="participant-name">Participant</span>
+                <button onclick="returnToPortal()" style="margin-left: 1rem; background: var(--burgundy); color: var(--primary-tan); border: 1px solid var(--primary-tan); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+                    <i class="fas fa-arrow-left"></i> Return to Portal
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="voting-card">
+            <div style="text-align: center; padding: 1.5rem;">
+                <div class="loading-spinner" style="margin: 0 auto 1rem;"></div>
+                <p>Loading voting questions...</p>
+                <div class="debug-box">
+                    <strong>🔍 Debug Info:</strong><br/>
+                    <div id="debug-messages"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Error State -->
+        <div id="error-state" class="hidden voting-card" style="text-align: center; padding: 1.5rem; color: #dc3545;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <div id="error-message"></div>
+        </div>
+        
+        <!-- Voting Tips (always visible, above status bar) -->
+        <div id="voting-tips" class="voting-tips hidden">
+            <span class="voting-tip"><i class="fas fa-hand-pointer"></i> Click on factors for more info</span>
+            <span class="voting-tip"><i class="fas fa-clock"></i> Take your time</span>
+            <span class="voting-tip"><i class="fas fa-mug-hot"></i> Take breaks if you need</span>
+        </div>
+
+        <!-- Progress Container -->
+        <div id="progress-container" class="progress-container hidden">
+            <div class="progress-info">
+                <span><strong id="question-number">Question 1</strong></span>
+                <span id="progress-percentage">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- Context Container - REMOVED per user request (context now only shown in question card) -->
+        
+        <!-- Voting Container -->
+        <div id="voting-container" class="voting-card hidden">
+            <div class="question-header">
+                <div id="question-number-display" class="question-number">Question 1</div>
+                <div id="question-text"></div>
+            </div>
+            
+            <!-- Rating Scale (1-5 ONLY, 5 = YES) -->
+            <div class="rating-scale">
+                <div class="rating-button" data-value="1">
+                    <div class="rating-bubble"></div>
+                    <span class="rating-number">1</span>
+                    <span class="rating-label">Strongly Disagree</span>
+                    <span class="rating-description">No relationship</span>
+                </div>
+                <div class="rating-button" data-value="2">
+                    <div class="rating-bubble"></div>
+                    <span class="rating-number">2</span>
+                    <span class="rating-label">Disagree</span>
+                    <span class="rating-description">Little relationship</span>
+                </div>
+                <div class="rating-button" data-value="3">
+                    <div class="rating-bubble"></div>
+                    <span class="rating-number">3</span>
+                    <span class="rating-label">Neutral</span>
+                    <span class="rating-description">Unsure</span>
+                </div>
+                <div class="rating-button" data-value="4">
+                    <div class="rating-bubble"></div>
+                    <span class="rating-number">4</span>
+                    <span class="rating-label">Agree</span>
+                    <span class="rating-description">Some relationship</span>
+                </div>
+                <div class="rating-button" data-value="5">
+                    <div class="rating-bubble"></div>
+                    <span class="rating-number">5</span>
+                    <span class="rating-label">Strongly Agree</span>
+                    <span class="rating-description">Significant relationship</span>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="navigation-buttons">
+                <button id="prev-btn" class="btn btn-secondary" onclick="previousQuestion()" disabled>
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <button id="next-btn" class="btn btn-primary" onclick="nextQuestion()" disabled>
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Save & Return Later -->
+            <button class="save-return-btn" onclick="saveAndReturnLater()">
+                <i class="fas fa-bookmark"></i> Save and Return Later
+            </button>
+        </div>
+        
+        <!-- Completion Screen -->
+        <div id="completion-container" class="hidden">
+            <div class="voting-card">
+                <div class="completion-screen">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; color: #0B2B26; margin-bottom: 1rem;"></i>
+                    <h2 style="color: #0B2B26; font-size: 1.8rem; margin-bottom: 0.5rem;">Voting Complete!</h2>
+                    <p style="color: #666; font-size: 1rem; margin-bottom: 0.5rem;">Thank you for your participation. Your responses have been saved.</p>
+                    
+                    <!-- Save Status Message -->
+                    <div id="save-status-message" style="background: #FAF3DD; border: 2px solid #0B2B26; border-radius: 8px; padding: 1rem; margin: 1rem auto; max-width: 600px;">
+                        <p style="margin: 0; color: #0B2B26; font-weight: 600;">
+                            <i class="fas fa-sync fa-spin"></i> Saving your results...
+                        </p>
+                    </div>
+                    
+                    <!-- Notice for previously completed (shown when loaded from localStorage) -->
+                    <div id="completion-notice" class="hidden" style="background: #fffbe6; border: 2px solid #3E0505; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        <p style="margin: 0; color: #3E0505; font-weight: 600;">
+                            <i class="fas fa-info-circle"></i> You've already completed this project
+                        </p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                            Want to retake the voting? Click "Redo ISM Voting" below.
+                        </p>
+                    </div>
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="openAggregateFlowchart()" style="background: #0B2B26; color: #FAF3DD; font-size: 1.1rem; padding: 0.75rem 1.5rem; border: none; transition: background 0.3s;" onmouseover="this.style.background='#164039'" onmouseout="this.style.background='#0B2B26'">
+                        <i class="fas fa-chart-line"></i> View Aggregate
+                    </button>
+                    <button class="btn" style="background: #0B2B26; color: #FAF3DD; border: none; transition: background 0.3s;" onclick="confirmRedo()" onmouseover="this.style.background='#164039'" onmouseout="this.style.background='#0B2B26'">
+                        <i class="fas fa-redo"></i> Redo ISM Voting
+                    </button>
+                </div>
+                
+                <!-- Download Options (Hidden by default) -->
+                <div id="download-options" class="hidden" style="background: #f8f9fa; border: 1px solid #ddd; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem;">
+                    <h4 style="color: #0B2B26; margin-bottom: 0.5rem; font-size: 1rem;">Download Your Flowchart</h4>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                        <button class="btn btn-secondary" onclick="downloadAsPNG()" style="flex: 0 0 auto;">
+                            <i class="fas fa-image"></i> PNG
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadAsPDF()" style="flex: 0 0 auto;">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="flowchart-container" style="margin-top: 1rem; text-align: center;">
+                    <h3 style="color: #0B2B26; margin-bottom: 1.5rem; font-size: 1.3rem; font-weight: 600;">Your Perceived Flow of Influence</h3>
+                    
+                    <div id="flowchart-wrapper" style="margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow-x: auto; overflow-y: visible; background: #fff; padding: 20px;">
+                        <svg id="flowchart-canvas"></svg>
+                    </div>
+                    
+                    <!-- Aggregation Note (for async sessions) -->
+                    <div style="margin: 1.5rem auto; max-width: 900px; text-align: center;">
+                        <div id="aggregation-note" style="margin-top: 1.5rem; padding: 1rem; background: #fffbe6; border-left: 4px solid #3E0505; font-size: 0.9rem; color: #333; text-align: left;">
+                            <strong style="color: #3E0505;">Next Step:</strong> Your individual flowchart will be aggregated with other participants' responses to create a collective perceived flow of influence representing the group's shared understanding.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center; margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="returnToPortal()" style="max-width: 300px; background: #0B2B26; color: #FAF3DD; border: none; transition: background 0.3s;" onmouseover="this.style.background='#164039'" onmouseout="this.style.background='#0B2B26'">
+                        <i class="fas fa-home"></i> Return to Portal
+                    </button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 🛡️ BOT PROTECTION: Hidden Honeypot Fields (Bots fill these, humans don't see them) -->
+    <div style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+        <input type="text" id="honeypot-email" name="email" tabindex="-1" autocomplete="off" />
+        <input type="text" id="honeypot-username" name="username" tabindex="-1" autocomplete="off" />
+        <input type="text" id="honeypot-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    
+    <script>
+        // VERSION LOGGING
+        console.log('%c🎯 ISM Voting v4.50.0-REVOTE-FIX - Redo Voting Fixed', 'color: #0B2B26; font-size: 16px; font-weight: bold');
+        console.log('%c📅 December 19, 2025 | Interactive Management Platform', 'color: #666;');
+        console.log('%c✅ localStorage cleared on redo - fixes "already completed" issue', 'color: #0B8B00;');
+        console.log('%c✅ Fixed TypeError when data.data is undefined (422 error)', 'color: #0B8B00;');
+        console.log('%c✅ "Already completed" notice with clear retry instructions', 'color: #0B8B00;');
+        console.log('%c' + '─'.repeat(60), 'color: #ccc;');
+        
+        // VOTING STATE - All variables properly initialized
+        let votingState = {
+            participantId: null,
+            participant: null,
+            projectId: null,
+            project: null,
+            factors: [],
+            allQuestions: [],          // All possible questions (diagnostic tool pattern)
+            currentQuestion: 0,         // Current index in allQuestions array
+            matrix: [],                 // Reachability matrix (n x n)
+            askedQuestions: [],        // Questions directly answered
+            responses: [],              // User's vote values
+            token: null
+        };
+        
+        // 🤖 BOT PROTECTION SYSTEM - Comprehensive security for public voting
+        const botProtection = {
+            // Behavioral tracking
+            behavior: {
+                mouseMovements: 0,
+                scrollEvents: 0,
+                clickCount: 0,
+                keyPresses: 0,
+                startTime: Date.now(),
+                questionStartTime: Date.now(),
+                questionTimes: []
+            },
+            
+            // Suspicion scoring (0-10, where 10 = definitely bot)
+            suspicionScore: 0,
+            flags: [],
+            
+            // Fingerprint
+            fingerprint: null,
+            
+            // Track if we've already checked this session
+            checked: false
+        };
+        
+        // Track mouse movements
+        document.addEventListener('mousemove', () => {
+            botProtection.behavior.mouseMovements++;
+        });
+        
+        // Track scrolling
+        document.addEventListener('scroll', () => {
+            botProtection.behavior.scrollEvents++;
+        });
+        
+        // Track clicks
+        document.addEventListener('click', () => {
+            botProtection.behavior.clickCount++;
+        });
+        
+        // Track keyboard
+        document.addEventListener('keydown', () => {
+            botProtection.behavior.keyPresses++;
+        });
+        
+        // Check honeypot fields
+        function checkHoneypot() {
+            const honeypots = [
+                document.getElementById('honeypot-email'),
+                document.getElementById('honeypot-username'),
+                document.getElementById('honeypot-website')
+            ];
+            
+            for (let trap of honeypots) {
+                if (trap && trap.value !== '') {
+                    console.log('🚨 BOT DETECTED: Honeypot filled (' + trap.name + ')');
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // Analyze behavioral patterns
+        function analyzeBehavior() {
+            const timeSpent = (Date.now() - botProtection.behavior.startTime) / 1000; // seconds
+            let score = 0;
+            const flags = [];
+            
+            // Check 1: Very few mouse movements (< 10 in first 30 seconds)
+            if (timeSpent > 10 && botProtection.behavior.mouseMovements < 10) {
+                score += 2;
+                flags.push('Very few mouse movements');
+                console.log('⚠️ Bot indicator: Only ' + botProtection.behavior.mouseMovements + ' mouse movements in ' + timeSpent + ' seconds');
+            }
+            
+            // Check 2: No scrolling
+            if (timeSpent > 15 && botProtection.behavior.scrollEvents === 0) {
+                score += 1;
+                flags.push('No scrolling detected');
+                console.log('⚠️ Bot indicator: No scrolling detected');
+            }
+            
+            // Check 3: Too fast (less than 30 seconds total)
+            if (timeSpent < 30) {
+                score += 2;
+                flags.push('Completed too fast (< 30 seconds)');
+                console.log('⚠️ Bot indicator: Very fast completion (' + timeSpent + ' seconds)');
+            }
+            
+            // Check 4: Questions answered too quickly (average < 3 seconds)
+            const avgTimePerQuestion = botProtection.behavior.questionTimes.length > 0
+                ? botProtection.behavior.questionTimes.reduce((a, b) => a + b, 0) / botProtection.behavior.questionTimes.length
+                : 0;
+            
+            if (avgTimePerQuestion > 0 && avgTimePerQuestion < 3) {
+                score += 2;
+                flags.push('Questions answered too quickly (avg ' + avgTimePerQuestion.toFixed(1) + 's)');
+                console.log('⚠️ Bot indicator: Average ' + avgTimePerQuestion.toFixed(1) + ' seconds per question');
+            }
+            
+            // Check 5: No keyboard activity
+            if (botProtection.behavior.keyPresses === 0 && timeSpent > 20) {
+                score += 1;
+                flags.push('No keyboard activity');
+                console.log('⚠️ Bot indicator: No keyboard presses detected');
+            }
+            
+            return { score, flags };
+        }
+        
+        // Get browser fingerprint
+        async function getBrowserFingerprint() {
+            try {
+                const fpPromise = FingerprintJS.load();
+                const fp = await fpPromise;
+                const result = await fp.get();
+                return result.visitorId;
+            } catch (error) {
+                console.error('Error getting fingerprint:', error);
+                return null;
+            }
+        }
+        
+        // Check if fingerprint already voted
+        async function checkFingerprintDuplicate(projectId, fingerprint) {
+            try {
+                const response = await fetch(`tables/public_vote_security?project_id=${projectId}&fingerprint=${fingerprint}&blocked=false`);
+                const data = await response.json();
+                
+                if (data.data && data.data.length > 0) {
+                    console.log('⚠️ Fingerprint already voted:', fingerprint);
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('Error checking fingerprint:', error);
+                return false; // Allow vote if check fails
+            }
+        }
+        
+        // Comprehensive bot check
+        async function comprehensiveBotCheck(projectId) {
+            console.log('%c🛡️ Running Comprehensive Bot Protection', 'color: white; background: #DC2626; padding: 5px 10px; font-weight: bold;');
+            
+            let totalScore = 0;
+            const allFlags = [];
+            
+            // Check 1: Honeypot
+            const honeypotTriggered = checkHoneypot();
+            if (honeypotTriggered) {
+                totalScore += 5;
+                allFlags.push('Honeypot trap triggered');
+                console.log('🚨 HONEYPOT TRIGGERED');
+            }
+            
+            // Check 2: Behavioral analysis
+            const behaviorResult = analyzeBehavior();
+            totalScore += behaviorResult.score;
+            allFlags.push(...behaviorResult.flags);
+            
+            // Check 3: Get fingerprint
+            const fingerprint = await getBrowserFingerprint();
+            botProtection.fingerprint = fingerprint;
+            
+            if (fingerprint) {
+                console.log('🔍 Browser fingerprint:', fingerprint);
+                
+                // Check if already voted
+                const alreadyVoted = await checkFingerprintDuplicate(projectId, fingerprint);
+                if (alreadyVoted) {
+                    totalScore += 3;
+                    allFlags.push('Device already voted');
+                    console.log('⚠️ Device/browser already submitted a vote');
+                }
+            }
+            
+            botProtection.suspicionScore = totalScore;
+            botProtection.flags = allFlags;
+            
+            console.log('%c📊 Bot Protection Results:', 'color: #3E0505; font-weight: bold;');
+            console.log('   Suspicion Score:', totalScore + '/10');
+            console.log('   Flags:', allFlags.length > 0 ? allFlags.join(', ') : 'None');
+            console.log('   Mouse Movements:', botProtection.behavior.mouseMovements);
+            console.log('   Scroll Events:', botProtection.behavior.scrollEvents);
+            console.log('   Time Spent:', ((Date.now() - botProtection.behavior.startTime) / 1000).toFixed(1) + 's');
+            
+            // Decision thresholds
+            if (totalScore >= 7) {
+                console.log('%c🚨 HIGH BOT PROBABILITY - BLOCKING', 'color: white; background: #DC2626; padding: 5px; font-weight: bold;');
+                return {
+                    allowed: false,
+                    reason: 'high_bot_probability',
+                    score: totalScore,
+                    flags: allFlags
+                };
+            } else if (totalScore >= 5) {
+                console.log('%c⚠️ MODERATE SUSPICION - FLAGGING', 'color: #FFA500; font-weight: bold;');
+                return {
+                    allowed: true, // Allow but flag
+                    flagged: true,
+                    score: totalScore,
+                    flags: allFlags
+                };
+            } else {
+                console.log('%c✅ LIKELY HUMAN - ALLOWING', 'color: #10B981; font-weight: bold;');
+                return {
+                    allowed: true,
+                    flagged: false,
+                    score: totalScore,
+                    flags: allFlags
+                };
+            }
+        }
+        
+        // Save security event to database
+        async function saveSecurityEvent(projectId, voteId, botCheckResult) {
+            try {
+                const timeOnPage = (Date.now() - botProtection.behavior.startTime) / 1000;
+                const avgTimePerQuestion = botProtection.behavior.questionTimes.length > 0
+                    ? botProtection.behavior.questionTimes.reduce((a, b) => a + b, 0) / botProtection.behavior.questionTimes.length
+                    : 0;
+                
+                await fetch('tables/public_vote_security', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin',
+                    mode: 'cors',
+                    body: JSON.stringify({
+                        project_id: projectId,
+                        fingerprint: botProtection.fingerprint || 'unknown',
+                        vote_id: voteId || null,
+                        bot_score: botCheckResult.score,
+                        blocked: !botCheckResult.allowed,
+                        honeypot_triggered: botCheckResult.flags.includes('Honeypot trap triggered'),
+                        mouse_movements: botProtection.behavior.mouseMovements,
+                        scroll_events: botProtection.behavior.scrollEvents,
+                        time_on_page: timeOnPage,
+                        questions_answered: botProtection.behavior.questionTimes.length,
+                        avg_time_per_question: avgTimePerQuestion,
+                        recaptcha_score: null, // Future: Add reCAPTCHA v3
+                        user_agent: navigator.userAgent,
+                        screen_resolution: screen.width + 'x' + screen.height,
+                        created_at: Date.now()
+                    })
+                });
+                
+                console.log('✅ Security event logged');
+            } catch (error) {
+                console.error('Error saving security event:', error);
+                // Don't block vote if logging fails
+            }
+        }
+        
+        // Track time per question
+        function trackQuestionTime() {
+            const questionTime = (Date.now() - botProtection.behavior.questionStartTime) / 1000;
+            botProtection.behavior.questionTimes.push(questionTime);
+            botProtection.behavior.questionStartTime = Date.now();
+            
+            console.log('⏱️ Question answered in ' + questionTime.toFixed(1) + ' seconds');
+        }
+        
+        // Debug function to show messages on page
+        function showDebug(message) {
+            console.log(message);
+            const debugMessages = document.getElementById('debug-messages');
+            if (debugMessages) {
+                debugMessages.innerHTML += message + '<br/>';
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Display version
+                console.log('%c✅ PUBLIC ISM Voting v6.28.27 - ERROR DETAIL', 'color: white; font-size: 16px; font-weight: bold; background: #0B2B26; padding: 8px 15px;');
+console.log('%c🔍 Enhanced: Detailed error logging for 422 failures', 'color: #10B981; font-size: 12px;');
+                console.log('%c🌍 PUBLIC PROJECT MODE - No authentication required', 'color: #10B981; font-size: 14px; font-weight: bold;');
+                console.log('%c📝 Click factor boxes to see clarification below', 'color: #3E0505; font-size: 14px; font-weight: bold;');
+                
+                showDebug('🚀 Starting PUBLIC ISM Voting initialization...');
+                
+                // Get project ID from URL (PUBLIC PROJECT MODE)
+                const urlParams = new URLSearchParams(window.location.search);
+                const projectId = urlParams.get('project');
+                showDebug('🌍 Project ID: ' + (projectId || 'NONE'));
+                
+                if (!projectId) {
+                    showDebug('❌ No project ID provided');
+                    showError('No project ID provided. Please select a project from the Public Projects tab.');
+                    return;
+                }
+                
+                votingState.projectId = projectId;
+                
+                // 🤖 RUN BOT PROTECTION CHECK
+                console.log('%c🛡️ Initiating Bot Protection Check...', 'color: white; background: #DC2626; padding: 5px; font-weight: bold;');
+                const botCheckResult = await comprehensiveBotCheck(projectId);
+                
+                if (!botCheckResult.allowed) {
+                    // BOT DETECTED - BLOCK
+                    showDebug('🚨 BOT DETECTED - Vote blocked');
+                    showError(`
+                        <h3 style="color: #DC2626;">⚠️ Automated Activity Detected</h3>
+                        <p style="margin: 1rem 0;">Our security system has detected unusual activity that suggests automated voting.</p>
+                        <p style="margin: 1rem 0; font-size: 0.9rem; color: #666;">
+                            <strong>Why am I seeing this?</strong><br/>
+                            • Voting was completed too quickly<br/>
+                            • Unusual interaction patterns detected<br/>
+                            • Multiple votes from same device/browser
+                        </p>
+                        <p style="margin: 1rem 0;">
+                            If you believe this is an error, please:
+                        </p>
+                        <ul style="text-align: left; margin: 1rem auto; max-width: 400px; color: #666;">
+                            <li>Clear your browser cache and try again</li>
+                            <li>Use a different browser</li>
+                            <li>Contact the survey administrator</li>
+                        </ul>
+                        <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #999;">
+                            Security Score: ${botCheckResult.score}/10<br/>
+                            Fingerprint: ${botProtection.fingerprint ? botProtection.fingerprint.substring(0, 16) + '...' : 'N/A'}
+                        </p>
+                    `);
+                    
+                    // Log the blocked attempt
+                    await saveSecurityEvent(projectId, null, botCheckResult);
+                    return; // Stop initialization
+                }
+                
+                if (botCheckResult.flagged) {
+                    console.log('%c⚠️ Flagged as suspicious but allowing vote', 'color: #FFA500; font-weight: bold;');
+                }
+                
+                // ========================================
+                // PUBLIC VOTING: LOCALSTORAGE + EXPORT
+                // ========================================
+                // Database tables require authentication for writes
+                // Public voters cannot create participant records (401 error)
+                // Solution: Store votes locally + provide JSON export for admin
+                
+                console.log('%c📱 Public Voting Mode: LocalStorage + Export', 'color: white; background: #2563EB; padding: 5px; font-weight: bold;');
+                
+                // Generate unique session ID for tracking
+                const sessionId = 'public-' + Date.now() + '-' + Math.random().toString(36).substring(2, 15);
+                
+                votingState.participantId = sessionId;
+                votingState.sessionId = sessionId;
+                votingState.participant = {
+                    id: sessionId,
+                    name: 'Anonymous Public Voter',
+                    full_name: 'Anonymous Public Voter'
+                };
+                
+                console.log('✅ Session initialized');
+                console.log('   🔑 Session ID:', sessionId);
+                console.log('   🔐 Fingerprint:', botProtection.fingerprint ? botProtection.fingerprint.substring(0, 16) + '...' : 'N/A');
+                console.log('   ℹ️ Votes will be stored locally and available for export');
+                
+                // Save session info to localStorage
+                localStorage.setItem(`public_session_${projectId}`, sessionId);
+                localStorage.setItem(`public_fingerprint_${projectId}`, botProtection.fingerprint || 'none');
+                
+                // PUBLIC MODE: Load project directly (no participant authentication)
+                showDebug('📥 Loading public project...');
+                await loadPublicProject(projectId);
+                showDebug('✅ Public project loaded: ' + votingState.project.title);
+                
+                showDebug('📥 Loading voting data...');
+                await loadVotingData();
+                showDebug('✅ Voting data loaded: ' + votingState.factors.length + ' factors');
+                
+                // Generate voting questions
+                showDebug('🔄 Generating voting questions...');
+                generateVotingQuestions();
+                showDebug('✅ Generated ' + votingState.allQuestions.length + ' questions');
+                
+                // PUBLIC MODE: Skip loading existing responses (no resume capability for public projects)
+                showDebug('⏭️ Skipping existing responses (public mode - fresh session)');
+                
+                // Show UI and first question
+                showDebug('🔄 Showing voting UI...');
+                showUI();
+                showDebug('✅ UI displayed');
+                
+                showDebug('📝 Displaying first question...');
+                showNextQuestion();
+                showDebug('✅ Complete! Ready to vote.');
+                
+            } catch (error) {
+                // If error is 'COMPLETED', it means we already showed the completion screen
+                if (error.message === 'COMPLETED') {
+                    showDebug('✅ Showing saved completion');
+                    return; // Don't show error
+                }
+                
+                showDebug('❌ ERROR: ' + error.message);
+                showDebug('❌ Stack: ' + error.stack);
+                console.error('❌ Initialization error:', error);
+                
+                showError(`
+                    <h3>Error Loading Public ISM Project</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Please try the following:</p>
+                    <ul style="text-align: left; margin: 1rem 0;">
+                        <li>Return to the Public Projects tab and try again</li>
+                        <li>Refresh your browser</li>
+                        <li>Contact the administrator if the problem persists</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                        <strong>Project ID:</strong> ${votingState.projectId || 'Not loaded'}
+                    </p>
+                `);
+            }
+        });
+        
+        // PUBLIC MODE: Load project data directly by ID (no authentication)
+        async function loadPublicProject(projectId) {
+            showDebug('🌍 Loading public project: ' + projectId);
+            
+            // Load project from database
+            const response = await fetch(`tables/projects/${projectId}`);
+            
+            if (!response.ok) {
+                throw new Error('Project not found');
+            }
+            
+            votingState.project = await response.json();
+            showDebug('✅ Project loaded: ' + votingState.project.title);
+            
+            // Verify it's a public project
+            if (votingState.project.session_mode !== 'public_project') {
+                throw new Error('This project is not configured for public access');
+            }
+            
+            // TODO: Future enhancement - Check completion by participant token or IP address
+            // For now: Always allow voting for public projects
+            // localStorage is only used to show user their OWN completion, not to block others
+            
+            showDebug('🌍 Public project - allowing fresh voting session');
+            
+            // Set anonymous participant info (new session)
+            votingState.participant = {
+                name: 'Public Participant',
+                id: 'public-' + Date.now(), // Generate anonymous ID
+                project_id: projectId
+            };
+            votingState.participantId = votingState.participant.id;
+            
+            document.getElementById('participant-name').textContent = 'Public Participant';
+            showDebug('✅ Anonymous participant session created');
+        }
+        
+        // Load voting data (factors only - project already loaded)
+        async function loadVotingData() {
+            showDebug('🔍 Loading factors from database (public mode)');
+            
+            // Project already loaded by loadPublicProject()
+            showDebug('✅ Project: ' + votingState.project.title);
+            
+            // Display organization logo in header if available
+            if (votingState.project && (votingState.project.company_logo || votingState.project.logo_url)) {
+                const logoUrl = votingState.project.company_logo || votingState.project.logo_url;
+                const orgLogo = document.getElementById('org-logo');
+                const divider = document.getElementById('logo-divider');
+                
+                if (orgLogo && divider) {
+                    orgLogo.src = logoUrl;
+                    orgLogo.alt = votingState.project.organization_name || 'Organization';
+                    orgLogo.style.display = 'block';
+                    divider.style.display = 'block';
+                }
+            }
+            
+            // Old logo container (keep for compatibility)
+            const logoContainer = document.getElementById('company-logo-container');
+            if (logoContainer && votingState.project.company_logo && votingState.project.organization) {
+                logoContainer.innerHTML = `
+                    <img src="${votingState.project.company_logo}" 
+                         alt="${votingState.project.organization}" 
+                         style="height: 50px; object-fit: contain;">
+                `;
+                logoContainer.style.display = 'block';
+            }
+            
+            // Load factors (PUBLIC MODE: try both tables - coded_themes AND factors)
+            showDebug('🔍 Checking coded_themes table first...');
+            
+            // Try coded_themes first (standard table used by preview)
+            let themesResponse = await fetch(`tables/coded_themes?search=${votingState.projectId}&limit=1000`);
+            let themesData = await themesResponse.json();
+            
+            console.log('🔍 DEBUG: All coded_themes from database:', themesData.data.length);
+            console.log('🔍 DEBUG: Project ID we are looking for:', votingState.projectId);
+            
+            votingState.factors = themesData.data
+                .filter(t => String(t.project_id) === String(votingState.projectId))
+                .sort((a, b) => (a.rank || 0) - (b.rank || 0))
+                .map((theme, index) => ({
+                    id: theme.id,
+                    name: theme.name || theme.theme_name,
+                    description: theme.description || theme.clarification || '',
+                    rank: theme.rank || index + 1,
+                    index: index
+                }));
+            
+            console.log('✅ Found', votingState.factors.length, 'themes in coded_themes table');
+            
+            // If no themes found, try factors table as fallback
+            if (votingState.factors.length === 0) {
+                showDebug('⚠️ No themes found, checking factors table...');
+                
+                try {
+                    const factorsResponse = await fetch(`tables/factors?search=${votingState.projectId}&limit=1000`);
+                    if (factorsResponse.ok) {
+                        const factorsData = await factorsResponse.json();
+                        
+                        votingState.factors = factorsData.data
+                            .filter(f => String(f.project_id) === String(votingState.projectId) && f.selected_for_voting)
+                            .sort((a, b) => (a.number || 0) - (b.number || 0))
+                            .map((factor, index) => ({
+                                id: factor.id,
+                                name: factor.name || factor.factor_name,
+                                description: factor.description || factor.clarification || '',
+                                rank: factor.number || index + 1,
+                                index: index
+                            }));
+                        
+                        console.log('✅ Found', votingState.factors.length, 'factors in factors table');
+                    }
+                } catch (error) {
+                    console.log('⚠️ Factors table not available:', error.message);
+                }
+            }
+            
+            console.log('✅ Final factors loaded for ISM voting:', votingState.factors.length);
+            console.log('📋 Factor names:', votingState.factors.map(f => f.name));
+            
+            showDebug('✅ Loaded ' + votingState.factors.length + ' factors for voting');
+            
+            if (votingState.factors.length === 0) {
+                throw new Error('No factors available for voting');
+            }
+        }
+        
+        // Generate all voting questions (diagnostic tool pattern)
+        function generateVotingQuestions() {
+            const n = votingState.factors.length;
+            
+            // Initialize matrix (n x n, all null)
+            votingState.matrix = Array(n).fill(null).map(() => Array(n).fill(null));
+            
+            // Set diagonal to false (factor cannot relate to itself)
+            for (let i = 0; i < n; i++) {
+                votingState.matrix[i][i] = false;
+            }
+            
+            // Generate ALL possible questions in CORRECT MATRIX ORDER
+            // Order: For each column j (1, 2, 3, ...), ask all i→j where i≠j
+            votingState.allQuestions = [];
+            
+            for (let j = 1; j < n; j++) {
+                // First: Ask all factors BEFORE j → j
+                for (let i = 0; i < j; i++) {
+                    votingState.allQuestions.push({
+                        from: i,
+                        to: j,
+                        asked: false
+                    });
+                }
+                // Then: Ask reverse (j → all factors before j)
+                for (let i = 0; i < j; i++) {
+                    votingState.allQuestions.push({
+                        from: j,
+                        to: i,
+                        asked: false
+                    });
+                }
+            }
+            
+            votingState.currentQuestion = 0;
+            votingState.askedQuestions = [];
+            
+            console.log('✅ Generated ' + votingState.allQuestions.length + ' total questions');
+            console.log('📊 Matrix order: ' + votingState.allQuestions.map(q => `${q.from+1}→${q.to+1}`).join(', '));
+        }
+        
+        // Load existing responses (for resume capability)
+        async function loadExistingResponses() {
+            // PUBLIC MODE: Try to restore from localStorage (save & return later)
+            try {
+                const savedKey = `ism_voting_progress_${votingState.projectId}_${votingState.participantId}`;
+                const saved = localStorage.getItem(savedKey);
+                if (saved) {
+                    const saveData = JSON.parse(saved);
+                    // Only restore if less than 7 days old
+                    if (Date.now() - saveData.savedAt < 7 * 24 * 60 * 60 * 1000) {
+                        console.log('📂 Restoring saved voting progress from localStorage');
+                        // Restore matrix
+                        for (const aq of saveData.askedQuestions) {
+                            if (saveData.matrix[aq.from] !== undefined) {
+                                votingState.matrix[aq.from][aq.to] = saveData.matrix[aq.from][aq.to];
+                                const questionIdx = votingState.allQuestions.findIndex(
+                                    q => q.from === aq.from && q.to === aq.to
+                                );
+                                if (questionIdx !== -1) {
+                                    votingState.allQuestions[questionIdx].asked = true;
+                                    votingState.askedQuestions.push(votingState.allQuestions[questionIdx]);
+                                }
+                            }
+                        }
+                        votingState.responses = saveData.responses || [];
+                        // Find first unanswered question
+                        votingState.currentQuestion = 0;
+                        while (votingState.currentQuestion < votingState.allQuestions.length) {
+                            const q = votingState.allQuestions[votingState.currentQuestion];
+                            if (votingState.matrix[q.from][q.to] === null) break;
+                            votingState.currentQuestion++;
+                        }
+                        console.log(`✅ Restored ${saveData.askedQuestions.length} saved responses`);
+                        if (votingState.currentQuestion >= votingState.allQuestions.length) {
+                            showCompletion();
+                        }
+                        return;
+                    } else {
+                        localStorage.removeItem(savedKey);
+                    }
+                }
+            } catch (e) {
+                console.log('⚠️ Could not restore saved progress:', e);
+            }
+            console.log('🌍 Public mode - no saved responses');
+            return;
+
+            try {
+                const response = await fetch(`tables/ism_votes?search=${votingState.projectId}&limit=10000`);
+                const data = await response.json();
+                
+                if (!data.data || !Array.isArray(data.data)) {
+                    console.log('⚠️ No existing responses found');
+                    return;
+                }
+                
+                const existing = data.data.filter(r => 
+                    r.project_id === votingState.projectId && 
+                    r.participant_id === votingState.participantId
+                );
+                
+                // Apply existing responses to matrix (ONLY 5 = YES)
+                for (const resp of existing) {
+                    const i = resp.from_factor_index;
+                    const j = resp.to_factor_index;
+                    votingState.matrix[i][j] = (resp.vote_value === 5);
+                    
+                    // Find and mark question as asked
+                    const questionIdx = votingState.allQuestions.findIndex(
+                        q => q.from === i && q.to === j
+                    );
+                    if (questionIdx !== -1) {
+                        votingState.allQuestions[questionIdx].asked = true;
+                        votingState.askedQuestions.push(votingState.allQuestions[questionIdx]);
+                    }
+                }
+                
+                // Set currentQuestion to first unanswered question
+                votingState.currentQuestion = 0;
+                while (votingState.currentQuestion < votingState.allQuestions.length) {
+                    const q = votingState.allQuestions[votingState.currentQuestion];
+                    if (votingState.matrix[q.from][q.to] === null) {
+                        break;
+                    }
+                    votingState.currentQuestion++;
+                }
+                
+                console.log(`✅ Loaded ${existing.length} existing responses`);
+                
+                // If all questions answered, show completion
+                if (votingState.currentQuestion >= votingState.allQuestions.length) {
+                    showCompletion();
+                }
+            } catch (error) {
+                console.error('❌ Error loading responses:', error);
+            }
+        }
+        
+        // Show UI elements
+        function showUI() {
+            // Context now only displayed in question card (red header removed)
+            
+            // Hide loading, show voting UI
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('progress-container').classList.remove('hidden');
+            // context-container removed - context now only in question card
+            document.getElementById('voting-tips').classList.remove('hidden');
+            document.getElementById('voting-container').classList.remove('hidden');
+        }
+        
+        // Show next question
+        function showNextQuestion() {
+            // Apply inference first
+            applyInference();
+            
+            // Find next unanswered question
+            while (votingState.currentQuestion < votingState.allQuestions.length) {
+                const q = votingState.allQuestions[votingState.currentQuestion];
+                
+                // Check if already answered (directly or inferred)
+                if (votingState.matrix[q.from][q.to] !== null) {
+                    console.log(`⏭️ Skipping: ${votingState.factors[q.from].name}→${votingState.factors[q.to].name} (already ${votingState.matrix[q.from][q.to] ? 'true' : 'false'})`);
+                    votingState.currentQuestion++;
+                    continue;
+                }
+                
+                // Show this question
+                displayCurrentQuestion();
+                updateProgress();
+                return;
+            }
+            
+            // All questions answered!
+            showCompletion();
+        }
+        
+        // Display the current question
+        function displayCurrentQuestion() {
+            const q = votingState.allQuestions[votingState.currentQuestion];
+            const fromFactor = votingState.factors[q.from];
+            const toFactor = votingState.factors[q.to];
+            const relationalPhrase = votingState.project.relational_phrase || 'significantly aggravates';
+            
+            // Use context_statement
+            let context = votingState.project.context_statement || 
+                         votingState.project.trigger_question || 
+                         'this context';
+            context = context.replace(/^(What are the characteristics of|What is|What are)\s*/i, '');
+            context = context.replace(/\?$/, '');
+            
+            // Create ISM question format (matching original portal design)
+            document.getElementById('question-text').innerHTML = `
+                <div style="text-align: center; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e0e0e0;">
+                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 0.25rem; font-weight: 600;">IN THE CONTEXT OF</div>
+                    <div style="font-size: 1rem; color: #0B2B26; font-weight: 500;">${context}</div>
+                </div>
+                <div class="ism-question-visual">
+                    <div style="font-size: 0.85rem; font-weight: 500; color: #666; align-self: center;">
+                        does
+                    </div>
+                    
+                    <div class="factor-box clickable-factor" onclick="toggleFactorClarification('from-factor', '${fromFactor.name}', '${(fromFactor.description || 'No clarification available').replace(/'/g, "\\'").replace(/"/g, '&quot;')}', ${q.from + 1})" style="cursor: pointer;" title="Click to see clarification">
+                        <div class="factor-box-name">
+                            ${fromFactor.name} (${q.from + 1})
+                        </div>
+                    </div>
+                    
+                    <div class="arrow-container">
+                        <div class="arrow-icon">━━━▶</div>
+                        <div class="relational-phrase-badge">${relationalPhrase}</div>
+                    </div>
+                    
+                    <div class="factor-box clickable-factor" onclick="toggleFactorClarification('to-factor', '${toFactor.name}', '${(toFactor.description || 'No clarification available').replace(/'/g, "\\'").replace(/"/g, '&quot;')}', ${q.to + 1})" style="cursor: pointer;" title="Click to see clarification">
+                        <div class="factor-box-name">
+                            ${toFactor.name} (${q.to + 1})
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.85rem; font-weight: 500; color: #666; align-self: center;">
+                        ?
+                    </div>
+                </div>
+                
+                <!-- Clarification Display Area (below boxes) -->
+                <div id="clarification-display" style="display: none; margin-top: 1.5rem; padding: 1rem; background: #FFF9E6; border: 1px solid #E0D5B7; border-radius: 0.4rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                    <div style="font-weight: 600; color: #0B2B26; margin-bottom: 0.5rem; font-size: 0.9rem;" id="clarification-title"></div>
+                    <div style="color: #555; font-size: 0.85rem; line-height: 1.5; font-style: italic;" id="clarification-text"></div>
+                </div>
+            `;
+            
+            // Clear selection
+            clearSelection();
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const totalPossible = votingState.allQuestions.length;
+            const answered = votingState.allQuestions.filter(q => {
+                const i = q.from;
+                const j = q.to;
+                return votingState.matrix[i][j] !== null;
+            }).length;
+            const askedDirectly = votingState.askedQuestions.length + 1;
+            
+            const progress = (answered / totalPossible) * 100;
+            
+            document.getElementById('question-number').textContent = 
+                `Question ${askedDirectly} (${answered} of ${totalPossible} answered)`;
+            document.getElementById('question-number-display').textContent = 
+                `Question ${askedDirectly}`;
+            document.getElementById('progress-percentage').textContent = Math.round(progress) + '%';
+            document.getElementById('progress-bar').style.width = progress + '%';
+            
+            // Enable/disable previous button
+            document.getElementById('prev-btn').disabled = (votingState.askedQuestions.length === 0);
+        }
+        
+        // Handle rating selection
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.rating-button')) {
+                const button = e.target.closest('.rating-button');
+                const value = parseInt(button.dataset.value);
+                
+                // Clear previous selection
+                clearSelection();
+                
+                // Select this button
+                button.classList.add('selected');
+                
+                // Store response
+                votingState.responses.push(value);
+                
+                // Enable next button
+                document.getElementById('next-btn').disabled = false;
+            }
+        });
+        
+        // Clear rating selection
+        function clearSelection() {
+            document.querySelectorAll('.rating-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById('next-btn').disabled = true;
+        }
+        
+        // Next question
+        async function nextQuestion() {
+            const q = votingState.allQuestions[votingState.currentQuestion];
+            const voteValue = votingState.responses[votingState.responses.length - 1];
+            
+            // Track time spent on this question (for bot detection)
+            trackQuestionTime();
+            
+            // Save response to database
+            await saveResponse(q, voteValue);
+            
+            // Record answer in matrix (ONLY 5 = YES, 1-4 = NO)
+            const connection = (voteValue === 5);
+            votingState.matrix[q.from][q.to] = connection;
+            q.asked = true;
+            votingState.askedQuestions.push(q);
+            
+            if (connection) {
+                console.log(`✅ ${votingState.factors[q.from].name} → ${votingState.factors[q.to].name}`);
+                console.log(`   → Stored in matrix[${q.from}][${q.to}] = ${votingState.matrix[q.from][q.to]}`);
+            } else {
+                console.log(`❌ ${votingState.factors[q.from].name} ↛ ${votingState.factors[q.to].name}`);
+                console.log(`   → Stored in matrix[${q.from}][${q.to}] = ${votingState.matrix[q.from][q.to]}`);
+            }
+            
+            // Move to next question
+            votingState.currentQuestion++;
+            showNextQuestion();
+        }
+        
+        // Previous question
+        function previousQuestion() {
+            if (votingState.askedQuestions.length === 0) return;
+            
+            // Go back to previous asked question
+            const lastAsked = votingState.askedQuestions.pop();
+            lastAsked.asked = false;
+            
+            // Remove last response
+            votingState.responses.pop();
+            
+            // Clear matrix entry
+            votingState.matrix[lastAsked.from][lastAsked.to] = null;
+            
+            // Find this question's index
+            votingState.currentQuestion = votingState.allQuestions.findIndex(
+                q => q.from === lastAsked.from && q.to === lastAsked.to
+            );
+            
+            showNextQuestion();
+        }
+        
+        // Save response to database
+        async function saveResponse(question, voteValue) {
+            // Skip saving in preview mode
+            if (votingState.token && votingState.token.startsWith('PREVIEW-')) {
+                console.log('🔍 Preview mode - not saving response');
+                return;
+            }
+            
+            const responseData = {
+                project_id: votingState.projectId,
+                participant_id: votingState.participantId,
+                from_factor_id: votingState.factors[question.from].id,
+                to_factor_id: votingState.factors[question.to].id,
+                from_factor_index: question.from,
+                to_factor_index: question.to,
+                vote_value: voteValue,
+                created_at: Date.now()
+            };
+            
+            try {
+                console.log('💾 Saving response to database:', responseData);
+                console.log('🔑 project_id:', responseData.project_id, '(type:', typeof responseData.project_id, ')');
+                console.log('🔑 from_factor_id:', responseData.from_factor_id);
+                console.log('🔑 to_factor_id:', responseData.to_factor_id);
+                
+                // Check for undefined values
+                const hasUndefined = Object.entries(responseData).some(([key, value]) => value === undefined);
+                if (hasUndefined) {
+                    console.error('❌ ERROR: responseData contains undefined values!');
+                    console.error('Data:', responseData);
+                    showDebug('⚠️ ERROR: Invalid data - contains undefined values');
+                    return;
+                }
+                
+                const jsonBody = JSON.stringify(responseData);
+                console.log('📤 JSON body:', jsonBody);
+                console.log('📤 Body length:', jsonBody.length);
+                console.log('🎫 Using participant token for authentication');
+                
+                // Use voting_responses table (same as internal participants)
+                const response = await fetch('tables/voting_responses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${votingState.token}` // Use the token we created!
+                    },
+                    body: jsonBody
+                });
+                
+                if (response.ok) {
+                    const savedData = await response.json();
+                    console.log('✅ Response saved to voting_responses table. Record ID:', savedData.id || 'unknown');
+                    
+                    // Keep track of successful saves
+                    if (!window.voteSaveCount) window.voteSaveCount = 0;
+                    window.voteSaveCount++;
+                    console.log(`📊 Total votes saved this session: ${window.voteSaveCount}`);
+                } else {
+                    console.error('═══════════════════════════════════════════════');
+                    console.error('❌ FAILED TO SAVE VOTE TO DATABASE');
+                    console.error('═══════════════════════════════════════════════');
+                    console.error('Status:', response.status, response.statusText);
+                    console.error('URL:', 'tables/voting_responses');
+                    console.error('Method:', 'POST');
+                    console.error('Data sent:', responseData);
+                    
+                    let errorDetails;
+                    try {
+                        errorDetails = await response.json();
+                        console.error('Error response (JSON):', errorDetails);
+                    } catch (e) {
+                        errorDetails = await response.text();
+                        console.error('Error response (text):', errorDetails);
+                    }
+                    console.error('═══════════════════════════════════════════════');
+                    
+                    // Show visible warning
+                    showDebug(`⚠️ WARNING: Vote not saved (Status: ${response.status}). Check console (F12) for details.`);
+                }
+            } catch (error) {
+                console.error('❌ Error saving response:', error);
+                showDebug(`⚠️ WARNING: Vote save failed (${error.message})`);
+            }
+        }
+        
+        // Apply inference rules (diagnostic tool logic)
+        function applyInference() {
+            const n = votingState.factors.length;
+            let totalInferred = 0;
+            let iterationCount = 0;
+            const maxIterations = 10;
+            
+            console.log('\n===== INFERENCE ENGINE STARTING =====');
+            
+            while (iterationCount < maxIterations) {
+                let inferredThisIteration = 0;
+                
+                // RULE 1: Transitive Closure (A→B, B→C ⇒ A→C)
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        if (i === j || votingState.matrix[i][j] !== null) continue;
+                        
+                        for (let k = 0; k < n; k++) {
+                            if (k === i || k === j) continue;
+                            
+                            if (votingState.matrix[i][k] === true && votingState.matrix[k][j] === true) {
+                                console.log(`🧠 TRANSITIVE: ${i+1}→${j+1} inferred (via ${i+1}→${k+1} and ${k+1}→${j+1})`);
+                                votingState.matrix[i][j] = true;
+                                inferredThisIteration++;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Find Strongly Connected Components (SCCs)
+                const sccs = findStronglyConnectedComponents();
+                
+                // RULE 2-4: Propagate within SCCs
+                for (const scc of sccs) {
+                    if (scc.length < 2) continue; // Skip single-factor SCCs
+                    
+                    // For mutual relationships, propagate both positive and negative relationships
+                    for (let i of scc) {
+                        for (let j of scc) {
+                            if (i === j) continue;
+                            
+                            // Ensure mutual relationships (A↔B)
+                            if (votingState.matrix[i][j] === true && votingState.matrix[j][i] === null) {
+                                console.log(`🧠 SCC MUTUAL: ${j+1}→${i+1} inferred (${i+1} and ${j+1} are mutually supportive)`);
+                                votingState.matrix[j][i] = true;
+                                inferredThisIteration++;
+                            }
+                            
+                            // Propagate positive outgoing (A↔B, A→C ⇒ B→C)
+                            for (let k = 0; k < n; k++) {
+                                if (scc.includes(k)) continue;
+                                
+                                if (votingState.matrix[i][k] === true && votingState.matrix[j][k] === null) {
+                                    console.log(`🧠 SCC POSITIVE OUT: ${j+1}→${k+1} inferred (${i+1}↔${j+1} and ${i+1}→${k+1})`);
+                                    votingState.matrix[j][k] = true;
+                                    inferredThisIteration++;
+                                }
+                                
+                                if (votingState.matrix[k][i] === true && votingState.matrix[k][j] === null) {
+                                    console.log(`🧠 SCC POSITIVE IN: ${k+1}→${j+1} inferred (${i+1}↔${j+1} and ${k+1}→${i+1})`);
+                                    votingState.matrix[k][j] = true;
+                                    inferredThisIteration++;
+                                }
+                                
+                                // Propagate negative outgoing (A↔B, A⊄C ⇒ B⊄C)
+                                if (votingState.matrix[i][k] === false && votingState.matrix[j][k] === null) {
+                                    console.log(`🧠 SCC NEGATIVE OUT: ${j+1}⊄${k+1} inferred (${i+1}↔${j+1} and ${i+1}⊄${k+1})`);
+                                    votingState.matrix[j][k] = false;
+                                    inferredThisIteration++;
+                                }
+                                
+                                // Propagate negative incoming (A↔B, C⊄A ⇒ C⊄B)
+                                if (votingState.matrix[k][i] === false && votingState.matrix[k][j] === null) {
+                                    console.log(`🧠 SCC NEGATIVE IN: ${k+1}⊄${j+1} inferred (${i+1}↔${j+1} and ${k+1}⊄${i+1})`);
+                                    votingState.matrix[k][j] = false;
+                                    inferredThisIteration++;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // RULE 5: Negative Transitive Closure (A→B, B⊄C ⇒ A⊄C)
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        if (i === j || votingState.matrix[i][j] !== null) continue;
+                        
+                        for (let k = 0; k < n; k++) {
+                            if (k === i || k === j) continue;
+                            
+                            if (votingState.matrix[i][k] === true && votingState.matrix[k][j] === false) {
+                                console.log(`🧠 NEGATIVE TRANSITIVE: ${i+1}⊄${j+1} inferred (${i+1}→${k+1} but ${k+1}⊄${j+1})`);
+                                votingState.matrix[i][j] = false;
+                                inferredThisIteration++;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                totalInferred += inferredThisIteration;
+                iterationCount++;
+                
+                if (inferredThisIteration === 0) {
+                    console.log(`✅ Inference complete after ${iterationCount} iterations (${totalInferred} total inferences)`);
+                    break;
+                }
+            }
+        }
+        
+        // Find Strongly Connected Components using Tarjan's algorithm
+        function findStronglyConnectedComponents() {
+            const n = votingState.factors.length;
+            const visited = Array(n).fill(false);
+            const stack = [];
+            const lowLink = Array(n).fill(0);
+            const ids = Array(n).fill(-1);
+            const onStack = Array(n).fill(false);
+            let id = 0;
+            const sccs = [];
+            
+            function dfs(at) {
+                stack.push(at);
+                onStack[at] = true;
+                ids[at] = lowLink[at] = id++;
+                visited[at] = true;
+                
+                for (let to = 0; to < n; to++) {
+                    if (at === to) continue;
+                    if (votingState.matrix[at][to] !== true) continue;
+                    
+                    if (!visited[to]) {
+                        dfs(to);
+                    }
+                    if (onStack[to]) {
+                        lowLink[at] = Math.min(lowLink[at], lowLink[to]);
+                    }
+                }
+                
+                if (ids[at] === lowLink[at]) {
+                    const scc = [];
+                    while (true) {
+                        const node = stack.pop();
+                        onStack[node] = false;
+                        scc.push(node);
+                        if (node === at) break;
+                    }
+                    if (scc.length > 0) {
+                        sccs.push(scc);
+                    }
+                }
+            }
+            
+            for (let i = 0; i < n; i++) {
+                if (!visited[i]) {
+                    dfs(i);
+                }
+            }
+            
+            return sccs;
+        }
+        
+        // Save progress and return later
+        function saveAndReturnLater() {
+            // Save voting state to localStorage so public voters can resume
+            try {
+                const saveData = {
+                    projectId: votingState.projectId,
+                    participantId: votingState.participantId,
+                    currentQuestion: votingState.currentQuestion,
+                    matrix: votingState.matrix,
+                    askedQuestions: votingState.askedQuestions.map(q => ({ from: q.from, to: q.to })),
+                    responses: votingState.responses,
+                    savedAt: Date.now()
+                };
+                localStorage.setItem(`ism_voting_progress_${votingState.projectId}_${votingState.participantId}`, JSON.stringify(saveData));
+            } catch (e) {
+                console.error('Could not save to localStorage:', e);
+            }
+
+            const answered = votingState.askedQuestions.length;
+            const total = votingState.allQuestions.length;
+
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(11,43,38,0.92);display:flex;align-items:center;justify-content:center;z-index:10000;';
+            overlay.innerHTML = `
+                <div style="background:#FAF3DD;border-radius:0.5rem;padding:2.5rem;max-width:460px;text-align:center;">
+                    <i class="fas fa-bookmark" style="font-size:2.5rem;color:#0B2B26;margin-bottom:1rem;"></i>
+                    <h3 style="color:#0B2B26;margin-bottom:0.75rem;">Progress Saved</h3>
+                    <p style="color:#333;margin-bottom:0.5rem;">You've completed <strong>${answered}</strong> of <strong>${total}</strong> questions.</p>
+                    <p style="color:#666;font-size:0.9rem;margin-bottom:1.5rem;">Your answers are saved on this device. Return to this same page on this device to pick up where you left off.</p>
+                    <div style="display:flex;gap:1rem;justify-content:center;">
+                        <button onclick="this.closest('div[style]').parentElement.remove()" class="btn btn-secondary" style="padding:0.6rem 1.2rem;">Continue Voting</button>
+                        <button onclick="window.close(); location.href='about:blank';" class="btn btn-primary" style="padding:0.6rem 1.2rem;background:#0B2B26;color:#FAF3DD;">Close Page</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+        
+        // Toggle factor clarification (show/hide on click)
+        let currentlyDisplayedFactor = null;
+        
+        function toggleFactorClarification(factorId, factorName, factorDescription, factorNumber) {
+            const clarificationDisplay = document.getElementById('clarification-display');
+            const clarificationTitle = document.getElementById('clarification-title');
+            const clarificationText = document.getElementById('clarification-text');
+            
+            // If clicking the same factor that's currently displayed, hide it
+            if (currentlyDisplayedFactor === factorId && clarificationDisplay.style.display !== 'none') {
+                clarificationDisplay.style.display = 'none';
+                currentlyDisplayedFactor = null;
+            } else {
+                // Show the clarification for the clicked factor
+                clarificationTitle.textContent = `${factorName} (${factorNumber})`;
+                clarificationText.textContent = factorDescription;
+                clarificationDisplay.style.display = 'block';
+                currentlyDisplayedFactor = factorId;
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+            document.getElementById('error-message').innerHTML = message;
+        }
+        
+        // Show completion screen with flowchart
+        async function showCompletion() {
+            console.log('🎉 ALL QUESTIONS COMPLETED!');
+            
+            // Track question time for last question
+            trackQuestionTime();
+            
+            // 🛡️ RUN BOT PROTECTION CHECK
+            console.log('%c🛡️ Running Final Bot Protection Check...', 'color: white; background: #0B2B26; padding: 5px 10px; font-weight: bold;');
+            const botCheckResult = await comprehensiveBotCheck(votingState.projectId);
+            
+            // Save security event to database
+            await saveSecurityEvent(votingState.projectId, votingState.participantId, botCheckResult);
+            
+            // If bot detected with high confidence, block completion
+            if (!botCheckResult.allowed) {
+                console.log('%c🚨 BOT DETECTED - BLOCKING COMPLETION', 'color: white; background: #DC2626; padding: 5px 10px; font-weight: bold;');
+                
+                // Show friendly error message
+                document.getElementById('voting-container').classList.add('hidden');
+                document.getElementById('error-container').classList.remove('hidden');
+                document.getElementById('error-message').innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-shield-alt" style="font-size: 3rem; color: #DC2626; margin-bottom: 1rem;"></i>
+                        <h2 style="color: #DC2626; margin-bottom: 1rem;">Unable to Submit Response</h2>
+                        <p style="color: #666; line-height: 1.6; max-width: 500px; margin: 0 auto;">
+                            We were unable to verify your submission. This may happen if you completed the survey too quickly 
+                            or if there was an issue with your browser.
+                        </p>
+                        <p style="color: #666; margin-top: 1rem;">
+                            Please try again or contact support if you continue to experience issues.
+                        </p>
+                        <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                    </div>
+                `;
+                window.scrollTo(0, 0);
+                return;
+            }
+            
+            // Log if flagged but allowed
+            if (botCheckResult.flagged) {
+                console.log('%c⚠️ RESPONSE FLAGGED (but allowed)', 'color: #FFA500; font-weight: bold;');
+                console.log('Flags:', botCheckResult.flags.join(', '));
+            } else {
+                console.log('%c✅ BOT CHECK PASSED', 'color: #10B981; font-weight: bold;');
+            }
+            
+            // Hide voting UI and main header
+            document.getElementById('progress-container').classList.add('hidden');
+            // context-container removed - no longer exists
+            document.getElementById('voting-tips').classList.add('hidden');
+            document.getElementById('voting-container').classList.add('hidden');
+            
+            // Keep the main header visible (no need to hide it)
+            // Main header stays visible for consistency
+            
+            // Show completion screen
+            document.getElementById('completion-container').classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Generate and display flowchart
+            generateFlowchart();
+        }
+        
+        // Generate ISM flowchart using PROPER WARFIELD'S ALGORITHM
+        function generateFlowchart() {
+            console.log('═══════════════════════════════════════════════════');
+            console.log('🎨 Generating flowchart with v6.26.0-SPACING-FIX');
+            console.log('═══════════════════════════════════════════════════');
+            
+            try {
+                const n = votingState.factors.length;
+                console.log(`📊 Input: ${n} factors`);
+                
+                // Count connections for logging
+                let connectionCount = 0;
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        if (i !== j && votingState.matrix[i][j] === true) {
+                            connectionCount++;
+                            console.log(`   ✅ Connection: ${votingState.factors[i].name} → ${votingState.factors[j].name}`);
+                        }
+                    }
+                }
+                
+                console.log(`✅ Voting matrix has ${connectionCount} connections`);
+                
+                if (connectionCount === 0) {
+                    console.error('❌❌❌ CRITICAL: ZERO CONNECTIONS FOUND! ❌❌❌');
+                    console.error('This means votingState.matrix contains no TRUE values');
+                    console.error('Debugging votingState.matrix:');
+                    console.table(votingState.matrix);
+                }
+                
+                console.log('📊 Voting Matrix (boolean):', votingState.matrix);
+                console.table(votingState.matrix);
+                
+                // Check if FlowchartISM is available
+                if (typeof FlowchartISM === 'undefined') {
+                    console.error('❌ FlowchartISM is not defined! Engine not loaded!');
+                    alert('Error: ISM engine not loaded. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ FlowchartISM API available');
+                
+                // Use FlowchartISM proper algorithm (v6.25.0-ALL-INTERFACES-SYNCHRONIZED)
+                // IMPORTANT: Pass the BOOLEAN voting matrix, NOT pre-converted adjacency matrix!
+                // The engine will handle the conversion internally
+                console.log('🔄 Calling FlowchartISM.generateFlowchartData()...');
+                const flowchartData = FlowchartISM.generateFlowchartData(votingState.factors, votingState.matrix);
+
+                console.log('📊 ISM FLOWCHART DATA GENERATED:');
+                console.log('   Levels:', flowchartData.levels ? flowchartData.levels.length : 'UNDEFINED');
+                console.log('   Components:', flowchartData.components ? flowchartData.components.length : 'UNDEFINED');
+                console.log('   Skeleton edges:', flowchartData.skeleton ? countSkeletonEdges(flowchartData.skeleton) : 'UNDEFINED');
+                console.log('   Isolated nodes:', flowchartData.isolatedNodes ? flowchartData.isolatedNodes.size : 'UNDEFINED');
+                
+                // Check container element
+                const container = document.getElementById('flowchart-canvas');
+                if (!container) {
+                    console.error('❌ Container element #flowchart-canvas not found!');
+                    alert('Error: Flowchart canvas not found. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('✅ Container element found');
+                
+                // Draw flowchart using FlowchartISM with static display
+                console.log('🔄 Calling FlowchartISM.drawFlowchart()...');
+                console.log('🎨 Using v6.26.0-SPACING-FIX (interpretation & spacing fixed)');
+                const result = FlowchartISM.drawFlowchart('flowchart-canvas', flowchartData, votingState.factors);
+                
+                console.log('📊 RENDER RESULT:', result);
+                
+                if (!result || !result.success) {
+                    console.error('❌ Flowchart rendering failed:', result);
+                    alert('Error rendering flowchart. Check console for details.');
+                    return;
+                }
+                
+                console.log('✅ Flowchart rendered successfully!');
+                console.log(`   Nodes: ${result.nodes}`);
+                console.log(`   Edges: ${result.edges}`);
+                console.log(`   Levels: ${result.levels}`);
+
+                // Show fullscreen flowchart overlay
+                FlowchartISM.showFullscreen(flowchartData, votingState.factors, 'Your Perceived Flow of Influence');
+
+                // Generate flowchart interpretation (using proper levels)
+                generateFlowchartInterpretation(flowchartData.levels, votingState.matrix);
+                
+                // Calculate correct parameters from flowchartData
+                const totalEdges = countSkeletonEdges(flowchartData.skeleton);
+                const reachable = calculateReachability(votingState.matrix, n);
+                
+                // Log completion to participant record with correct data
+                logFlowchartCompletion(flowchartData.levels, totalEdges, reachable);
+                
+                console.log('═══════════════════════════════════════════════════');
+                console.log('✅ COMPLETE! Flowchart generated successfully');
+                console.log('═══════════════════════════════════════════════════');
+                
+                // Report vote save statistics
+                if (window.voteSaveCount) {
+                    console.log(`📊 DATABASE SAVES: ${window.voteSaveCount} votes successfully saved to database`);
+                    console.log('✅ These votes will appear in the aggregate metastructure');
+                } else {
+                    console.warn('⚠️ WARNING: No votes were saved to database!');
+                    console.warn('⚠️ Check console for "❌ Failed to save response" messages');
+                    showDebug('⚠️ WARNING: Votes were not saved to database. Aggregate metastructure will not work.');
+                }
+                console.log('═══════════════════════════════════════════════════');
+                
+            } catch (error) {
+                console.error('═══════════════════════════════════════════════════');
+                console.error('❌ FLOWCHART GENERATION ERROR');
+                console.error('═══════════════════════════════════════════════════');
+                console.error('Error:', error);
+                console.error('Stack:', error.stack);
+                console.error('═══════════════════════════════════════════════════');
+                alert(`Error generating flowchart: ${error.message}\n\nPlease check the console (F12) for details and contact support.`);
+            }
+        }
+        
+        // Helper function to count edges in skeleton matrix
+        function countSkeletonEdges(skeleton) {
+            let count = 0;
+            for (let i = 0; i < skeleton.length; i++) {
+                for (let j = 0; j < skeleton[i].length; j++) {
+                    if (skeleton[i][j] === 1) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+        
+        // Helper function to calculate reachability count
+        function calculateReachability(G, n) {
+            let count = 0;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (i !== j && G[i][j] === 1) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+        
+        // Generate dynamic flowchart interpretation
+        function generateFlowchartInterpretation(levels, G) {
+            let interpretation = '';
+            
+            if (levels.length === 0) {
+                interpretation = 'Your responses show that these factors don\'t have a clear order of influence. They may all work together equally, or they may be independent of each other.';
+            } else if (levels.length === 1) {
+                interpretation = 'Your responses show that all these factors work together as a connected group. Rather than one leading to another, they support each other equally.';
+            } else {
+                // In Warfield ISM: levels[last] = primary drivers (most influential)
+                // The leftmost visual position shows the primary driver
+                const driverLevel = levels[levels.length - 1];
+                const driverName = votingState.factors[driverLevel[0]].name;
+
+                // Build interpretation (shortened as requested)
+                interpretation = '<p style="font-size: 1rem; line-height: 1.8; color: #333;">';
+                interpretation += `This flowchart represents your perceived flow of influence among ${votingState.factors.length} factors. Starting from the LEFT, '${driverName}' has the highest influence and is the primary driver, increasing the likelihood that subsequent factors manifest.`;
+                interpretation += '</p>';
+            }
+            
+            document.getElementById('flowchart-interpretation').innerHTML = interpretation;
+        }
+        
+        // Return to participant portal with improved error handling
+        // Return to participant portal with improved error handling
+        // Open aggregate flowchart in new window
+        function openAggregateFlowchart() {
+            console.log('🌍 Opening aggregate flowchart...');
+            
+            if (!votingState.projectId) {
+                alert('Error: Project ID not found. Please refresh and try again.');
+                return;
+            }
+            
+            // Open aggregate metastructure in new window
+            const url = `aggregate-metastructure-DEC19-2025.html?project=${votingState.projectId}&source=public`;
+            const aggregateWindow = window.open(url, '_blank', 'width=1200,height=800');
+            
+            if (!aggregateWindow) {
+                alert('⚠️ Popup blocked! Please allow popups to view the aggregate flowchart.');
+            }
+        }
+        
+        async function returnToPortal() {
+            try {
+                // Show loading state on button
+                const buttons = document.querySelectorAll('button[onclick*="returnToPortal"]');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Returning to Portal...';
+                });
+                
+                // PUBLIC MODE: Redirect to public participant portal
+                console.log('🏠 Returning to public portal...');
+                
+                // Small delay for visual feedback
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Redirect to public portal (no token needed)
+                window.location.href = 'public-participant-portal.html';
+                
+            } catch (error) {
+                console.error('Error returning to portal:', error);
+                // Still try to navigate
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+                if (token) {
+                    window.location.href = `participant-portal.html?token=${token}`;
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+        
+        // Log flowchart completion (PUBLIC: LocalStorage + Export)
+        async function logFlowchartCompletion(levels, totalEdges, reachable) {
+            try {
+                // Prepare flowchart object
+                const flowchartObject = {
+                    levels: levels,
+                    adjacencyMatrix: votingState.matrix,
+                    factors: votingState.factors.map(f => ({id: f.id, name: f.name}))
+                };
+                
+                // Save to localStorage
+                const completionKey = `public_project_${votingState.projectId}_completed`;
+                const savedData = {
+                    projectId: votingState.projectId,
+                    sessionId: votingState.sessionId,
+                    factors: votingState.factors,
+                    matrix: votingState.matrix,
+                    responses: votingState.responses,
+                    completedAt: Date.now(),
+                    flowchart: flowchartObject,
+                    num_edges: totalEdges,
+                    num_levels: levels.length
+                };
+                localStorage.setItem(completionKey, JSON.stringify(savedData));
+                console.log('✅ Completion saved to localStorage');
+                
+                // Show export/import message
+                const statusEl = document.getElementById('save-status-message');
+                if (statusEl) {
+                    statusEl.style.background = '#e3f2fd';
+                    statusEl.style.borderColor = '#2196f3';
+                    statusEl.innerHTML = `
+                        <p style="margin: 0; color: #1976d2; font-weight: 600;">
+                            <i class="fas fa-info-circle"></i> Voting Complete!
+                        </p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                            Your votes are saved on this device. Click "Download My Votes" below to export and send to admin for inclusion in the aggregate.
+                        </p>
+                    `;
+                }
+                
+                console.log('✅ Public voting complete - votes ready for export');
+                
+            } catch (error) {
+                console.error('❌ Error logging completion:', error);
+            }
+        }
+        
+        // ========================================
+        // FLOWCHART RENDERING FUNCTIONS
+        // ========================================
+        
+        // Draw flowchart on canvas (PROVEN DIAGNOSTIC TOOL LOGIC)
+        function drawFlowchart(levels, G) {
+            const canvas = document.getElementById('flowchart-canvas');
+            if (!canvas) {
+                console.error('❌ Canvas element not found');
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+            
+            console.log('🎨 Drawing flowchart with', levels.length, 'levels');
+            
+            // Fixed dimensions (proven from diagnostic tool)
+            const boxWidth = 200;
+            const boxHeight = 80;
+            const levelSpacing = 300;
+            
+            // Calculate canvas size
+            const canvasWidth = Math.max(800, 200 + (levels.length * levelSpacing));
+            const canvasHeight = 400;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            
+            console.log('📐 Canvas dimensions:', canvasWidth, 'x', canvasHeight);
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            
+            // Calculate node positions (diagnostic tool approach)
+            const nodePositions = [];
+            levels.forEach((level, idx) => {
+                const x = 100 + (idx * levelSpacing);
+                const y = canvasHeight / 2;
+                nodePositions.push({
+                    x: x,
+                    y: y,
+                    factors: level
+                });
+            });
+            
+            // Draw edges (arrows) first
+            for (let fromLevel = 0; fromLevel < levels.length; fromLevel++) {
+                for (let toLevel = 0; toLevel < levels.length; toLevel++) {
+                    if (fromLevel === toLevel) continue;
+                    
+                    // Check if there's any edge between these levels
+                    let hasEdge = false;
+                    for (const fromFactor of levels[fromLevel]) {
+                        for (const toFactor of levels[toLevel]) {
+                            if (G[fromFactor][toFactor] === 1) {
+                                hasEdge = true;
+                                break;
+                            }
+                        }
+                        if (hasEdge) break;
+                    }
+                    
+                    if (hasEdge) {
+                        const fromPos = nodePositions[fromLevel];
+                        const toPos = nodePositions[toLevel];
+                        
+                        // Draw arrow
+                        ctx.beginPath();
+                        ctx.strokeStyle = '#0B2B26';
+                        ctx.lineWidth = 2.5;
+                        ctx.setLineDash([]);
+                        
+                        const fromX = fromPos.x + boxWidth / 2;
+                        const fromY = fromPos.y;
+                        const toX = toPos.x - boxWidth / 2;
+                        const toY = toPos.y;
+                        
+                        ctx.moveTo(fromX, fromY);
+                        ctx.lineTo(toX, toY);
+                        ctx.stroke();
+                        
+                        // Draw arrowhead
+                        const angle = Math.atan2(toY - fromY, toX - fromX);
+                        const arrowSize = 12;
+                        ctx.beginPath();
+                        ctx.fillStyle = '#0B2B26';
+                        ctx.moveTo(toX, toY);
+                        ctx.lineTo(toX - arrowSize * Math.cos(angle - Math.PI / 6), 
+                                   toY - arrowSize * Math.sin(angle - Math.PI / 6));
+                        ctx.lineTo(toX - arrowSize * Math.cos(angle + Math.PI / 6), 
+                                   toY - arrowSize * Math.sin(angle + Math.PI / 6));
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                }
+            }
+            
+            // Draw nodes (boxes)
+            nodePositions.forEach((pos, levelIdx) => {
+                const factors = pos.factors;
+                const numFactors = factors.length;
+                const height = Math.max(boxHeight, 60 + numFactors * 25);
+                
+                const x = pos.x - boxWidth / 2;
+                const y = pos.y - height / 2;
+                
+                // Draw shadow
+                ctx.shadowColor = 'rgba(11, 43, 38, 0.2)';
+                ctx.shadowBlur = 8;
+                ctx.shadowOffsetX = 3;
+                ctx.shadowOffsetY = 3;
+                
+                // Standard box styling for all factors
+                ctx.fillStyle = '#FAF3DD';
+                ctx.strokeStyle = '#0B2B26';
+                ctx.lineWidth = 3;
+                
+                ctx.beginPath();
+                
+                // Use roundRect if available, otherwise use rect (browser compatibility)
+                if (typeof ctx.roundRect === 'function') {
+                    ctx.roundRect(x, y, boxWidth, height, 8);
+                } else {
+                    ctx.rect(x, y, boxWidth, height);
+                }
+                ctx.fill();
+                ctx.stroke();
+                
+                // Reset shadow
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                
+                // Draw text (diagnostic tool style)
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Draw factor names
+                ctx.fillStyle = '#0B2B26';
+                ctx.font = 'bold 16px Arial';
+                
+                if (numFactors === 1) {
+                    // Single factor
+                    const factor = votingState.factors[factors[0]];
+                    if (factor && factor.name) {
+                        // Draw factor name WITHOUT number (position scores calculated correctly in aggregate)
+                        const factorText = factor.name;
+                        
+                        // Draw factor name
+                        ctx.font = 'bold 16px Arial';
+                        ctx.fillStyle = '#0B2B26';
+                        ctx.fillText(factorText, pos.x, pos.y);
+                    }
+                } else {
+                    // Multiple factors in same box (cycle/SCC)
+                    ctx.font = 'bold 14px Arial';
+                    const lineHeight = 22;
+                    const startY = pos.y - ((numFactors - 1) * lineHeight) / 2;
+                    
+                    factors.forEach((factorIdx, idx) => {
+                        const factor = votingState.factors[factorIdx];
+                        if (factor && factor.name) {
+                            const factorY = startY + idx * lineHeight;
+                            
+                            // Draw factor name WITHOUT number (position scores calculated correctly in aggregate)
+                            const factorText = factor.name;
+                            
+                            // Draw factor name
+                            ctx.font = 'bold 14px Arial';
+                            ctx.fillStyle = '#0B2B26';
+                            ctx.fillText(factorText, pos.x, factorY);
+                        }
+                    });
+                }
+            });
+            
+            console.log('✅ Flowchart rendered successfully');
+            console.log('📊 Canvas dimensions:', canvas.width, 'x', canvas.height);
+            console.log('📦 Drew', nodePositions.length, 'levels with', levels.flat().length, 'total factors');
+            
+            // Initialize drag functionality after drawing
+            initializeFlowchartDrag();
+        }
+        
+        // Initialize drag functionality for flowchart
+        function initializeFlowchartDrag() {
+            const canvas = document.getElementById('flowchart-canvas');
+            const wrapper = document.getElementById('flowchart-wrapper');
+            if (!canvas || !wrapper) return;
+            
+            let isDragging = false;
+            let startX = 0;
+            let startY = 0;
+            let scrollLeft = 0;
+            let scrollTop = 0;
+            
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.pageX - wrapper.offsetLeft;
+                startY = e.pageY - wrapper.offsetTop;
+                scrollLeft = wrapper.scrollLeft;
+                scrollTop = wrapper.scrollTop;
+                canvas.style.cursor = 'grabbing';
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - wrapper.offsetLeft;
+                const y = e.pageY - wrapper.offsetTop;
+                const walkX = (x - startX) * 1.5; // Scroll speed multiplier
+                const walkY = (y - startY) * 1.5;
+                wrapper.scrollLeft = scrollLeft - walkX;
+                wrapper.scrollTop = scrollTop - walkY;
+            });
+            
+            console.log('✅ Drag functionality initialized');
+        }
+        
+        // Zoom functions removed - flowchart is now static full-size
+        
+        // Show/hide download options
+        function showDownloadOptions() {
+            const options = document.getElementById('download-options');
+            if (options.classList.contains('hidden')) {
+                options.classList.remove('hidden');
+            } else {
+                options.classList.add('hidden');
+            }
+        }
+        
+        // Download flowchart as PNG (SVG version)
+        function downloadAsPNG() {
+            try {
+                const svg = document.getElementById('flowchart-canvas');
+                if (!svg) {
+                    alert('Flowchart not found. Please generate the flowchart first.');
+                    return;
+                }
+                
+                // Get SVG dimensions
+                const svgRect = svg.getBoundingClientRect();
+                const svgWidth = svgRect.width || 1400;
+                const svgHeight = svgRect.height || 800;
+                
+                // Create a canvas to render SVG
+                const canvas = document.createElement('canvas');
+                canvas.width = svgWidth;
+                canvas.height = svgHeight;
+                const ctx = canvas.getContext('2d');
+                
+                // Convert SVG to image
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(svgBlob);
+                
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Download as PNG
+                    const link = document.createElement('a');
+                    link.download = `ISM_Flowchart_${votingState.participant.name.replace(/\s+/g, '_')}_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    
+                    URL.revokeObjectURL(url);
+                    console.log('✅ Flowchart downloaded as PNG');
+                };
+                
+                img.onerror = function(error) {
+                    console.error('❌ Error loading SVG image:', error);
+                    alert('Failed to download PNG. Error loading flowchart image.');
+                    URL.revokeObjectURL(url);
+                };
+                
+                img.src = url;
+            } catch (error) {
+                console.error('❌ Error downloading PNG:', error);
+                alert('Failed to download PNG. Error: ' + error.message);
+            }
+        }
+        
+        // Download flowchart as PDF (SVG version)
+        function downloadAsPDF() {
+            try {
+                // Check if jsPDF is loaded
+                if (typeof window.jspdf === 'undefined') {
+                    alert('PDF library not loaded. Please refresh the page and try again.');
+                    console.error('❌ jsPDF library not found');
+                    return;
+                }
+                
+                const svg = document.getElementById('flowchart-canvas');
+                if (!svg) {
+                    alert('Flowchart not found. Please generate the flowchart first.');
+                    return;
+                }
+                
+                // Get SVG dimensions
+                const svgRect = svg.getBoundingClientRect();
+                const svgWidth = svgRect.width || 1400;
+                const svgHeight = svgRect.height || 800;
+                
+                // Create a canvas to render SVG
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const padding = 40;
+                const titleHeight = 60;
+                canvas.width = svgWidth + (padding * 2);
+                canvas.height = svgHeight + (padding * 2) + titleHeight;
+                
+                // White background
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Add title
+                ctx.fillStyle = '#0B2B26';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Perceived Flow of Influence', canvas.width / 2, padding + 30);
+                
+                // Add participant name
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#666';
+                ctx.fillText(votingState.participant.name, canvas.width / 2, padding + 50);
+                
+                // Convert SVG to image
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(svgBlob);
+                
+                const img = new Image();
+                img.onload = function() {
+                    // Draw SVG image
+                    ctx.drawImage(img, padding, padding + titleHeight, svgWidth, svgHeight);
+                    
+                    // Convert to PDF using jsPDF
+                    const imgData = canvas.toDataURL('image/png');
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+                        unit: 'px',
+                        format: [canvas.width, canvas.height]
+                    });
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                    pdf.save(`ISM_Flowchart_${votingState.participant.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
+                    
+                    URL.revokeObjectURL(url);
+                    console.log('✅ Flowchart downloaded as PDF');
+                };
+                
+                img.onerror = function(error) {
+                    console.error('❌ Error loading SVG image:', error);
+                    alert('Failed to generate PDF. Error loading flowchart image.');
+                    URL.revokeObjectURL(url);
+                };
+                
+                img.src = url;
+                
+            } catch (error) {
+                console.error('❌ Error generating PDF:', error);
+                alert('Failed to generate PDF. Error: ' + error.message);
+            }
+        }
+        
+        // ========================================
+        // EXPORT VOTES TO JSON (localStorage Export Solution)
+        // ========================================
+        function exportVotesToJSON() {
+            console.log('📤 Exporting votes to JSON file...');
+            
+            try {
+                // Collect all vote data
+                const exportData = {
+                    exportVersion: '1.0',
+                    exportedAt: Date.now(),
+                    exportedDate: new Date().toISOString(),
+                    projectId: votingState.projectId,
+                    participantId: votingState.participantId,
+                    participantName: votingState.participant?.name || 'Anonymous Public Voter',
+                    factors: votingState.factors.map(f => ({
+                        id: f.id,
+                        name: f.name
+                    })),
+                    matrix: votingState.matrix,
+                    responses: votingState.responses,
+                    votes: []
+                };
+                
+                // Build individual vote records (same format as database)
+                votingState.responses.forEach((response, idx) => {
+                    if (response.question && response.value !== null) {
+                        const vote = {
+                            project_id: votingState.projectId,
+                            participant_id: votingState.participantId,
+                            from_factor_id: votingState.factors[response.question.from].id,
+                            to_factor_id: votingState.factors[response.question.to].id,
+                            from_factor_index: response.question.from,
+                            to_factor_index: response.question.to,
+                            vote_value: response.value,
+                            created_at: Date.now()
+                        };
+                        exportData.votes.push(vote);
+                    }
+                });
+                
+                // Add flowchart if generated
+                if (window.generatedFlowchart) {
+                    exportData.flowchart = {
+                        levels: window.generatedFlowchart.levels,
+                        numEdges: window.generatedFlowchart.numEdges,
+                        numLevels: window.generatedFlowchart.numLevels,
+                        reachable: window.generatedFlowchart.reachable
+                    };
+                }
+                
+                // Add metadata
+                exportData.metadata = {
+                    totalQuestions: votingState.totalQuestions,
+                    completedQuestions: votingState.responses.filter(r => r.value !== null).length,
+                    userAgent: navigator.userAgent,
+                    screenResolution: `${window.screen.width}x${window.screen.height}`,
+                    completedAt: Date.now()
+                };
+                
+                console.log('✅ Export data prepared:', exportData);
+                console.log('   📊 Total votes:', exportData.votes.length);
+                console.log('   📊 Factors:', exportData.factors.length);
+                
+                // Convert to JSON
+                const jsonString = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                
+                // Create download link
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `public-votes-${votingState.projectId}-${Date.now()}.json`;
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                console.log('✅ Votes exported successfully!');
+                alert('✅ Your votes have been downloaded!\n\nFile: ' + link.download + '\n\nPlease send this file to the project administrator.');
+                
+            } catch (error) {
+                console.error('❌ Error exporting votes:', error);
+                alert('❌ Failed to export votes. Please try again or contact support.');
+            }
+        }
+        
+        /* REMOVED: openResultsPage() - Purple results page removed per v6.35.1 update
+         * Users now click "View Aggregate" which calls openAggregateFlowchart() instead
+         */
+        
+        // Confirm redo
+        function confirmRedo() {
+            const confirmed = confirm(
+                'Are you sure you want to redo your ISM voting?\n\n' +
+                'This will:\n' +
+                '• Delete all your current responses\n' +
+                '• Delete your current flowchart\n' +
+                '• Start the voting process from the beginning\n\n' +
+                'This action cannot be undone.'
+            );
+            
+            if (confirmed) {
+                redoVoting();
+            }
+        }
+        
+        // Redo voting (delete all responses and restart)
+        async function redoVoting() {
+            // Skip in preview mode
+            if (votingState.token && votingState.token.startsWith('PREVIEW-')) {
+                console.log('🔍 Preview mode - restarting without deleting database records');
+                location.reload();
+                return;
+            }
+            
+            try {
+                console.log('🔄 Deleting existing responses...');
+                
+                // Clear localStorage for this project FIRST
+                const completionKey = `public_project_${votingState.projectId}_completed`;
+                localStorage.removeItem(completionKey);
+                console.log('✅ localStorage cleared');
+
+                // Get all responses for this participant and project
+                const response = await fetch(`tables/ism_votes?search=${votingState.projectId}&limit=10000`);
+                const data = await response.json();
+                
+                // Check if data exists (handle 422 error or empty response)
+                if (!data || !data.data || !Array.isArray(data.data)) {
+                    console.log('⚠️ No existing voting data found - starting fresh');
+                    location.reload();
+                    return;
+                }
+                
+                const toDelete = data.data.filter(r => 
+                    r.project_id === votingState.projectId && 
+                    r.participant_id === votingState.participantId
+                );
+                
+                // Delete each response
+                for (const resp of toDelete) {
+                    await fetch(`tables/ism_votes/${resp.id}`, {
+                        method: 'DELETE'
+                    });
+                }
+                
+                console.log(`✅ Deleted ${toDelete.length} responses`);
+                
+                // Update participant record to clear completion status
+                await fetch(`tables/participants/${votingState.participantId}`, {
+                    method: 'PATCH',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        ism_completed: false,
+                        ism_completion_date: null,
+                        flowchart_levels: null,
+                        flowchart_edges: null,
+                        flowchart_reachable: null,
+                        flowchart_data: null
+                    })
+                });
+                
+                console.log('✅ Participant record cleared');
+                console.log('🔄 Reloading page...');
+                
+                // Reload the page to start fresh
+                location.reload();
+                
+            } catch (error) {
+                console.error('❌ Error during redo:', error);
+                alert('An error occurred while resetting your responses. Please refresh the page and try again.');
+            }
+        }
+        
+        // Auto-calculate aggregate metastructure for PUBLIC projects (DIRECT METHOD)
+        // Uses public_ism_votes table (no auth required for public voters)
+        async function calculateAndSavePublicAggregateDirect(projectId, currentFlowchart) {
+            console.log('═══════════════════════════════════════════════════');
+            console.log('🔄 Calculating PUBLIC aggregate from votes table');
+            console.log('═══════════════════════════════════════════════════');
+            
+            const statusEl = document.getElementById('save-status-message');
+            
+            try {
+                // Fetch all votes for this project from public_ism_votes table
+                console.log('📊 Fetching public votes from public_ism_votes table...');
+                
+                const publicVotesResponse = await fetch(`tables/public_ism_votes?search=${projectId}&limit=10000`);
+                if (!publicVotesResponse.ok) {
+                    throw new Error(`Failed to fetch public votes: ${publicVotesResponse.status}`);
+                }
+                
+                const publicVotesData = await publicVotesResponse.json();
+                const projectVotes = publicVotesData.data.filter(v => v.project_id === projectId);
+                
+                console.log(`✅ Found ${projectVotes.length} public votes for this project`);
+                
+                // Group votes by participant to build individual flowcharts
+                const votesByParticipant = {};
+                projectVotes.forEach(vote => {
+                    if (!votesByParticipant[vote.participant_id]) {
+                        votesByParticipant[vote.participant_id] = [];
+                    }
+                    votesByParticipant[vote.participant_id].push(vote);
+                });
+                
+                const participantIds = Object.keys(votesByParticipant);
+                console.log(`📊 ${participantIds.length} unique public participants`);
+                
+                // Build flowchart for each participant
+                const allFlowcharts = [];
+                
+                // Add current participant's flowchart (from localStorage or current session)
+                if (currentFlowchart && currentFlowchart.factors) {
+                    allFlowcharts.push(currentFlowchart);
+                    console.log('✅ Added current session flowchart');
+                }
+                
+                // Note: We can't rebuild flowcharts from votes alone without factor data
+                // So for now, we'll use localStorage for public voters
+                // Admin will need to trigger full recalculation
+                
+                console.log(`📊 Total flowcharts for aggregate: ${allFlowcharts.length}`);
+                
+                if (allFlowcharts.length === 0) {
+                    console.log('⚠️ No flowcharts to aggregate yet');
+                    if (statusEl) {
+                        statusEl.style.background = '#fff3e0';
+                        statusEl.style.borderColor = '#ff9800';
+                        statusEl.innerHTML = `
+                            <p style="margin: 0; color: #e65100; font-weight: 600;">
+                                <i class="fas fa-info-circle"></i> Votes saved successfully!
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                                Your ${projectVotes.length} votes are in the database. Admin will calculate the aggregate metastructure.
+                            </p>
+                        `;
+                    }
+                    return;
+                }
+                
+                // Calculate aggregate using same algorithm
+                console.log('🔄 Calculating aggregate from', allFlowcharts.length, 'flowcharts...');
+                const aggregate = calculateAggregateFromFlowcharts(allFlowcharts);
+                
+                console.log('✅ Aggregate calculated:');
+                console.log('   📊 Factors:', aggregate.factors.length);
+                console.log('   📊 Participants:', aggregate.numParticipants);
+                
+                // Try to save to ism_metastructure table (may fail with 401)
+                const metastructureRecord = {
+                    id: `meta-${projectId}-${Date.now()}`,
+                    project_id: projectId,
+                    num_participants: participantIds.length,
+                    themes: JSON.stringify(aggregate.factors),
+                    average_influence_scores: JSON.stringify(aggregate),
+                    created_at: Date.now()
+                };
+                
+                console.log('💾 Attempting to save aggregate metastructure...');
+                const saveResponse = await fetch('tables/ism_metastructure', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(metastructureRecord)
+                });
+                
+                if (saveResponse.ok) {
+                    console.log('═══════════════════════════════════════════════════');
+                    console.log('✅ AGGREGATE METASTRUCTURE SAVED SUCCESSFULLY!');
+                    console.log('═══════════════════════════════════════════════════');
+                    console.log('📊 Total Participants:', participantIds.length);
+                    console.log('📊 Total Votes:', projectVotes.length);
+                    console.log('📊 Total Factors:', aggregate.factors.length);
+                    if (aggregate.factors.length > 0) {
+                        console.log('📊 Top Factor:', aggregate.factors[0].name, '(avgINF:', aggregate.factors[0].avgINF.toFixed(2) + ')');
+                    }
+                    console.log('═══════════════════════════════════════════════════');
+                    
+                    // Update status message - SUCCESS
+                    if (statusEl) {
+                        statusEl.style.background = '#e8f5e9';
+                        statusEl.style.borderColor = '#4caf50';
+                        statusEl.innerHTML = `
+                            <p style="margin: 0; color: #2e7d32; font-weight: 600;">
+                                <i class="fas fa-check-circle"></i> All results saved successfully!
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                                Your ${projectVotes.length} votes are saved and included in the aggregate (${participantIds.length} total participants)
+                            </p>
+                        `;
+                    }
+                    
+                } else if (saveResponse.status === 401) {
+                    console.log('ℹ️ 401: Cannot save aggregate (expected for public voters)');
+                    console.log('✅ Votes are saved. Admin will calculate aggregate.');
+                    
+                    // Update status message - VOTES SAVED, AGGREGATE PENDING
+                    if (statusEl) {
+                        statusEl.style.background = '#e3f2fd';
+                        statusEl.style.borderColor = '#2196f3';
+                        statusEl.innerHTML = `
+                            <p style="margin: 0; color: #1565c0; font-weight: 600;">
+                                <i class="fas fa-check-circle"></i> Your votes are saved!
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                                ${projectVotes.length} votes recorded in database. Admin will update the aggregate metastructure.
+                            </p>
+                        `;
+                    }
+                    
+                } else {
+                    console.error('❌ Failed to save aggregate:', saveResponse.status);
+                    const errorText = await saveResponse.text();
+                    console.error('❌ Error details:', errorText);
+                    
+                    // Update status message - ERROR
+                    if (statusEl) {
+                        statusEl.style.background = '#fff3e0';
+                        statusEl.style.borderColor = '#ff9800';
+                        statusEl.innerHTML = `
+                            <p style="margin: 0; color: #e65100; font-weight: 600;">
+                                <i class="fas fa-exclamation-triangle"></i> Votes saved, aggregate pending
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                                Your votes are in the database. Error ${saveResponse.status} saving aggregate - admin will resolve.
+                            </p>
+                        `;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('═══════════════════════════════════════════════════');
+                console.error('❌ ERROR CALCULATING AGGREGATE');
+                console.error('═══════════════════════════════════════════════════');
+                console.error('Error:', error);
+                console.error('Stack:', error.stack);
+                console.error('═══════════════════════════════════════════════════');
+                
+                // Update status message - EXCEPTION
+                if (statusEl) {
+                    statusEl.style.background = '#fff3e0';
+                    statusEl.style.borderColor = '#ff9800';
+                    statusEl.innerHTML = `
+                        <p style="margin: 0; color: #e65100; font-weight: 600;">
+                            <i class="fas fa-info-circle"></i> Votes saved successfully
+                        </p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">
+                            Individual votes are in the database. Admin will calculate the aggregate metastructure.
+                        </p>
+                    `;
+                }
+            }
+        }
+        
+        // Auto-calculate aggregate metastructure for PUBLIC projects
+        async function calculateAndSavePublicAggregate(projectId) {
+            console.log('═══════════════════════════════════════════════════');
+            console.log('🔄 Auto-calculating aggregate metastructure for project:', projectId);
+            console.log('═══════════════════════════════════════════════════');
+            
+            try {
+                // UNIFIED APPROACH: Fetch from ism_participant_flowcharts table
+                // This table contains BOTH internal participants AND public voters
+                console.log('📊 Fetching all flowcharts from ism_participant_flowcharts...');
+                
+                const flowchartsResponse = await fetch(`tables/ism_participant_flowcharts?search=${projectId}&limit=10000`);
+                if (!flowchartsResponse.ok) {
+                    console.error('❌ Failed to fetch flowcharts');
+                    return;
+                }
+                
+                const flowchartsData = await flowchartsResponse.json();
+                const projectFlowcharts = flowchartsData.data.filter(fc => 
+                    fc.project_id === projectId && fc.levels && fc.factors && fc.matrix
+                );
+                
+                console.log(`✅ Found ${projectFlowcharts.length} completed flowcharts for project`);
+                
+                if (projectFlowcharts.length === 0) {
+                    console.log('⚠️ No completed flowcharts yet - cannot calculate aggregate');
+                    return;
+                }
+                
+                // Convert to flowchart format (SAME as participant portal)
+                // Parse JSON strings if needed
+                const allFlowcharts = projectFlowcharts.map(fc => {
+                    const levels = typeof fc.levels === 'string' ? JSON.parse(fc.levels) : fc.levels;
+                    const matrix = typeof fc.matrix === 'string' ? JSON.parse(fc.matrix) : fc.matrix;
+                    const factors = typeof fc.factors === 'string' ? JSON.parse(fc.factors) : fc.factors;
+                    
+                    return {
+                        levels: levels,
+                        adjacencyMatrix: matrix,
+                        factors: factors
+                    };
+                });
+                
+                console.log('✅ Converted', allFlowcharts.length, 'flowcharts to standard format');
+                console.log('   📊 Sample flowchart:', {
+                    levelsCount: allFlowcharts[0]?.levels?.length,
+                    factorsCount: allFlowcharts[0]?.factors?.length,
+                    matrixSize: allFlowcharts[0]?.adjacencyMatrix?.length
+                });
+                
+                // Calculate aggregate (use SAME function as participant portal)
+                console.log('🔄 Calculating aggregate from', allFlowcharts.length, 'flowcharts...');
+                const aggregate = calculateAggregateFromFlowcharts(allFlowcharts);
+                
+                console.log('✅ Aggregate calculated:');
+                console.log('   📊 Factors:', aggregate.factors.length);
+                console.log('   📊 Participants:', aggregate.numParticipants);
+                
+                // Save to ism_metastructure table
+                const metastructureRecord = {
+                    id: `meta-${projectId}-${Date.now()}`,
+                    project_id: projectId,
+                    num_participants: allFlowcharts.length,
+                    themes: JSON.stringify(aggregate.factors),
+                    average_influence_scores: JSON.stringify(aggregate),
+                    created_at: Date.now()
+                };
+                
+                console.log('💾 Saving aggregate metastructure to database...');
+                const saveResponse = await fetch('tables/ism_metastructure', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(metastructureRecord)
+                });
+                
+                if (saveResponse.ok) {
+                    console.log('═══════════════════════════════════════════════════');
+                    console.log('✅ AGGREGATE METASTRUCTURE SAVED SUCCESSFULLY!');
+                    console.log('═══════════════════════════════════════════════════');
+                    console.log('📊 Total Participants (Public + Internal):', allFlowcharts.length);
+                    console.log('📊 Total Factors:', aggregate.factors.length);
+                    console.log('📊 Top Factor:', aggregate.factors[0].name, '(avgINF:', aggregate.factors[0].avgINF.toFixed(2) + ')');
+                    console.log('═══════════════════════════════════════════════════');
+                } else {
+                    console.error('❌ Failed to save aggregate:', saveResponse.status);
+                    const errorText = await saveResponse.text();
+                    console.error('❌ Error details:', errorText);
+                }
+                
+            } catch (error) {
+                console.error('═══════════════════════════════════════════════════');
+                console.error('❌ ERROR AUTO-CALCULATING AGGREGATE');
+                console.error('═══════════════════════════════════════════════════');
+                console.error('Error:', error);
+                console.error('Stack:', error.stack);
+                console.error('═══════════════════════════════════════════════════');
+            }
+        }
+        
+        // Shared calculation function (same as participant-voting.html)
+        function calculateAggregateFromFlowcharts(flowcharts) {
+            const factorMap = new Map();
+            
+            flowcharts.forEach(fc => {
+                fc.factors.forEach(f => {
+                    if (!factorMap.has(f.id)) {
+                        factorMap.set(f.id, {
+                            id: f.id,
+                            name: f.name,
+                            influenceScores: []
+                        });
+                    }
+                });
+            });
+            
+            flowcharts.forEach(fc => {
+                const { factors, adjacencyMatrix, levels } = fc;
+                const n = factors.length;
+                
+                factors.forEach((factor, i) => {
+                    let level = -1;
+                    for (let l = 0; l < levels.length; l++) {
+                        if (levels[l].includes(i)) {
+                            level = l;
+                            break;
+                        }
+                    }
+                    
+                    if (level === -1) return;
+                    
+                    const POS = levels.length - level;
+                    const SUC = adjacencyMatrix[i].filter(Boolean).length;
+                    let ANT = 0;
+                    for (let j = 0; j < n; j++) {
+                        if (adjacencyMatrix[j][i]) ANT++;
+                    }
+                    
+                    const INF = POS + (SUC - ANT);
+                    factorMap.get(factor.id).influenceScores.push(INF);
+                });
+            });
+            
+            const aggregateScores = [];
+            factorMap.forEach((data, factorId) => {
+                if (data.influenceScores.length === 0) return;
+                
+                const scores = data.influenceScores;
+                const avgINF = scores.reduce((a, b) => a + b, 0) / scores.length;
+                const mean = avgINF;
+                const squareDiffs = scores.map(s => Math.pow(s - mean, 2));
+                const stdDev = Math.sqrt(squareDiffs.reduce((a, b) => a + b, 0) / scores.length);
+                const min = Math.min(...scores);
+                const max = Math.max(...scores);
+                
+                aggregateScores.push({
+                    id: data.id,
+                    name: data.name,
+                    avgINF,
+                    stdDev,
+                    min,
+                    max
+                });
+            });
+            
+            aggregateScores.sort((a, b) => b.avgINF - a.avgINF);
+            
+            aggregateScores.forEach((score, index) => {
+                score.rank = index + 1;
+                
+                const quartileSize = Math.ceil(aggregateScores.length / 4);
+                const stageNum = Math.floor(index / quartileSize) + 1;
+                const stageNames = {
+                    1: 'Stage 1: Core Enablers',
+                    2: 'Stage 2: Informed Climate',
+                    3: 'Stage 3: Interpersonal Level',
+                    4: 'Stage 4: Outcomes'
+                };
+                score.stage = stageNames[Math.min(stageNum, 4)];
+            });
+            
+            return {
+                factors: aggregateScores,
+                numParticipants: flowcharts.length
+            };
+        }
+    </script>
+    
+    <!-- ADA Footer Component -->
+    <script src="js/ada-footer.js"></script>
+    
+    <!-- vis.js for Classic ISM Flowchart Rendering -->
+    <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+    
+    <!-- ISM Flowchart Proper Algorithm -->
+    <script src="js/ism-complete-v6.11.0.js?v=6.32.0&t=20260218"></script>
+    
+    <!-- Classic ISM Renderer (vis.js) -->
+    <script src="js/ism-vis-renderer.js?v=7.0.0&t=20251216180000"></script>
+</body>
+</html>

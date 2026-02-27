@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon-light.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+    <title>Idea Generation - Interactive Management Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/ada-footer.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #FAF3DD;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+        }
+        
+        /* Admin-Style Header */
+        .app-header {
+            background: #0B2B26;
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            margin-bottom: 2rem;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .org-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            max-height: 60px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+        
+        .logo-divider {
+            width: 2px;
+            height: 40px;
+            background: #FAF3DD;
+            opacity: 0.3;
+        }
+        
+        .header-content {
+            position: relative;
+        }
+        
+        .logo-img {
+            height: 50px;
+            object-fit: contain;
+        }
+        
+        .header-subtitle {
+            color: #FAF3DD;
+            font-size: 0.9rem;
+            margin: 0.25rem 0 0 0;
+            font-weight: 600;
+        }
+        
+        .participant-info {
+            color: #FAF3DD;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .trigger {
+            background: #FFF8DC;
+            border: 3px solid #0B2B26;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .idea-form {
+            border: 2px solid #ddd;
+        }
+        
+        .idea-form.submitted {
+            border-color: #0B2B26;
+            background: #f1f8f4;
+        }
+        
+        h2 {
+            color: #0B2B26;
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #0B2B26;
+        }
+        
+        button {
+            background: #0B2B26;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px 0 0;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #164038;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .button-success {
+            background: #0B2B26;
+        }
+        
+        .button-success:hover {
+            background: #164038;
+        }
+        
+        .button-outline {
+            background: white;
+            color: #0B2B26;
+            border: 2px solid #0B2B26;
+        }
+        
+        .button-outline:hover {
+            background: #F5E6D3;
+        }
+        
+        .button-primary {
+            background: #3E0505;
+            color: white;
+        }
+        
+        .button-primary:hover {
+            background: #5a0707;
+        }
+        
+        /* Tab Navigation */
+        .tab-navigation {
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            padding: 0;
+        }
+        
+        .tab-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            padding: 0 2rem;
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #718096;
+            font-weight: 600;
+            font-family: 'Open Sans', sans-serif;
+            border-bottom: 3px solid transparent;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            margin: 0;
+        }
+        
+        .tab-button:hover {
+            color: #0B2B26;
+            background: #F5E6D3;
+        }
+        
+        .tab-button.active {
+            color: #3E0505;
+            border-bottom-color: #3E0505;
+            background: #F5E6D3;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #dc3545;
+        }
+        
+        .success-screen {
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .success-screen h1 {
+            color: #0B2B26;
+            font-size: 48px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem 1rem;
+                max-width: 100%;
+            }
+            .header-content {
+                padding: 0 1rem;
+            }
+            .logo-section {
+                gap: 0.75rem;
+            }
+            .logo-img {
+                height: 36px;
+            }
+            .org-logo {
+                max-height: 40px;
+                max-width: 140px;
+            }
+            .box {
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+            .trigger {
+                font-size: 16px;
+            }
+            .success-screen {
+                padding: 20px;
+            }
+            .success-screen h1 {
+                font-size: 28px;
+            }
+            .loading {
+                padding: 30px;
+                font-size: 16px;
+            }
+            button {
+                min-height: 48px;
+                padding: 12px 20px;
+                width: 100%;
+                margin: 8px 0 0 0;
+            }
+            .tab-container {
+                padding: 0 0.5rem;
+            }
+            .tab-button {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+            }
+            textarea {
+                font-size: 16px; /* Prevents iOS zoom on focus */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-subtitle {
+                font-size: 0.8rem !important;
+            }
+            .participant-info {
+                font-size: 0.85rem;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+    <!-- Firebase SDK (auto-injected by sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260205"></script>
+    <script src="js/firestore-api-adapter.js?v=20260205"></script>
+</head>
+<body>
+    <!-- Header - Admin Style -->
+    <header class="app-header" id="main-header" style="display: none;">
+        <div class="header-content">
+            <div class="logo-section">
+                <span style="font-family: 'Merriweather', serif; font-size: 1.1rem; font-weight: 700; color: #FAF3DD;">Interactive Management</span>
+                <div class="logo-divider"></div>
+                <p class="header-subtitle" style="margin: 0; font-size: 1.1rem;">Idea Generation</p>
+            </div>
+            
+            <!-- Organization Logo - Centered -->
+            <img id="org-logo" class="org-logo" alt="Organization" style="display: none;">
+            
+            <div class="participant-info">
+                <i class="fas fa-user"></i>
+                <span id="participant-name-header">Participant</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Tab Navigation -->
+    <nav class="tab-navigation" id="tab-nav" style="display: none;">
+        <div class="tab-container">
+            <button class="tab-button active">
+                <i class="fas fa-lightbulb"></i> Idea Generation
+            </button>
+            <button class="tab-button" style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fas fa-vote-yea"></i> ISM Voting
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+            Loading your session...
+        </div>
+
+        <!-- Error -->
+        <div id="error" class="error hidden"></div>
+
+        <!-- Main Content -->
+        <div id="content" class="hidden">
+            <div class="box trigger">
+                <p id="trigger"></p>
+            </div>
+
+            <div id="ideas"></div>
+
+            <div id="buttons" class="hidden">
+                <button class="button-outline" onclick="addIdea()">+ Add Another Idea</button>
+                <button class="button-success" onclick="finish()">✓ I'm Done</button>
+            </div>
+        </div>
+
+        <!-- Success -->
+        <div id="success" class="success-screen hidden">
+            <h1 style="color: #0B2B26; font-size: 48px;">✓</h1>
+            <h2 style="color: #0B2B26;">Thank You!</h2>
+            <p style="font-size: 1.1rem; margin: 1rem 0;">Your ideas have been submitted successfully.</p>
+            <p id="count" style="color: #666; margin-bottom: 2rem;"></p>
+            
+            <div style="background: #FFF8DC; border: 2px solid #0B2B26; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h3 style="color: #0B2B26; margin-bottom: 1rem;"><i class="fas fa-envelope"></i> Next Step: ISM Voting</h3>
+                <p style="color: #333; line-height: 1.6;">
+                    Please wait for an email from your administrator regarding the next phase of this strategic initiative. 
+                    You will receive instructions and a link to complete the ISM voting process.
+                </p>
+            </div>
+            
+            <button class="button-primary" onclick="returnToPortal()" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <i class="fas fa-arrow-left"></i> Return to Your Portal
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let participant, project, participantToken;
+        let ideaNum = 0;
+        let submitted = [];
+
+        // Start when page loads
+        window.onload = async function() {
+            try {
+                // Get token from URL
+                const params = new URLSearchParams(window.location.search);
+                const token = params.get('token');
+                participantToken = token; // Store globally for API calls
+
+                console.log('Token from URL:', token);
+
+                if (!token) {
+                    showError('No token provided in URL. Link should be: participant.html?token=XXXXX');
+                    return;
+                }
+
+                // Get participant
+                console.log('Fetching participants...');
+                const pResp = await fetch('tables/participants?limit=1000');
+                const pData = await pResp.json();
+                console.log('Raw API response:', pData);
+                
+                // Handle different API response formats
+                let allP = [];
+                if (Array.isArray(pData)) {
+                    allP = pData;
+                } else if (pData.data && Array.isArray(pData.data)) {
+                    allP = pData.data;
+                } else if (pData.data && typeof pData.data === 'object') {
+                    allP = Object.values(pData.data);
+                } else if (typeof pData === 'object' && !Array.isArray(pData)) {
+                    allP = [pData];
+                } else {
+                    allP = [];
+                }
+                
+                console.log('Total participants found:', allP.length);
+                console.log('First 3 participants:', allP.length > 0 ? allP.slice(0, 3) : 'None');
+                
+                // Normalize token for comparison (case-insensitive, trimmed)
+                const normalizedToken = String(token).trim().toUpperCase();
+                console.log('Looking for token (normalized):', normalizedToken);
+                
+                // Find participant by access_token (case-insensitive)
+                participant = allP.find(p => {
+                    if (!p.access_token) return false;
+                    const pToken = String(p.access_token).trim().toUpperCase();
+                    const matches = pToken === normalizedToken;
+                    if (matches) {
+                        console.log('✓ FOUND MATCH!', p.name || p.full_name, pToken);
+                    }
+                    return matches;
+                });
+
+                console.log('Participant search result:', participant);
+
+                if (!participant) {
+                    console.error('❌ Participant not found for token:', token);
+                    console.error('Total participants checked:', allP.length);
+                    
+                    // Show all tokens in console for debugging
+                    if (allP.length > 0) {
+                        console.log('Participants in database:');
+                        allP.forEach((p, i) => {
+                            console.log(`  ${i+1}. ${p.name || 'Unnamed'}: ${p.access_token || 'NO TOKEN'}`);
+                        });
+                    }
+                    
+                    showError(
+                        `<p><strong>Participant not found</strong></p>
+                         <p>Token from URL: <code>${token}</code></p>
+                         <p>Total participants in database: ${allP.length}</p>
+                         <hr>
+                         <h4>Possible issues:</h4>
+                         <ol>
+                             <li>The participant hasn't been added to this project yet</li>
+                             <li>The token in the link is incorrect</li>
+                             <li>The participant was deleted</li>
+                         </ol>
+                         <p><strong>Solution:</strong> Go to the admin panel, select your project, go to the Participants tab, and copy the correct link for this participant.</p>
+                         <p style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+                             <strong>Press F12</strong> to open the browser console and see all participant tokens.
+                         </p>`
+                    );
+                    return;
+                }
+
+                console.log('Participant found:', participant);
+
+                if (!participant.project_id) {
+                    showError(`No project assigned to ${participant.full_name || participant.name}. Please assign a project in admin.`);
+                    return;
+                }
+
+                // Get project
+                console.log('Fetching project:', participant.project_id);
+                const projResp = await fetch(`tables/projects/${participant.project_id}`);
+                
+                if (!projResp.ok) {
+                    showError(`Project not found (ID: ${participant.project_id}). Status: ${projResp.status}`);
+                    return;
+                }
+                
+                project = await projResp.json();
+                console.log('Project loaded:', project);
+
+                if (!project.trigger_question) {
+                    showError(`Project "${project.project_title || project.title}" is not set up. Missing trigger question. Please complete Workshop Setup in admin.`);
+                    return;
+                }
+
+                if (!project.context_statement) {
+                    console.warn('Project missing context statement, using default');
+                }
+
+                // Update header with branding
+                const mainHeader = document.getElementById('main-header');
+                mainHeader.style.display = 'block';
+                
+                // Show tab navigation
+                document.getElementById('tab-nav').style.display = 'block';
+                
+                // Set participant name in header
+                document.getElementById('participant-name-header').textContent = participant.name || participant.full_name || 'Participant';
+                
+                // Load organization logo if available (centered)
+                if (project.company_logo || project.logo_url) {
+                    const logoUrl = project.company_logo || project.logo_url;
+                    const orgLogo = document.getElementById('org-logo');
+                    
+                    orgLogo.src = logoUrl;
+                    orgLogo.alt = project.organization || 'Organization';
+                    orgLogo.style.display = 'block';
+                }
+                
+                // Show content
+                console.log('Displaying content...');
+                document.getElementById('trigger').textContent = project.trigger_question;
+
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+
+                console.log('Page ready! Adding first idea form...');
+
+                // Add first form
+                addIdea();
+                
+                console.log('✅ Initialization complete!');
+                console.log('Participant:', participant.full_name || participant.name);
+                console.log('Project:', project.project_title || project.title);
+                console.log('Ready to accept ideas!');
+
+            } catch (error) {
+                showError('Error: ' + error.message);
+            }
+        };
+
+        function showError(msg) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').innerHTML = msg;
+            document.getElementById('error').classList.remove('hidden');
+        }
+
+        function addIdea() {
+            ideaNum++;
+            const id = 'idea-' + ideaNum;
+
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'box idea-form';
+            div.innerHTML = `
+                <h2>Idea #${ideaNum}</h2>
+                <label>Your Idea: *</label>
+                <textarea id="${id}-text" rows="3" placeholder="e.g., ability to collaborate"></textarea>
+                <label>Clarification (optional):</label>
+                <textarea id="${id}-clarification" rows="3" placeholder="Explain your idea..."></textarea>
+                <button onclick="submitIdea('${id}')">Submit This Idea</button>
+                <button class="button-outline" onclick="cancelIdea('${id}')">Cancel</button>
+            `;
+
+            document.getElementById('ideas').appendChild(div);
+            document.getElementById('buttons').classList.add('hidden');
+
+            // Scroll to it
+            div.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelIdea(id) {
+            // Remove the idea form
+            const ideaForm = document.getElementById(id);
+            if (ideaForm) {
+                ideaForm.remove();
+            }
+            
+            // Show the buttons again
+            document.getElementById('buttons').classList.remove('hidden');
+            
+            // Decrease the idea counter since this one was cancelled
+            ideaNum--;
+        }
+
+        async function submitIdea(id) {
+            const text = document.getElementById(id + '-text').value.trim();
+            const clarification = document.getElementById(id + '-clarification').value.trim();
+
+            if (!text) {
+                alert('Please enter an idea');
+                return;
+            }
+
+            try {
+                // Save to database
+                const data = {
+                    id: 'IDEA-' + Date.now(),
+                    project_id: participant.project_id,
+                    participant_id: participant.id,
+                    participant_name: participant.full_name || participant.name,
+                    idea_text: text,
+                    clarification: clarification,
+                    submitted_at: Date.now()
+                };
+
+                await fetch('tables/idea_responses', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('✅ Idea submitted');
+                
+                // Mark participant as having completed idea task
+                console.log('✅ Marking idea task as completed for participant:', participant.id);
+          await fetch(`tables/participants/${participant.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        idea_task_completed: true,
+        idea_task_completed_at: Date.now()
+    })
+});
+
+
+                submitted.push(data);
+
+                // Mark as submitted with edit option
+                const div = document.getElementById(id);
+                div.classList.add('submitted');
+                div.innerHTML = `
+                    <h2>✓ Idea Submitted</h2>
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p><strong>Idea:</strong> ${text}</p>
+                        ${clarification ? `<p><strong>Clarification:</strong> ${clarification}</p>` : ''}
+                    </div>
+                    <button onclick="editIdea('${id}', '${data.id}')" style="padding: 10px 20px; background: #0B2B26; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                        ✏️ Edit This Idea
+                    </button>
+                `;
+
+                // Show buttons
+                document.getElementById('buttons').classList.remove('hidden');
+                document.getElementById('buttons').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                alert('Error saving idea: ' + error.message);
+            }
+        }
+
+        async function editIdea(divId, ideaId) {
+            // Find the submitted idea
+            const ideaIndex = submitted.findIndex(s => s.id === ideaId);
+            if (ideaIndex === -1) return;
+
+            const idea = submitted[ideaIndex];
+            
+            // Restore the form
+            const div = document.getElementById(divId);
+            div.classList.remove('submitted');
+            div.innerHTML = `
+                <h2>Edit Your Idea</h2>
+                <textarea id="${divId}-text" placeholder="Enter your idea here..." style="width: 100%; min-height: 120px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 15px;">${idea.idea_text}</textarea>
+                <textarea id="${divId}-clarification" placeholder="Add clarification (optional)" style="width: 100%; min-height: 80px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 15px;">${idea.clarification || ''}</textarea>
+                <button onclick="updateIdea('${divId}', '${ideaId}')" style="padding: 12px 30px; background: #0B2B26; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold;">
+                    💾 Save Changes
+                </button>
+                <button onclick="cancelEdit('${divId}', '${ideaId}')" style="padding: 12px 30px; background: #999; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; margin-left: 10px;">
+                    Cancel
+                </button>
+            `;
+        }
+
+        async function updateIdea(divId, ideaId) {
+            const text = document.getElementById(divId + '-text').value.trim();
+            const clarification = document.getElementById(divId + '-clarification').value.trim();
+
+            if (!text) {
+                alert('Please enter an idea');
+                return;
+            }
+
+            try {
+                // Find and update the idea in submitted array
+                const ideaIndex = submitted.findIndex(s => s.id === ideaId);
+                if (ideaIndex !== -1) {
+                    submitted[ideaIndex].idea_text = text;
+                    submitted[ideaIndex].clarification = clarification;
+                    submitted[ideaIndex].updated_at = Date.now();
+
+                    // Update in database
+                    await fetch(`tables/idea_responses/${ideaId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            idea_text: text,
+                            clarification: clarification,
+                            updated_at: Date.now()
+                        })
+                    });
+
+                    // Show updated submission
+                    const div = document.getElementById(divId);
+                    div.classList.add('submitted');
+                    div.innerHTML = `
+                        <h2>✓ Idea Updated</h2>
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <p><strong>Idea:</strong> ${text}</p>
+                            ${clarification ? `<p><strong>Clarification:</strong> ${clarification}</p>` : ''}
+                        </div>
+                        <button onclick="editIdea('${divId}', '${ideaId}')" style="padding: 10px 20px; background: #0B2B26; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                            ✏️ Edit This Idea
+                        </button>
+                    `;
+                }
+            } catch (error) {
+                alert('Error updating idea: ' + error.message);
+            }
+        }
+
+        function cancelEdit(divId, ideaId) {
+            // Find the idea and restore the submitted view
+            const idea = submitted.find(s => s.id === ideaId);
+            if (!idea) return;
+
+            const div = document.getElementById(divId);
+            div.classList.add('submitted');
+            div.innerHTML = `
+                <h2>✓ Idea Submitted</h2>
+                <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <p><strong>Idea:</strong> ${idea.idea_text}</p>
+                    ${idea.clarification ? `<p><strong>Clarification:</strong> ${idea.clarification}</p>` : ''}
+                </div>
+                <button onclick="editIdea('${divId}', '${ideaId}')" style="padding: 10px 20px; background: #0B2B26; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; transition: all 0.2s;">
+                    ✏️ Edit This Idea
+                </button>
+            `;
+        }
+
+        async function finish() {
+            if (submitted.length === 0) {
+                alert('Please submit at least one idea');
+                return;
+            }
+
+            document.getElementById('content').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
+            document.getElementById('count').textContent = `You submitted ${submitted.length} idea${submitted.length > 1 ? 's' : ''}.`;
+            
+            // Display completion rank for internal projects
+            await displayCompletionRank('idea');
+        }
+        
+        async function displayCompletionRank(taskType) {
+            try {
+                // Only show for internal/async projects (not public projects)
+                if (!project || project.session_mode === 'public') {
+                    return;
+                }
+                
+                // Fetch all participants for this project
+                const pResp = await fetch(`tables/participants?limit=1000`);
+                if (!pResp.ok) return;
+                
+                const pData = await pResp.json();
+                const allParticipants = pData.data.filter(p => p.project_id === project.id);
+                
+                // Get participants who completed this task
+                const completedParticipants = allParticipants.filter(p => {
+                    if (taskType === 'idea') {
+                        return p.idea_task_completed === true;
+                    } else if (taskType === 'voting') {
+                        return p.voting_task_completed === true || p.ism_completed === true;
+                    }
+                    return false;
+                });
+                
+                // Sort by completion time
+                completedParticipants.sort((a, b) => {
+                    const timeA = taskType === 'idea' ? a.idea_task_completed_at : a.voting_completed_at;
+                    const timeB = taskType === 'idea' ? b.idea_task_completed_at : b.voting_completed_at;
+                    return (timeA || 0) - (timeB || 0);
+                });
+                
+                // Find current participant's rank
+                const currentIndex = completedParticipants.findIndex(p => p.id === participant.id);
+                
+                if (currentIndex >= 0) {
+                    const rank = currentIndex + 1;
+                    const total = allParticipants.length;
+                    
+                    // Create rank display element
+                    const rankHTML = `
+                        <div style="background: #e8f5e9; border: 2px solid #0B2B26; padding: 1.5rem; border-radius: 10px; margin: 2rem auto; max-width: 600px;">
+                            <h3 style="color: #0B2B26; margin-bottom: 1rem;">
+                                <i class="fas fa-trophy"></i> Completion Status
+                            </h3>
+                            <p style="color: #333; font-size: 1.2rem; font-weight: 600; margin: 0;">
+                                You are participant <strong style="color: #0B2B26; font-size: 1.4rem;">${rank}</strong> out of <strong style="color: #0B2B26; font-size: 1.4rem;">${total}</strong> to complete this task.
+                            </p>
+                        </div>
+                    `;
+                    
+                    // Insert after the count message
+                    const countEl = document.getElementById('count');
+                    if (countEl && countEl.parentElement) {
+                        countEl.insertAdjacentHTML('afterend', rankHTML);
+                    }
+                }
+            } catch (error) {
+                console.error('Error displaying completion rank:', error);
+                // Fail silently - don't disrupt the completion flow
+            }
+        }
+        
+        function returnToPortal() {
+            // Get token from URL
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            
+            if (token) {
+                // Return to participant portal with same token
+                window.location.href = `participant-portal.html?token=${token}`;
+            } else {
+                // Fallback to index
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+    
+    <!-- ADA Footer Component -->
+    <script src="js/ada-footer.js"></script>
+</body>
+</html>

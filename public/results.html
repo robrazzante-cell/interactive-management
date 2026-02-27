@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon-light.png" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+    <title>ISM Results - Flowchart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0B2B26 0%, #164039 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            color: #FAF3DD;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .flowchart-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 1400px;
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+
+        .flowchart-wrapper {
+            min-width: 800px;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #flowchart-canvas {
+            width: 100%;
+            min-height: 400px;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-aggregate {
+            background: linear-gradient(135deg, #0B2B26 0%, #164039 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-aggregate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #0B2B26 0%, #164039 100%);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-close {
+            background: linear-gradient(135deg, #3E0505 0%, #3E0505 100%);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+
+        .error i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #3E0505;
+        }
+
+        /* Aggregate Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-close:hover {
+            color: #3E0505;
+        }
+
+        .aggregate-content h2 {
+            color: #0B2B26;
+            margin-bottom: 20px;
+        }
+
+        .aggregate-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .aggregate-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .aggregate-table th,
+        .aggregate-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aggregate-table th {
+            background: #0B2B26;
+            color: #FAF3DD;
+            font-weight: 600;
+        }
+
+        .aggregate-table tr:hover {
+            background: #f3f4f6;
+        }
+    </style>
+    <!-- Firebase SDK (auto-injected by sync) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase-init.js?v=20260205"></script>
+    <script src="js/firestore-api-adapter.js?v=20260205"></script>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1><i class="fas fa-project-diagram"></i> Perceived Flow of Influence</h1>
+        <p id="project-name"></p>
+    </div>
+
+    <!-- Flowchart Container -->
+    <div class="flowchart-container" id="flowchart-container">
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading your flowchart...</p>
+        </div>
+        <div class="flowchart-wrapper" id="flowchart-wrapper" style="display: none;">
+            <svg id="flowchart-canvas"></svg>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="btn btn-aggregate" onclick="showAggregate()">
+            <i class="fas fa-chart-bar"></i> See Aggregate
+        </button>
+        <button class="btn btn-download" onclick="downloadFlowchart()">
+            <i class="fas fa-download"></i> Download Flowchart
+        </button>
+        <button class="btn btn-close" onclick="window.close()">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+
+    <!-- Aggregate Modal -->
+    <div class="modal" id="aggregate-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAggregate()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="aggregate-content">
+                <h2><i class="fas fa-chart-line"></i> Aggregate Metastructure</h2>
+                <p>This shows how all participants' responses have been combined to create a collective understanding of the flow of influence.</p>
+                
+                <div id="aggregate-data">
+                    <p style="text-align: center; color: #999; padding: 40px;">
+                        <i class="fas fa-info-circle"></i><br>
+                        Aggregate data will be calculated after all participants complete voting.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load ISM Renderer -->
+    <script src="js/ism-vis-renderer.js?v=7.0.0"></script>
+
+    <script>
+        // Load flowchart data from sessionStorage
+        const flowchartDataStr = sessionStorage.getItem('ism_flowchart_data');
+        
+        if (!flowchartDataStr) {
+            document.getElementById('loading').innerHTML = `
+                <div class="error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>No flowchart data found. Please complete voting first.</p>
+                </div>
+            `;
+        } else {
+            try {
+                const flowchartData = JSON.parse(flowchartDataStr);
+                
+                // Update project name
+                document.getElementById('project-name').textContent = flowchartData.projectName || 'Perceived Flow of Influence';
+                
+                // Render flowchart
+                renderFlowchart(flowchartData);
+            } catch (error) {
+                console.error('Error loading flowchart:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading flowchart data.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderFlowchart(data) {
+            try {
+                // Check if renderer is available
+                if (typeof ClassicISMRenderer === 'undefined') {
+                    throw new Error('ISM Renderer not loaded');
+                }
+
+                // Create renderer
+                const container = document.getElementById('flowchart-canvas');
+                const renderer = new ClassicISMRenderer(container, {
+                    style: 'style1', // Classic ISM style
+                    interactive: false, // Static display
+                    horizontal: true // Horizontal layout
+                });
+
+                // Render the flowchart
+                renderer.render({
+                    factors: data.factors,
+                    levels: data.levels
+                });
+
+                // Show flowchart
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('flowchart-wrapper').style.display = 'flex';
+            } catch (error) {
+                console.error('Error rendering flowchart:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error rendering flowchart. Please try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function showAggregate() {
+            const modal = document.getElementById('aggregate-modal');
+            modal.classList.add('active');
+            
+            // TODO: Load actual aggregate data from API
+            // For now, show placeholder
+            loadAggregateData();
+        }
+
+        function closeAggregate() {
+            const modal = document.getElementById('aggregate-modal');
+            modal.classList.remove('active');
+        }
+
+        async function loadAggregateData() {
+            // Get flowchart data
+            const flowchartDataStr = sessionStorage.getItem('ism_flowchart_data');
+            if (!flowchartDataStr) return;
+            
+            const flowchartData = JSON.parse(flowchartDataStr);
+            const projectId = flowchartData.projectId;
+            
+            try {
+                // Fetch aggregate metastructure from database
+                const response = await fetch(`tables/ism_metastructure?project_id=${projectId}&limit=1`);
+                const result = await response.json();
+                
+                if (result.data && result.data.length > 0) {
+                    const aggregate = result.data[0];
+                    const themes = JSON.parse(aggregate.themes || '[]');
+                    const avgScores = JSON.parse(aggregate.average_influence_scores || '{}');
+                    
+                    // Display aggregate data
+                    let html = `
+                        <p><strong>Participants:</strong> ${aggregate.num_participants || 0}</p>
+                        <p><strong>Factors:</strong> ${themes.length || 0}</p>
+                        
+                        <h3 style="margin-top: 20px; color: #0B2B26;">Factor Influence Scores</h3>
+                        <table class="aggregate-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Factor</th>
+                                    <th>Stage</th>
+                                    <th>Average Influence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    if (avgScores.factors && avgScores.factors.length > 0) {
+                        avgScores.factors.forEach((factor, index) => {
+                            html += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${factor.name || 'Factor ' + (factor.id || index + 1)}</td>
+                                    <td>${factor.stage || 'N/A'}</td>
+                                    <td>${(factor.avgINF || 0).toFixed(2)}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        html += `
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #999;">
+                                    No aggregate data available yet.
+                                </td>
+                            </tr>
+                        `;
+                    }
+                    
+                    html += `
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    document.getElementById('aggregate-data').innerHTML = html;
+                } else {
+                    document.getElementById('aggregate-data').innerHTML = `
+                        <p style="text-align: center; color: #999; padding: 40px;">
+                            <i class="fas fa-info-circle"></i><br>
+                            No aggregate metastructure calculated yet. Please check back after more participants complete voting.
+                        </p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading aggregate data:', error);
+                document.getElementById('aggregate-data').innerHTML = `
+                    <p style="text-align: center; color: #3E0505; padding: 40px;">
+                        <i class="fas fa-exclamation-triangle"></i><br>
+                        Error loading aggregate data.
+                    </p>
+                `;
+            }
+        }
+
+        function downloadFlowchart() {
+            // TODO: Implement flowchart download functionality
+            alert('Download functionality will be implemented based on your preferred format (PNG, PDF, etc.)');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('aggregate-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAggregate();
+            }
+        });
+    </script>
+</body>
+</html>

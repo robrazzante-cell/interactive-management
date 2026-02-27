@@ -1,0 +1,25 @@
+# Firebase
+.firebase/
+.firebaserc
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Backups
+*.backup
+*.OLD_BACKUP
+*-BACKUP-*
+
+# Environment
+.env
+.env.local
