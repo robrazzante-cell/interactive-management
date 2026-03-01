@@ -180,22 +180,22 @@
         <!-- INTERNAL PROJECT CARD -->
         <div class="card">
             <h2>
-                🏥 Falck Project
+                🏢 Internal Project
                 <span class="badge internal">Internal</span>
             </h2>
             <p class="subtitle">Participant-based voting with unique access tokens</p>
 
             <div class="project-info">
-                <p><strong>Project ID:</strong> <code>id_1764823618972_c82zzrg68</code></p>
+                <p><strong>Project ID:</strong> <span id="internal-project-id">Enter your project ID</span></p>
                 <p><strong>Type:</strong> Internal/Organizational</p>
                 <p><strong>Access:</strong> Token-based (participant roster)</p>
             </div>
 
-            <button class="primary" onclick="loadFalckParticipants()">
-                📋 Load Falck Participants
+            <button class="primary" onclick="loadInternalParticipants()">
+                📋 Load Participants
             </button>
 
-            <div id="falck-results"></div>
+            <div id="internal-results"></div>
         </div>
 
         <!-- PUBLIC PROJECT CARD -->
@@ -221,30 +221,36 @@
     </div>
 
     <script>
-        const FALCK_PROJECT_ID = 'id_1764823618972_c82zzrg68';
+        let internalProjectId = null;
         let communityProjectId = null;
 
-        // Load Falck internal participants
-        async function loadFalckParticipants() {
-            const resultsDiv = document.getElementById('falck-results');
-            resultsDiv.innerHTML = '<div class="status info">⏳ Loading Falck participants...</div>';
+        // Load internal project participants
+        async function loadInternalParticipants() {
+            const resultsDiv = document.getElementById('internal-results');
+
+            // Prompt for project ID if not set
+            if (!internalProjectId) {
+                internalProjectId = prompt('Enter your project ID:');
+                if (!internalProjectId) return;
+                document.getElementById('internal-project-id').textContent = internalProjectId;
+            }
+
+            resultsDiv.innerHTML = '<div class="status info">⏳ Loading participants...</div>';
 
             try {
                 const response = await fetch('tables/participants?limit=1000');
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
 
                 const data = await response.json();
-                const participants = data.data.filter(p => p.project_id === FALCK_PROJECT_ID);
-                
-                console.log('Falck participants:', participants);
+                const participants = data.data.filter(p => p.project_id === internalProjectId);
 
                 if (participants.length === 0) {
                     resultsDiv.innerHTML = `
                         <div class="status" style="background: #f8d7da; color: #721c24;">
-                            ❌ No participants found for Falck project
+                            ❌ No participants found for this project
                         </div>
                     `;
                     return;
@@ -252,22 +258,22 @@
 
                 let html = `
                     <div class="status success">
-                        ✅ Found ${participants.length} Falck participant(s)
+                        ✅ Found ${participants.length} participant(s)
                     </div>
                     <div class="participant-list">
                 `;
 
                 participants.forEach((participant, index) => {
-                    const votingLink = `participant-voting-v6.33.html?token=${participant.access_token}`;
+                    const votingLink = `participant-voting.html?token=${participant.access_token}`;
                     const portalLink = `participant-portal.html?token=${participant.access_token}`;
-                    
+
                     html += `
                         <div class="participant-item">
                             <h4>👤 ${participant.name || 'Participant ' + (index + 1)}</h4>
                             <p><strong>Position:</strong> ${participant.position || 'N/A'}</p>
                             <p><strong>Email:</strong> ${participant.email || 'N/A'}</p>
                             <p><strong>Status:</strong> ${participant.completion_status || 'not_started'}</p>
-                            
+
                             <div class="actions">
                                 <button onclick="window.open('${portalLink}', '_blank')">
                                     🚪 Portal
@@ -423,13 +429,13 @@
         }
 
         function openPublicVoting(projectId, projectTitle) {
-            const url = `public-voting-v6.33.html?project=${projectId}`;
+            const url = `public-voting.html?project=${projectId}`;
             console.log(`Opening public voting for ${projectTitle}:`, url);
             window.open(url, '_blank');
         }
 
         function openPublicAggregate(projectId) {
-            const url = `aggregate-metastructure-DEC19-2025.html?project=${projectId}&source=public&_t=${Date.now()}`;
+            const url = `aggregate-metastructure.html?project=${projectId}&source=public&_t=${Date.now()}`;
             console.log('Opening public aggregate:', url);
             window.open(url, '_blank');
         }
@@ -437,7 +443,6 @@
         // Auto-load on page open
         window.addEventListener('load', () => {
             console.log('🚀 ISM Voting Access Hub loaded');
-            console.log('Falck Project ID:', FALCK_PROJECT_ID);
         });
     </script>
 </body>

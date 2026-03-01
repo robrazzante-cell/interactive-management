@@ -777,7 +777,7 @@ function previewISMTask() {
     const previewParticipant = {
         id: 'preview-participant',
         name: 'Preview User (Administrator)',
-        email: 'preview@admin.local',
+        email: 'admin@example.com',
         project_id: votingState.projectId,
         access_token: previewToken,
         role: 'preview'

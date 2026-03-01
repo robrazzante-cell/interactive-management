@@ -36,6 +36,9 @@
                         <i class="fas fa-user-shield"></i> Administrator Login
                     </button>
                 </div>
+                <div style="margin-top: 1rem;">
+                    <a href="#" onclick="showCreateAccount(); return false;" style="color: rgba(250,243,221,0.8); font-size: 0.95rem; text-decoration: underline;">Create an Account</a>
+                </div>
             </div>
         </section>
 
@@ -54,7 +57,7 @@
                         <div class="feature-number">2</div>
                         <i class="fas fa-project-diagram"></i>
                         <h4>Structure Relationships</h4>
-                        <p>Use pairwise voting to determine how ideas relate to each other through Interpretive Structural Modeling.</p>
+                        <p>Use pairwise voting with Interpretive Structural Modeling to understand how participants perceive the flow of influence between ideas.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-number">3</div>
@@ -95,6 +98,9 @@
                         <i class="fas fa-sign-in-alt"></i> Login
                     </button>
                 </form>
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #666;">
+                    Don't have an account? <a href="#" onclick="closeModal('admin-login-modal'); showCreateAccount(); return false;" style="color: var(--forest-green); text-decoration: underline;">Create one</a>
+                </p>
             </div>
         </div>
     </div>
@@ -116,6 +122,42 @@
                         <i class="fas fa-arrow-right"></i> Access Portal
                     </button>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Account Modal -->
+    <div id="create-account-modal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3>Create Administrator Account</h3>
+                <button class="close-btn" onclick="closeModal('create-account-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="createAccount(event)">
+                    <div class="form-section">
+                        <label for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" required placeholder="Your full name">
+                    </div>
+                    <div class="form-section">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" required placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-section">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required placeholder="At least 6 characters" minlength="6">
+                    </div>
+                    <div class="form-section">
+                        <label for="reg-password-confirm">Confirm Password</label>
+                        <input type="password" id="reg-password-confirm" required placeholder="Re-enter your password" minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="create-account-btn">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #666;">
+                    Already have an account? <a href="#" onclick="closeModal('create-account-modal'); showAdminLogin(); return false;" style="color: var(--forest-green); text-decoration: underline;">Log in</a>
+                </p>
             </div>
         </div>
     </div>

@@ -264,7 +264,8 @@ function selectThemeCount(count) {
 
 // ==================== AI Theme Generation ====================
 
-const AI_THEMES_URL = 'https://us-central1-ism-platform-firebase.cloudfunctions.net/generateAIThemes';
+// Update this URL with your own Cloud Function endpoint (see SETUP.md)
+const AI_THEMES_URL = '/api/generateAIThemes';
 
 // Extract key phrases from idea texts for the codes field
 function extractKeyPhrases(ideaTexts) {
