@@ -27,28 +27,29 @@ The platform supports the full Interactive Management workflow through seven cor
 - **Visualization**: [vis-network.js](https://visjs.github.io/vis-network/docs/network/) for interactive graph rendering of structural models.
 - **Analytics**: [Chart.js](https://www.chartjs.org/) for statistical charts and aggregate analysis dashboards.
 
-## Quick Start
+## Quick Start (Automated)
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/interactive-management.git
-   cd interactive-management
-   ```
+Clone and run the setup script -- it walks you through everything:
 
-2. **Set up Firebase** -- Follow the detailed instructions in [SETUP.md](SETUP.md).
+```bash
+git clone https://github.com/robrazzante-cell/interactive-management.git
+cd interactive-management
+bash setup.sh
+```
 
-3. **Update your Firebase config** -- Edit `public/js/firebase-init.js` with your own Firebase project configuration.
+The script will:
+1. Install Firebase CLI (if needed)
+2. Log you into Firebase with your Google account
+3. Create or connect a Firebase project
+4. Guide you through enabling Firestore and Authentication
+5. Write your Firebase config automatically
+6. Deploy to Firebase Hosting
 
-4. **Deploy to Firebase Hosting**
-   ```bash
-   firebase login
-   firebase init hosting
-   firebase deploy --only hosting
-   ```
+Your platform will be live at `https://your-project-id.web.app` in about 5 minutes.
 
-5. **Visit your site** at `https://your-project-id.web.app`
+**Prerequisites:** [Node.js](https://nodejs.org/) (v16+) and a Google account (Firebase free tier).
 
-For a complete walkthrough, see [SETUP.md](SETUP.md).
+For step-by-step manual setup, see [SETUP.md](SETUP.md).
 
 ## Academic References
 

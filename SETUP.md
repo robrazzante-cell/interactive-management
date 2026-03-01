@@ -78,26 +78,7 @@ Anonymous authentication is used for participant access during workshops. Partic
 
 ## Step 5: Create Your Admin Account
 
-1. In the Firebase console, go to **Authentication > Users**.
-2. Click **"Add user"**.
-3. Enter your email address and a strong password.
-4. Click **"Add user"**.
-5. Once the user appears in the list, **copy the User UID** (the long string in the "User UID" column).
-6. Go to **Firestore Database**.
-7. Click **"Start collection"** and name it `admin_users`.
-8. Add a document with the following fields:
-
-   | Field          | Type   | Value                  |
-   |----------------|--------|------------------------|
-   | `id`           | string | `<your-uid>`           |
-   | `uid`          | string | `<your-uid>`           |
-   | `email`        | string | `your@email.com`       |
-   | `display_name` | string | `Your Name`            |
-   | `role`         | string | `platform_admin`       |
-
-   Replace `<your-uid>` with the User UID you copied, and fill in your actual email and name.
-
-9. Click **Save**.
+After deploying (Step 7), visit your platform and click **"Create an Account"** on the landing page. Enter your name, email, and password. The platform automatically creates your admin account -- no manual Firestore setup needed.
 
 ---
 
